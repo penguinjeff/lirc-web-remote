@@ -4,20 +4,32 @@ const Edit=
  savings:{},
  modes: ["Activities","Macros","Modules","Displays","Devices"],
  display()
- {var html='<select id="EditSeclect" onchange="Edit.selected()">';
-  var selectedmsg='';
-  var x;
-  for(x=0;x<this.modes.length;x++)
-  {if(this.modes[x]==this.mode){selectedmsg=' selected="selected"'}else{selectedmsg=''}
-   html+='<option value="'+this.modes[x]+'"'+selectedmsg+'>'+this.modes[x]+'</option>';
-  }
-  html+='</select>';
-  html+='<button onclick="Edit.save()">Save</button>'
-  html+='<div id="EditItemDisplay"></div>';
-  html+='<div id="EditDisplay"></div>';
-  html+='<div id="data"></div>';
-  document.getElementById('Display').innerHTML=html;
-  this.selected()
+ {
+  var box=document.getElementById('Display');
+  box.appendChild(createElement(
+  {'options':this.modes,
+   'value':0,
+   'onchange':'Edit.update(this)',
+   'id':'EditSeclect'
+  }));
+  box.appendChild(createElement(
+  {'tag':'button',
+   'onclick':'Edit.save()',
+   'innerHTML':'Save'
+  }));
+  box.appendChild(createElement(
+  {'tag':'div',
+   'id':'EditItemDisplay'
+  }));
+  box.appendChild(createElement(
+  {'tag':'div',
+   'id':'EditDisplay'
+  }));
+  box.appendChild(createElement(
+  {'tag':'div',
+   'id':'data'
+  }));
+  this.update(document.getElementById('EditSeclect'))
  },
  load()
  {
@@ -50,10 +62,5 @@ const Edit=
     // console.error("Fetch error:", error);
   });
  },
- selected()
- {editmode=document.getElementById('EditSeclect').value;
-  var x;
-  for(x=0;x<this.modes.length;x++)
-  {if(editmode==this.modes[x])
-   {eval(this.modes[x]+'.display()');
-}}}}
+ update(item){eval(this.modes[item.value]+'.display()');}
+}
