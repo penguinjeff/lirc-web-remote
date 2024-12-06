@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en-US">
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Selectors</title>
+<script>
+var selectionselections={
+'none':['none'],
+'item1':['none','sub1item1','sub1item2','sub1item3'],
+'item2':['none','sub2item1','sub2item2','sub2item3'],
+'item3':['none','sub3item1','sub3item2','sub3item3']
+}
+
+//index to allow an integer to reference
+var selections_index=Object.keys(selectionselections);
+
+//function to create an object from a list where that list item becomes a key with its index being the value
+//useful for converting the name to an index
+function reverse_index(list)
+{var myobject={};
+ list.forEach((value, index) => myobject[value] = index);
+ return myobject;
+}
+
+// to allow fast convertion of name to index number
+var selections_reverse_index=reverse_index(selections_index);
+
+// to allow fast convertion of name to index number
+var selectionselections_reverse_index={}
+selections_index.forEach((value,index) => selectionselections_reverse_index[value] = reverse_index(selectionselections[value]))
+
+//I wanted a way to pass more into a createElement to simplify my code
+//since I am using class names because html do no provide searchbyname on subelements
+//I add name to classname 
+function createElement(items)
+{var item;
+ if(items['options'])
+ {item=document.createElement('select');
+  for(var x=0;x<items['options'].length;x++)
+  {var option=document.createElement('option');
+   if(items['namevalues']){option.value=items['options'][x];}
+   else{option.value=x;}
+   option.text=items['options'][x];
+   item.appendChild(option);
+ }}
+ else if(items['tag'])
+ {item=document.createElement(items['tag']);
+ }
+ else
+ {alert('need either options or tag')
+  return null;
+ }
+ items['class']+=' '+items['name'];
+ items['class'].trimStart();
+ keys=Object.keys(items);
+ for(var x=0;x<keys.length;x++)
+ {if(keys[x]=='options'||keys[x]=='namevalues'||keys[x]=='tag'){continue;}
+  if(keys[x]=='innerHTML')
+  {item.innerHTML=items[keys[x]];
+  }
+  else if(keys[x]=='value')
+  {item.value=items[keys[x]];
+  }
+  else
+  {item.setAttribute(keys[x],items[keys[x]])
+ }}
+ return item;
+}
+
+//updates the selections of the second column selectbox run after the first selection is selected
+function update_selectionselections(parent,selected)
+{var item=parent.getElementsByClassName('selections')[0];
+ var box2=parent.getElementsByClassName('selectionselectionsparent')[0];
+ box2.removeChild(box2.firstChild);
+ box2.appendChild(createElement(
+ {'options':selectionselections[selections_index[item.value]],
+  'class':'lefty',
+  'name':'selectionselections',
+  'onchange':'update(this)',
+  'value':selected
+ }));
+}
+
+var fields=['selections','selectionselections','delay']
+var field_functions=
+{'selections':function(item,value){return selections_index[value];},
+ 'selectionselections':function(item,value){return selectionselections[selections_index[item.childNodes[0].value]][value];},
+ 'delay':function(item,value){return value;}
+}
+
+function swap(item1,item2)
+{for(x=0;x<fields.length;x++)
+ {var temp=item1.getElementsByClassName(fields[x])[0].value
+  if(fields[x]=='selectionselections'){update_selectionselections(item1,0);}
+  item1.getElementsByClassName(fields[x])[0].value=item2.getElementsByClassName(fields[x])[0].value
+  if(fields[x]=='selectionselections'){update_selectionselections(item2,0)}
+  item2.getElementsByClassName(fields[x])[0].value=temp;
+  items[item1.getAttribute('name')][x]=field_functions[fields[x]](item1,item1.getElementsByClassName(fields[x])[0].value);
+  items[item2.getAttribute('name')][x]=field_functions[fields[x]](item2,item2.getElementsByClassName(fields[x])[0].value);
+}}
+
+function update(item)
+{switch (item.getAttribute('name'))
+ {case 'remove':
+  {var sure=confirm('Are you sure')
+  if(sure)
+  {var current=parseInt(item.parentElement.getAttribute('name'));
+   parentparent=item.parentElement.parentElement
+   for(var x=parseInt(item.parentElement.getAttribute('name'));x<parentparent.childNodes.length;x++)
+   {if(x==1){parentparent.childNodes[x].getElementsByClassName('swapup')[0].setAttribute('disabled','disabled');}
+    parentparent.childNodes[x].setAttribute('name',x-1);
+   }
+   items.splice(parseInt(item.parentElement.getAttribute('name')),1);
+   if(current==items.length&&items.length>0)
+   {document.getElementById('Edit').lastChild.previousSibling.getElementsByClassName('swapdown')[0].setAttribute('disabled','disabled');
+   }
+   item.parentElement.remove();
+  }}
+  break;
+  case 'swapup':
+  {if(item.parentElement.previousSibling)
+   {var item2=item.parentElement.previousSibling;
+    swap(item.parentElement,item2);
+   }
+   else
+   {alert('no previous');
+  }}
+  break;
+  case 'swapdown':
+  {if(item.parentElement.nextSibling)
+   {var item2=item.parentElement.nextSibling;
+    swap(item.parentElement,item2);
+   }
+   else
+   {alert('no next');
+  }}
+  break;
+  case 'selections':
+  {update_selectionselections(item.parentElement,0);
+   items[parseInt(item.parentElement.getAttribute('name'))][0]=selections_index[item.value];
+  }
+  break;
+  case 'selectionselections':
+  {var selected_item=selectionselections[selections_index[item.parentElement.parentElement.getElementsByClassName('selections')[0].value]][item.value];
+   items[parseInt(item.parentElement.parentElement.getAttribute('name'))][1]=selected_item;
+  }
+  break;
+  case 'delay':
+  {items[parseInt(item.parentElement.getAttribute('name'))][2]=item.value;
+  }
+  break;
+  default:
+  {alert('no case for'+item.getAttribute('name'))
+ }}
+ document.getElementById('items').innerHTML=JSON.stringify(items);
+}
+
+//store in a easily deciphered form
+var items=[]
+
+function addselectboxes(selected_item,selectionselected_item,selected_delay)
+{if(typeof(selected_item)=='undefined'){selected_item='none';}
+ if(typeof(selectionselected_item)=='undefined'){selectionselected_item='none';}
+ if(typeof(selected_delay)=='undefined'){selected_delay=0;}
+ const box = createElement({'tag':'div','name':items.length})
+ //add to items after so that we can use the length to get its current index in the array
+ items.push([selected_item,selectionselected_item,selected_delay])
+ box.appendChild(createElement(
+ {'options':selections_index,
+  'class':'lefty',
+  'name':'selections',
+  'onchange':'update(this)',
+  'value':selections_reverse_index[selected_item]
+ }));
+ const box2 = createElement(
+ {'tag':'div',
+  'class':'selectionselectionsparent',
+  'name':'selectionselectionsparent',
+ });
+ //Add a blank item to delete so I can use the same update_selectionselections for startup
+ box2.appendChild(createElement({'tag':'div'}));
+ box.appendChild(box2);
+ update_selectionselections(box,selectionselections_reverse_index[selected_item][selectionselected_item]);
+ box.appendChild(createElement(
+ {'tag':'input',
+  'name':'delay',
+  'type':'number',
+  'min':0,
+  'max':30000,
+  'value':selected_delay,
+  'onchange':'update(this)'
+ }));
+ box.appendChild(createElement(
+ {'tag':'button',
+  'innerHTML':'remove',
+  'name':'remove',
+  'onclick':'update(this)'
+ }));
+ box.appendChild(createElement(
+ {'tag':'button',
+  'innerHTML':'swapup',
+  'name':'swapup',
+  'onclick':'update(this)'
+ }));
+ box.appendChild(createElement(
+ {'tag':'button',
+  'innerHTML':'swapdown',
+  'name':'swapdown',
+  'onclick':'update(this)',
+  'disabled':'disabled'
+ }));
+ document.getElementById('Edit').appendChild(box);
+ document.getElementById('Edit').firstChild.getElementsByClassName('swapup')[0].setAttribute('disabled','disabled');
+ if(items.length>1)
+ {document.getElementById('Edit').lastChild.previousSibling.getElementsByClassName('swapdown')[0].removeAttribute('disabled');
+ }
+ document.getElementById('items').innerHTML=JSON.stringify(items);
+}
+
+var saveconfig=[];
+
+function save()
+{saveconfig=JSON.parse(JSON.stringify(items));
+}
+
+function clearboard()
+{while(document.getElementById('Edit').childNodes.length>0)
+ {document.getElementById('Edit').firstChild.remove();
+ }
+ items=[];
+ document.getElementById('items').innerHTML=JSON.stringify(items);
+}
+
+function load()
+{clearboard();
+ for(var x=0;x<saveconfig.length;x++)
+ {addselectboxes(saveconfig[x][0],saveconfig[x][1],saveconfig[x][2]);
+}}
+</script>
+<style>
+.lefty{float:left}
+</style>
+ </head>
+ <body>
+  <button onclick="addselectboxes()">Add</button>
+  <button onclick="save()">Save</button>
+  <button onclick="load()">Load</button>
+  <div id="Edit"></div>
+  <div id="items"></div>
+ </body>
+</html>
