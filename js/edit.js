@@ -62,5 +62,9 @@ const Edit=
     // console.error("Fetch error:", error);
   });
  },
- update(item){eval(this.modes[item.value]+'.display()');}
+ update(item)
+ {document.getElementById('EditItemDisplay').innerHTML='';
+  document.getElementById('EditDisplay').innerHTML='';
+  eval(this.modes[item.value]+'.display()');
+ }
 }
