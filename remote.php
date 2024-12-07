@@ -28,7 +28,8 @@ var mode='remote';
 function timestamp(){return Math.floor(Date.now()/1000);}
 
 function changemode()
-{if(document.getElementById("mode").value==="Edit")
+{document.getElementById("Display").innerHTML='';
+ if(document.getElementById("mode").value==="Edit")
  {Edit.display({'display':'EditDisplay','showall':true});
  }
  else
