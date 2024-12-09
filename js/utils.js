@@ -27,8 +27,14 @@ function createElement(items)
  {alert('need either options or tag')
   return null;
  }
- items['class']+=' '+items['name'];
- items['class'].trimStart();
+ if(items['name'])
+ {
+  if(items['class'])
+  {items['class']+=' '+items['name'];
+  }
+  else
+  {items['class']=items['name'];
+ }}
  keys=Object.keys(items);
  for(var x=0;x<keys.length;x++)
  {if(keys[x]=='options'||keys[x]=='namevalues'||keys[x]=='tag'){continue;}
@@ -43,3 +49,4 @@ function createElement(items)
  }}
  return item;
 }
+

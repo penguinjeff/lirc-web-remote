@@ -35,9 +35,9 @@ const Edit=
  {
  },
  save()
- {var data={};
+ {var localdata={};
   for(x=0;x<this.modes.length;x++)
-  {data[this.modes[x]]=eval(this.modes[x]+'.save()')
+  {localdata[this.modes[x]]=eval(this.modes[x]+'.save()')
   }
   document.getElementById('data').innerHTML='<pre>'+JSON.stringify(data,null,2)+'</pre>';
   var request = new Request('save.php?version='+version,
@@ -54,7 +54,7 @@ const Edit=
      }
      return response.text();
    })
-   .then(data => {
+   .then(localdata => {
      // console.log(data); // Log the JSON response
     // Process the data
   })

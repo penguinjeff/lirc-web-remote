@@ -14,6 +14,28 @@ if(isset($argv[1]))
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+var mode='remote';
+var data={}
+function timestamp(){return Math.floor(Date.now()/1000);}
+
+function changemode()
+{document.getElementById("Display").innerHTML='';
+ if(document.getElementById("mode").value==="Edit")
+ {Edit.display();
+ }
+ else
+ {mode='remote';
+ }
+ if(document.getElementById("mode").value==="Activities")
+ {Activities.remotes();
+ }
+ if(document.getElementById("mode").value==="Devices")
+ {Devices.remotes();
+}}
+
+window.addEventListener('load',function(){changemode();})
+</script>
 <?php
 $javascript_files=scandir('./js/');
 $time=time();
@@ -22,28 +44,6 @@ foreach($javascript_files as $js)
  {print '<script class="code" src="js/'.$js.'?timestamp='.$time.'"></script>'."\n";
 }}
 ?>
-<script>
-var mode='remote';
-
-function timestamp(){return Math.floor(Date.now()/1000);}
-
-function changemode()
-{document.getElementById("Display").innerHTML='';
- if(document.getElementById("mode").value==="Edit")
- {Edit.display({'display':'EditDisplay','showall':true});
- }
- else
- {mode='remote';
- }
- if(document.getElementById("mode").value==="Activities")
- {Activities.select();
- }
- if(document.getElementById("mode").value==="Devices")
- {Devices.select();
-}}
-
-window.addEventListener('load',function(){changemode();})
-</script>
 <link rel="stylesheet" href="css/remote_css.php?scale=<?php echo $scale; ?>&timestamp=<?php echo time()?>">
 </head>
 <body style="width:100%;height:100%">
