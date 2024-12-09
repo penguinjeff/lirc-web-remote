@@ -158,30 +158,29 @@ x1 1  3
 
 
  CatchAllAdvanceRewind(remote,columns,rows,advance)
- {var buttons=this.unused;
-  var item;
+ {var item;
   this.current+=advance;
   var end=this.current+this.per;
-  if((buttons.length-1)>this.per)
-  {if(this.current>buttons.length){this.current=0;}
-   if(this.current<0){this.current=buttons.length-(rows)}
+  if((this.unused.length-1)>this.per)
+  {if(this.current>this.unused.length){this.current=0;}
+   if(this.current<0){this.current=this.unused.length-(rows)}
   }
   else
   {this.current=0;
-   this.per=buttons.length;
+   this.per=this.unused.length;
   }
   for(var x=0;x<this.per;x++)
   {item=this.current+x;
    var button;
-   if(this.current+x>(buttons.length-1)){item=this.current+x-buttons.length}
-   if(buttons[item]!='')
+   if(this.current+x>(this.unused.length-1)){item=this.current+x-this.unused.length}
+   if(this.unused[item]!='')
    {button=createElement(
     {'tag':'div',
      'class':'button',
-     'onpointerdown':'presshold(\''+remote+'\',\''+buttons[item]+'\')',
-     'onpointerup':'release(\''+remote+'\',\''+buttons[item]+'\')',
-     'onpointerleave':'release(\''+remote+'\',\''+buttons[item]+'\')',
-     'innerHTML':buttons[item].replace('KEY_','').replaceAll('_',' ')
+     'onpointerdown':'presshold(\''+remote+'\',\''+this.unused[item]+'\')',
+     'onpointerup':'release(\''+remote+'\',\''+this.unused[item]+'\')',
+     'onpointerleave':'release(\''+remote+'\',\''+this.unused[item]+'\')',
+     'innerHTML':this.unused[item].replace('KEY_','').replaceAll('_',' ')
     })
    }
    else
