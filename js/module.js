@@ -74,9 +74,9 @@ x1 1  3
      'class':'container-2'
     });
     box.appendChild(createElement(
-    {'tag':'div',
+    {'tag':'button',
      'class':'button',
-     'onclick':'Modules.CatchAllAdvanceRewind(\''+remote+'\','+columns+','+rows+',-'+rows+')',
+     'onclick':'Modules.CatchAllAdvanceRewind(\''+remote+'\','+columns+','+rows+',-'+rows+',this,event)',
      'innerHTML':'&lt'
     }));
     for(var x=0;x<(columns-2);x++)
@@ -86,9 +86,9 @@ x1 1  3
      }));
     }
     box.appendChild(createElement(
-    {'tag':'div',
+    {'tag':'button',
      'class':'button',
-     'onclick':'Modules.CatchAllAdvanceRewind(\''+remote+'\','+columns+','+rows+','+rows+')',
+     'onclick':'Modules.CatchAllAdvanceRewind(\''+remote+'\','+columns+','+rows+','+rows+',this,event)',
      'innerHTML':'&gt'
     }));
     if(drawin){drawin.appendChild(box);}
@@ -125,11 +125,11 @@ x1 1  3
        if(!(this.usedircodes[remote])){this.usedircodes[remote]={};}
        this.usedircodes[remote][button]=true;
        box.appendChild(createElement(
-       {'tag':'div',
+       {'tag':'button',
         'class':'button',
-        'onpointerdown':'presshold(\''+remote+'\',\''+button+'\')',
-        'onpointerup':'release(\''+remote+'\',\''+button+'\')',
-        'onpointerleave':'release(\''+remote+'\',\''+button+'\')',
+        'onpointerdown':'presshold(\''+remote+'\',\''+button+'\',this,event)',
+        'onpointerup':'release(\''+remote+'\',\''+button+'\',this,event)',
+        'onpointerleave':'release(\''+remote+'\',\''+button+'\',this,event)',
         'innerHTML':buttondisplay
        }));
       }
@@ -147,7 +147,7 @@ x1 1  3
       box.appendChild(createElement(
       {'tag':'button',
        'name':'button',
-       'onpointerdown':'Macros.execute('+macro+')'
+       'onpointerdown':'Macros.execute('+macro+',this,event)'
       }));
     }}
     if(drawin)
@@ -157,8 +157,9 @@ x1 1  3
  }}},
 
 
- CatchAllAdvanceRewind(remote,columns,rows,advance)
- {var item;
+ CatchAllAdvanceRewind(remote,columns,rows,advance,item,event)
+ {console.log(event);
+  var item;
   this.current+=advance;
   var end=this.current+this.per;
   if((this.unused.length-1)>this.per)
@@ -175,11 +176,11 @@ x1 1  3
    if(this.current+x>(this.unused.length-1)){item=this.current+x-this.unused.length}
    if(this.unused[item]!='')
    {button=createElement(
-    {'tag':'div',
+    {'tag':'button',
      'class':'button',
-     'onpointerdown':'presshold(\''+remote+'\',\''+this.unused[item]+'\')',
-     'onpointerup':'release(\''+remote+'\',\''+this.unused[item]+'\')',
-     'onpointerleave':'release(\''+remote+'\',\''+this.unused[item]+'\')',
+     'onpointerdown':'presshold(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
+     'onpointerup':'release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
+     'onpointerleave':'release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
      'innerHTML':this.unused[item].replace('KEY_','').replaceAll('_',' ')
     })
    }
@@ -221,15 +222,17 @@ x1 1  3
 var holdtimer;
 var held=false;
 var mousedown=false;
-function presshold(remote,button)
-{
+function presshold(remote,button,item,event)
+{if(!event['button'])
+ {
+  item.setAttribute('class','button_clicked')
 //document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
- mousedown=true;
- held=false;
- holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
- navigator.vibrate(500);
- send_action('send_once',remote,button);
-}
+  mousedown=true;
+  held=false;
+  holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
+  navigator.vibrate(500);
+  send_action('send_once',remote,button);
+}}
 
 function hold(remote,button)
 {
@@ -237,14 +240,17 @@ function hold(remote,button)
  send_action('send_start',remote,button);
 }
 
-function release(remote,button)
-{
- clearTimeout(holdtimer);
- mousedown=false;
- if(held)
- {send_action('send_stop',remote,button);
-  held=false;
-}}
+function release(remote,button,item,event)
+{if(!event['button'])
+ {
+  item.setAttribute('class','button')
+// console.log(event);
+  clearTimeout(holdtimer);
+  mousedown=false;
+  if(held)
+  {send_action('send_stop',remote,button);
+   held=false;
+}}}
 
 
 function Module_init()

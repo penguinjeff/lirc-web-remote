@@ -29,3 +29,7 @@ sudo chmod go-w /var/www/html/lirc-web-remote/data/
 #
 # I used irscrutinizer to help create my lirc files.
 #
+
+#
+# I will soon implement an indicator to let you know it sent a command and I will need to show when a button is depressed
+#
