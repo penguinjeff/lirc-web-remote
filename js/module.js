@@ -3,7 +3,9 @@ var catchallbuttons={}
 var Modules=
 {
  usedircodes:{},
-
+ unused:[],
+ current:0,
+ per:0,
  //with just remote it uses best fit to find modules
  display(remote,module,buttons,rows,columns)
  {if(typeof(remote)=='undefined')
@@ -18,9 +20,11 @@ var Modules=
    modules.forEach(function(module){if(module!='catchall'){Modules.display(remote,module)}})
    var unused=[];
    for(var x=0;x<data['remotes'][remote].length;x++)
-   {if(!this.usedircodes[remote][data['remotes'][remote][x]]){unused.push(data['remotes'][remote][x])
-   }}
-
+   {if(!this.usedircodes[remote][data['remotes'][remote][x]])
+    {if(data['remotes'][remote][x]!='')
+     {unused.push(data['remotes'][remote][x])
+   }}}
+   this.unused=unused.sort();
    Modules.display(remote,'catchall',unused,3,5);
    this.usedircodes={};
 
@@ -30,23 +34,29 @@ var Modules=
   if(typeof(rows)=='undefined'){rows=3}
   if(typeof(colums)=='undefined'){columns=5}
   var drawin=document.getElementById(data['modules'][module]['in']);
+
+
+/*
+#################  CatchAll Module  ###################
+*/
   if(module=='catchall')
-  {var pad=buttons.length%rows;
+  {var pad=this.unused.length%rows;
    if(pad!=0){pad=rows-pad}
    var x,y;
-   for(x=0;x<pad;x++){buttons.push('')}
-   catchallbuttons[remote]={'buttons':buttons,'current':0,'per':(rows*columns)};
+   for(var x=0;x<pad;x++){this.unused.push('')}
+   this.current=0;
+   this.per=(rows*columns);
 /*
    y0 y1
 x0 0  2
 x1 1  3
 */
-   for(x=0;x<rows;x++)
+   for(var x=0;x<rows;x++)
    {var box=createElement(
     {'tag':'div',
      'class':'container-2'
     });
-    for(y=0;y<columns;y++)
+    for(var y=0;y<columns;y++)
     {box.appendChild(createElement(
      {'tag':'div',
       'id':'catch_all_'+remote+'_'+(y*rows+x)
@@ -58,7 +68,7 @@ x1 1  3
     }
     else{alert('could not find module id:'+module)}
    }
-   if(buttons.length>rows*columns)
+   if(this.unused.length>rows*columns)
    {var box=createElement(
     {'tag':'div',
      'class':'container-2'
@@ -69,7 +79,7 @@ x1 1  3
      'onclick':'Modules.CatchAllAdvanceRewind(\''+remote+'\','+columns+','+rows+',-'+rows+')',
      'innerHTML':'&lt'
     }));
-    for(x=0;x<(columns-2);x++)
+    for(var x=0;x<(columns-2);x++)
     {box.appendChild(createElement(
      {'tag':'div',
       'class':'empty'
@@ -87,8 +97,12 @@ x1 1  3
    Modules.CatchAllAdvanceRewind(remote,columns,rows,0);
    return;
   }
-  else //################# End CatchAll ########################
-  {var drawin=document.getElementById(data['modules'][module]['in']);
+  else
+  {
+/*
+#################  End CatchAll  ########################
+*/
+   var drawin=document.getElementById(data['modules'][module]['in']);
    if(!drawin){alert('no id for '+module);return}
    var skip=data['modules'][module]['skip'];
    for(var x=0;x<data['modules'][module]['buttons'].length;x++)
@@ -144,25 +158,22 @@ x1 1  3
 
 
  CatchAllAdvanceRewind(remote,columns,rows,advance)
- {var current=catchallbuttons[remote]['current'];
-  var per=catchallbuttons[remote]['per'];
-  var buttons=catchallbuttons[remote]['buttons'].sort();
-  var x,item;
-  current+=advance;
-  var end=current+per;
-  if((buttons.length-1)>per)
-  {if(current>buttons.length){current=0;}
-   if(current<0){current=buttons.length-(rows)}
+ {var buttons=this.unused;
+  var item;
+  this.current+=advance;
+  var end=this.current+this.per;
+  if((buttons.length-1)>this.per)
+  {if(this.current>buttons.length){this.current=0;}
+   if(this.current<0){this.current=buttons.length-(rows)}
   }
   else
-  {current=0;
-   per=buttons.length;
+  {this.current=0;
+   this.per=buttons.length;
   }
-  catchallbuttons[remote]['current']=current;
-  for(x=0;x<per;x++)
-  {item=current+x;
+  for(var x=0;x<this.per;x++)
+  {item=this.current+x;
    var button;
-   if(current+x>(buttons.length-1)){item=current+x-buttons.length}
+   if(this.current+x>(buttons.length-1)){item=this.current+x-buttons.length}
    if(buttons[item]!='')
    {button=createElement(
     {'tag':'div',
@@ -176,7 +187,7 @@ x1 1  3
    else
    {button=createElement(
     {'tag':'div',
-     'class':'emty'
+     'class':'empty'
     });
    }
    if(document.getElementById('catch_all_'+remote+'_'+x))
