@@ -21,7 +21,11 @@ var Activities=
   }));
  },
  select(item)
- {display(item.value)
- }
+ {if(item.value=='none')
+  {display(item.value)
+  }
+  else
+  {document.getElementById('remote').innerHTML=''
+ }}
 }
 

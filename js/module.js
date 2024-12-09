@@ -14,7 +14,7 @@ var Modules=
   }
   if(typeof(module)=='undefined')
   {var modules=Modules.bestfit(data['remotes'][remote])
-   Displays.display();
+   Displays.display('Default');
    this.usedircodes={};
    this.usedircodes[remote]={};
    modules.forEach(function(module){if(module!='catchall'){Modules.display(remote,module)}})

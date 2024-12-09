@@ -1,7 +1,7 @@
 var Devices=
 {
  display()
- {alert('here')
+ {alert('displays edit mode')
  },
  remotes()
  {into=document.getElementById('Display')
@@ -17,8 +17,12 @@ var Devices=
   }));
  },
  select(item)
- {Modules.display(item.value)
- }
+ {if(item.value!='none')
+  {Modules.display(item.value)
+  }
+  else
+  {document.getElementById('remote').innerHTML='';
+ }}
 }
 
 
