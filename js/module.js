@@ -219,40 +219,6 @@ x1 1  3
 }
 
 
-var holdtimer;
-var held=false;
-var mousedown=false;
-function presshold(remote,button,item,event)
-{if(!event['button'])
- {
-  item.setAttribute('class','button_clicked')
-//document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
-  mousedown=true;
-  held=false;
-  holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
-  navigator.vibrate(500);
-  send_action('send_once',remote,button);
-}}
-
-function hold(remote,button)
-{
- held=true;
- send_action('send_start',remote,button);
-}
-
-function release(remote,button,item,event)
-{if(!event['button'])
- {
-  item.setAttribute('class','button')
-// console.log(event);
-  clearTimeout(holdtimer);
-  mousedown=false;
-  if(held)
-  {send_action('send_stop',remote,button);
-   held=false;
-}}}
-
-
 function Module_init()
 {data['modules']={};
  data['modules']['numbers']={'editable':false,'in':'numbers','buttons':

@@ -27,10 +27,11 @@ var Devices=
 
 
 
-function send_action(arg1,arg2,arg3)
+function send_action(arg1,arg2,arg3,loop,remote,button)
 {if(typeof(arg1)=='undefined'){arg1='list';}
  if(typeof(arg2)=='undefined'){arg2='';}
  if(typeof(arg3)=='undefined'){arg3='';}
+ if(typeof(loop)=='undefined'){loop=false;}
 //function getremotes() {
  var id = Math.round(+new Date()/1000);
  fetch('irsend.php?arg1='+arg1+'&arg2='+arg2+'&arg3='+arg3+'&id='+id)
@@ -43,6 +44,13 @@ function send_action(arg1,arg2,arg3)
   .then(localdata => {
     // console.log(data); // Log the JSON response
     // Process the data
+   if(loop)
+   {
+    if(eval(loop))
+    {holdtimer=setTimeout(function(){ hold(remote,button); }, 10);
+    }
+    return
+   }
    data['remote_index']=[];
    if(JSON.stringify(localdata['stderr'])!='["",""]')
    {alert(JSON.stringify(localdata['arg1']+' '+localdata['arg2']+' '+localdata['arg3']+' '+localdata['stderr']))
@@ -91,6 +99,48 @@ selections_index.forEach((value,index) => selectionselections_reverse_index[valu
    }
   })
   .catch(error => {});
+}
+
+var holdtimer;
+var altholdtimer;
+var held=false;
+var mousedown=false;
+function presshold(remote,button,item,event)
+{if(!event['button'])
+ {
+  item.setAttribute('class','button_clicked')
+//document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
+  mousedown=true;
+  held=false;
+  holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
+  navigator.vibrate(500);
+  send_action('send_once',remote,button);
+}}
+
+function hold(remote,button)
+{
+ held=true;
+// send_action('send_start',remote,button);
+ send_action('send_once',remote,button,'held',remote,button);
+}
+
+function release(remote,button,item,event)
+{if(!event['button'])
+ {
+  altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
+//  alert('stop')
+// console.log(event);
+  clearTimeout(holdtimer);
+  mousedown=false;
+  if(held)
+  {
+   //send_action('send_stop',remote,button);
+   held=false;
+}}}
+
+function delayed_release(item)
+{
+  item.setAttribute('class','button')
 }
 
 

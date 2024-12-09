@@ -26,8 +26,9 @@ if(isset($argv[1]))
 .numbers{width:<?php echo $mw*$scale; ?>px;background-color:#878787}
 .numberpads{width:<?php echo $sw*$scale; ?>px;background-color:#878787}
 .button
-{width:<?php echo 30*$scale; ?>px;height:<?php echo 25*$scale; ?>px;border-style:solid;border-radius:<?php echo 5*$scale; ?>px;text-align:center;font-size:<?php echo 10*$scale; ?>px;margin-top: <?php echo 4*$scale; ?>px;}
-.button_clicked{background-color:#666666;width:<?php echo 30*$scale; ?>px;height:<?php echo 25*$scale; ?>px;border-style:solid;border-radius:<?php echo 5*$scale; ?>px;text-align:center;font-size:<?php echo 10*$scale; ?>px;margin-top: <?php echo 4*$scale; ?>px;}
+{background-color:#888888;width:<?php echo 30*$scale; ?>px;height:<?php echo 25*$scale; ?>px;border-style:solid;border-radius:<?php echo 5*$scale; ?>px;text-align:center;font-size:<?php echo 10*$scale; ?>px;margin-top: <?php echo 4*$scale; ?>px;}
+.button_clicked
+{background-color:#666666;width:<?php echo 30*$scale; ?>px;height:<?php echo 25*$scale; ?>px;border-style:solid;border-radius:<?php echo 5*$scale; ?>px;text-align:center;font-size:<?php echo 10*$scale; ?>px;margin-top: <?php echo 4*$scale; ?>px;}
 margin-right; <?php echo 4*$scale; ?>px;
 margin-bottom: <?php echo 4*$scale; ?>px;
 margin-left: <?php 4*$scale; ?>px;}
