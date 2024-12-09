@@ -52,7 +52,10 @@ x1 1  3
       'id':'catch_all_'+remote+'_'+(y*rows+x)
      }));
     }
-    if(drawin){drawin.appendChild(box);}
+    if(drawin)
+    {
+     drawin.appendChild(box);
+    }
     else{alert('could not find module id:'+module)}
    }
    if(buttons.length>rows*columns)
@@ -133,7 +136,9 @@ x1 1  3
        'onpointerdown':'Macros.execute('+macro+')'
       }));
     }}
-    if(drawin){drawin.appendChild(box);}
+    if(drawin)
+    {drawin.appendChild(box);
+    }
     else{alert('could not find id:'+module)}
  }}},
 
@@ -175,8 +180,7 @@ x1 1  3
     });
    }
    if(document.getElementById('catch_all_'+remote+'_'+x))
-   {
-    document.getElementById('catch_all_'+remote+'_'+x).innerHTML='';
+   {document.getElementById('catch_all_'+remote+'_'+x).innerHTML='';
     document.getElementById('catch_all_'+remote+'_'+x).appendChild(button);
    }
    else{alert('can not find id: catch_all_'+remote+'_'+x)}

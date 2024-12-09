@@ -3,6 +3,7 @@ var Displays=
  {if(typeof(displayname)=='undefined'){displayname='Default';}
   var displayin=document.getElementById('remote');
   var color,count,width,middle,leftover,itemwidth;
+  displayin.innerHTML='';
   for(var x=0;x<data['displays'][displayname]['modules'].length;x++)
   {//rows
    box=createElement(
