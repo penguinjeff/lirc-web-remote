@@ -1,0 +1,43 @@
+.container{display:flex;flex-direction:column;justify-content:space-around;}
+.container-1{display:flex;flex-direction:row;justify-content:left;}
+.container-2{display:flex;flex-direction:row;justify-content:space-around;}
+.item{}
+.remotename{width:350px;background-color:#A7A7A7}
+.power{width:350px;background-color:#A7A7A7}
+.catchall{width:350px;background-color:#979797}
+.common{width:350px;background-color:#878787}
+.colors{width:350px;background-color:#979797}
+.volume{width:70px;background-color:#A7A7A7}
+.directions{width:210px;background-color:#878787}
+.channels{width:70px;background-color:#A7A7A7}
+.navigator{width:210px;background-color:#979797}
+.navigatorpads{width:70px;background-color:#979797}
+.numbers{width:210px;background-color:#878787}
+.numberpads{width:70px;background-color:#878787}
+.empty{height:42px;width:46px;}
+.button
+{background-color:#888888;
+ width:42px;
+ height:35px;
+ border-style:solid;
+ border-radius:7px;
+ text-align:center;
+ font-size:14px;
+ margin-top: 5px;
+ margin-right: 5px;
+ margin-bottom: 5px;
+ margin-left: 5px;
+}
+.button_clicked
+{background-color:#666666;
+ width:42px;
+ height:35px;
+ border-style:solid;
+ border-radius:7px;
+ text-align:center;
+ font-size:14px;
+ margin-top: 5px;}
+ margin-right: 5px;
+ margin-bottom: 5px;
+ margin-left: 5px;
+}

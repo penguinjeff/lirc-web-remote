@@ -1,5 +1,5 @@
 <?php
-$scale=1.4;
+$scale=1;
 if(isset($_REQUEST['scale']))
 {$scale=$_REQUEST['scale'];
 }
