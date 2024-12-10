@@ -9,9 +9,13 @@ var Modules=
  //with just remote it uses best fit to find modules
  display(remote,module,buttons,rows,columns)
  {if(typeof(remote)=='undefined')
-  {alert('modules edit mode');
+  {alert('Modules Edit Mode');
    return;
   }
+
+/*
+############### End Module Edit Section #####################
+*/
   if(typeof(module)=='undefined')
   {var modules=Modules.bestfit(data['remotes'][remote])
    Displays.display('Default');
