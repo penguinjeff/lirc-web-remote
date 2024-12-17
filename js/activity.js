@@ -8,12 +8,15 @@ var Activities=
   }
  },
  remotes()
- {into=document.getElementById('Display')
+ {
+  into=document.getElementById('choose')
+  into.innerHTML='';
   into.appendChild(createElement(
   {'options':Object.keys(data['activities']),
    'onchange':'activities.select(this)',
    'namevalues':true
   }));
+  into=document.getElementById('Display')
   into.appendChild(createElement(
   {'tag':'div',
    'class':'container',
@@ -26,6 +29,9 @@ var Activities=
   }
   else
   {document.getElementById('remote').innerHTML=''
- }}
-}
+ }},
+ save()
+ {alert('Saving Activities')
+  savedata['activities']=data['activities']
+}}
 

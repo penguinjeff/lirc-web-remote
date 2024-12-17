@@ -4,12 +4,15 @@ var Devices=
  {alert('displays edit mode')
  },
  remotes()
- {into=document.getElementById('Display')
+ {var into
+  into=document.getElementById('choose');
+  into.innerHTML='';
   into.appendChild(createElement(
   {'options':Object.keys(data['remotes']),
    'onchange':'Devices.select(this)',
    'namevalues':true
   }));
+  into=document.getElementById('Display')
   into.appendChild(createElement(
   {'tag':'div',
    'class':'container',
@@ -22,8 +25,10 @@ var Devices=
   }
   else
   {document.getElementById('remote').innerHTML='';
- }}
-}
+ }},
+ save()
+ {alert('Saving Devices')
+}}
 
 
 
@@ -58,10 +63,11 @@ function send_action(arg1,arg2,arg3,loop,remote,button)
    if(localdata['remotes'])
    {
     data['remotes']={'none':['none']};
-    data['remote_index']=Object.keys(localdata['remotes']);
-    for(var x=0;x<data['remote_index'].length;x++)
-    {data['remotes'][data['remote_index'][x]]=localdata['remotes'][data['remote_index'][x]]
+    var remotes_index=Object.keys(localdata['remotes'])
+    for(var x=0;x<remotes_index.length;x++)
+    {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]]
     }
+    data['remote_index']=Object.keys(data['remotes']);
     data['remote_reverse_index']=reverse_index(data['remote_index'])
     data['remotes_reverse_index']={};
     data['remote_index'].forEach((value,index) => data['remotes_reverse_index'][value]=reverse_index(data['remotes'][value]));

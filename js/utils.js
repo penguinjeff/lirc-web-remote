@@ -2,7 +2,7 @@
 //useful for converting the name to an index
 function reverse_index(list)
 {var myobject={};
- list.forEach((value, index) => myobject[value] = index);
+ list.forEach((value, index) => myobject[index] = value);
  return myobject;
 }
 

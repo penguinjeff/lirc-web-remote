@@ -20,7 +20,8 @@ var data={}
 function timestamp(){return Math.floor(Date.now()/1000);}
 
 function changemode()
-{document.getElementById("Display").innerHTML='';
+{
+ document.getElementById("Display").innerHTML='';
  if(document.getElementById("mode").value==="Edit")
  {Edit.display();
  }
@@ -47,11 +48,18 @@ foreach($javascript_files as $js)
 <link rel="stylesheet" href="css/remote_css.php?scale=<?php echo $scale; ?>&timestamp=<?php echo time()?>">
 </head>
 <body style="width:100%;height:100%">
+<div class="container-1">
+<div class="select_area">
 <select id="mode" onchange="changemode()">
 <option value="Activities">Activities</option>
 <option value="Devices">Devices</option>
 <option value="Edit">Edit</option>
 </select>
+<div id="choose"></div>
+</div>
+<div id="activity" class="activity">
+</div>
+</div>
 <div id="Display"></div>
 <div id="Show"></div>
 </body>

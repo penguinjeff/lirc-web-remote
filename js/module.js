@@ -218,6 +218,15 @@ x1 1  3
    {hasmodules.push(modules[x])
   }}
   return hasmodules;
+ },
+ save()
+ {alert('Saving Modules')
+  var temp=[];
+  for(var x=0;x<data['modules'].length;x++)
+  {if(data['modules'][x]['editable'])
+   {temp.push(JSON.parse(JSON.stringify(data['modules'][x])));
+  }}
+  savedata['modules']=temp;
  }
  //close out Modules
 }

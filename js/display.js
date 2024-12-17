@@ -29,7 +29,17 @@ var Displays=
      }));
     }
     displayin.appendChild(box);
- }}}
+ }}},
+ save()
+ {alert('Saving Displays')
+  var temp=[];
+  for(var x=0;x<data['displays'];x++)
+  {if(data['displays'][x]['editable'])
+   {temp.push(JSON.parse(JSON.stringify(data['displays'][x])));
+  }}
+  savedata['displays']=temp;
+ }
+ //###### End Displays Class ###########
 }
 
 
