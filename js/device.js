@@ -65,12 +65,15 @@ function send_action(arg1,arg2,arg3,loop,remote,button)
     data['remotes']={'none':['none']};
     var remotes_index=Object.keys(localdata['remotes'])
     for(var x=0;x<remotes_index.length;x++)
-    {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]]
+    {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]];
     }
     data['remote_index']=Object.keys(data['remotes']);
     data['remote_reverse_index']=reverse_index(data['remote_index'])
+    data['remotes_index']={}
     data['remotes_reverse_index']={};
-    data['remote_index'].forEach((value,index) => data['remotes_reverse_index'][value]=reverse_index(data['remotes'][value]));
+    for(var x=0;x<data['remote_index'].length;x++)
+    {data['remotes_reverse_index'][data['remote_index'][x]]=reverse_index(data['remotes'][data['remote_index'][x]]);
+    }
 
 /*
 var selectionselections={
