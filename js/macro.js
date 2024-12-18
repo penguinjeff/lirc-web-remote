@@ -95,6 +95,15 @@ var Macros=
   this.update(item,remote_handle,event)
   box.getElementsByClassName('ircode')[0].value=ircode_index;
   box.appendChild(createElement(
+  {'tag':'input',
+   'name':'delay',
+   'type':'number',
+   'min':0,
+   'max':30000,
+   'value':delay,
+   'onclick':'Macros.update('+item+',this,event)'
+  }));
+  box.appendChild(createElement(
   {'tag':'button',
    'name':'remove',
    'innerHTML':'remove',
