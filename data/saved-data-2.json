@@ -1,1 +1,1 @@
-{"activities":{},"macros":[{"name":"Macro1","ircodes":[["none","none",0],["Logitech_Denon","KEY_POWERON",0]]},{"name":"Macro2"}],"modules":[],"displays":[]}
+{"activities":{},"macros":[{"name":"Macro1","ircodes":[["Logitech_Samsung","KEY_POWERON",0],["Logitech_Denon","KEY_POWERON",0]]},{"name":"Macro2","ircodes":[["Logitech_Samsung","KEY_POWEROFF",0],["Logitech_Denon","KEY_POWEROFF",0]]}],"modules":[],"displays":[]}

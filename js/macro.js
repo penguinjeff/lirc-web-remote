@@ -144,8 +144,7 @@ var Macros=
     'id':'ircodes'
    }));
    if(data['macros'][item]['ircodes'])
-   {alert('ircodes'+data['macros'][item]['ircodes'].length)
-    for(var x=0;x<data['macros'][item]['ircodes'].length;x++)
+   {for(var x=0;x<data['macros'][item]['ircodes'].length;x++)
     {this.add_ircode(item,x);
    }}
  }},
