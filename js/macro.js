@@ -63,6 +63,7 @@ var Macros=
    ircode=data['remotes'][remote][ircode_index];
    item_data=data['macros'][item]['ircodes'].length;
    data['macros'][item]['ircodes'].push([remote,ircode,delay]);
+   event=true;
   }
   else
   {
@@ -71,7 +72,9 @@ var Macros=
    delay=data['macros'][item]['ircodes'][item_data][2];
    remote_index=data['remote_reverse_index'][remote];
    ircode_index=data['remotes_reverse_index'][remote][ircode];
+   event=false;
   }
+//  alert('item:'+item+' item_data:'+item_data+' '+JSON.stringify(data['macros'][item]['ircodes']))
   var box=createElement(
   {'tag':'div',
    'name':item_data
@@ -89,7 +92,7 @@ var Macros=
    'class':'lefty',
    'name':'ircode_parent'
   }));
-  this.update(item,remote_handle);
+  this.update(item,remote_handle,event)
   box.getElementsByClassName('ircode')[0].value=ircode_index;
   box.appendChild(createElement(
   {'tag':'button',
@@ -187,8 +190,11 @@ return;
 }
 if(handle.getAttribute('name')=='remote')
 {var ircode_parent=handle.parentElement.getElementsByClassName('ircode_parent')[0];
- data['macros'][item]['ircodes'][handle.parentElement.getAttribute('name')][0]=data['remote_index'][handle.value];
- data['macros'][item]['ircodes'][handle.parentElement.getAttribute('name')][1]=data['remotes'][data['remote_index'][handle.value]][0];
+ var ircode_index=handle.parentElement.getAttribute('name');
+ data['macros'][item]['ircodes'][ircode_index][0]=data['remote_index'][handle.value];
+ if(event)
+ {data['macros'][item]['ircodes'][ircode_index][1]=data['remotes'][data['remote_index'][handle.value]][0];
+ }
  ircode_parent.innerHTML=''
  ircode_parent.appendChild(createElement(
  {'options':data['remotes'][data['remote_index'][handle.value]],
