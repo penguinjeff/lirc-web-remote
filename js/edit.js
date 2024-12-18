@@ -22,11 +22,11 @@ const Edit=
   }));
   box.appendChild(createElement(
   {'tag':'div',
-   'id':'EditItemDisplay'
+   'id':'EditDisplay'
   }));
   box.appendChild(createElement(
   {'tag':'div',
-   'id':'EditDisplay'
+   'id':'EditItemDisplay'
   }));
   box.appendChild(createElement(
   {'tag':'div',

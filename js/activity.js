@@ -32,6 +32,8 @@ var Activities=
  }},
  save()
  {alert('Saving Activities')
-  savedata['activities']=data['activities']
+  var temp=JSON.parse(JSON.stringify(data['activities']));
+  delete temp['none'];
+  savedata['activities']=temp;
 }}
 
