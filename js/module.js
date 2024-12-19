@@ -219,6 +219,19 @@ x1 1  3
   }}
   return hasmodules;
  },
+ load()
+ {var x=0;
+  while(x<data['modules'].length)
+  {if(data['modules'][x]['editable'])
+   {data['modules'].splice(x,1);
+   }
+   else
+   {x++;
+  }}
+  for(x=0;x<data_load['modules'].length;x++)
+  {data['modules'].push(data_load['modules'][x])
+  }
+ },
  save()
  {alert('Saving Modules')
   var temp=[];

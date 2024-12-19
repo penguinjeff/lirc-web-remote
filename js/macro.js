@@ -164,6 +164,12 @@ var Macros=
  execute()
  {
  },
+ load()
+ {
+  alert(JSON.stringify(Edit.load_data));
+  data['macros']=JSON.parse(JSON.stringify(Edit.data_load['macros']));
+  return true;
+ },
  save()
  {savedata['macros']=data['macros'];
  },

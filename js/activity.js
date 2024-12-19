@@ -30,6 +30,13 @@ var Activities=
   else
   {document.getElementById('remote').innerHTML=''
  }},
+ load()
+ {if(Edit.data_load['activites'])
+  {
+   data['activities']=JSON.parse(JSON.stringify(Edit.data_load['activites']));
+  }
+  return true;
+ },
  save()
  {alert('Saving Activities')
   var temp=JSON.parse(JSON.stringify(data['activities']));

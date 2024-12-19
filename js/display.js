@@ -30,6 +30,19 @@ var Displays=
     }
     displayin.appendChild(box);
  }}},
+ load()
+ {var x=0;
+  while(x<data['displays'].length)
+  {if(data['displays'][x]['editable'])
+   {data['displays'].splice(x,1);
+   }
+   else
+   {x++;
+  }}
+  for(x=0;x<data_load['displays'].length;x++)
+  {data['displays'].push(data_load['displays'][x])
+  }
+ },
  save()
  {alert('Saving Displays')
   var temp=[];

@@ -16,7 +16,7 @@ if(isset($argv[1]))
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script>
 var mode='remote';
-var data={}
+var data={};
 function timestamp(){return Math.floor(Date.now()/1000);}
 
 function changemode()
@@ -33,7 +33,8 @@ function changemode()
  }
  if(document.getElementById("mode").value==="Devices")
  {Devices.remotes();
-}}
+ }
+}
 
 window.addEventListener('load',function(){changemode();})
 </script>
