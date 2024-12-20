@@ -1,5 +1,9 @@
+
 var Devices=
-{
+{holdtimer:'',
+ altholdtimer:'',
+ held:false,
+ mousedown:false,
  display()
  {alert('displays edit mode')
  },
@@ -46,7 +50,7 @@ var Devices=
   .then(localdata =>
   {if(loop)
    {if(eval(loop))
-    {holdtimer=setTimeout(function(){ hold(remote,button); }, 10);
+    {this.holdtimer=setTimeout(function(){ hold(remote,button); }, 10);
     }
     return
    }
@@ -76,16 +80,16 @@ var Devices=
   {
    item.setAttribute('class','button_clicked')
  //document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
-   mousedown=true;
-   held=false;
-   holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
+   this.mousedown=true;
+   this.held=false;
+   this.holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
    navigator.vibrate(500);
    this.send_action('send_once',remote,button);
  }},
 
  hold(remote,button)
  {
-  held=true;
+  this.held=true;
  // send_action('send_start',remote,button);
   this.send_action('send_once',remote,button,'held',remote,button);
  },
@@ -93,15 +97,15 @@ var Devices=
 
  release(remote,button,item,event)
  {if(!event['button'])
-  {altholdtimer=setTimeout(function(){ this.delayed_release(item); }, 100);
+  {this.altholdtimer=setTimeout(function(){ Devices.delayed_release(item); }, 100);
  //  alert('stop')
  // console.log(event);
-   clearTimeout(holdtimer);
-   mousedown=false;
-   if(held)
+   clearTimeout(this.holdtimer);
+   this.mousedown=false;
+   if(this.held)
    {
     //send_action('send_stop',remote,button);
-    held=false;
+    this.held=false;
  }}},
  delayed_release(item)
  {item.setAttribute('class','button')
@@ -112,10 +116,6 @@ var Devices=
 
 
 
-var holdtimer;
-var altholdtimer;
-var held=false;
-var mousedown=false;
 
 
 

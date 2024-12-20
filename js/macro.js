@@ -46,28 +46,24 @@ var Macros=
 
 // ####################### Add Ircode ###############################
  add_ircode(item,item_data)
- {var remote;
+ {var remote_index=0;
+  var ircode_index=0;
+  var delay=0;
+  var remote;
   var ircode;
-  var delay;
-  var remote_index;
-  var ircode_index;
+  var event=true;
   var into=document.getElementById('ircodes');
   if(!data['macros'][item]['ircodes'])
   {data['macros'][item]['ircodes']=[];
   }
   if(item_data==-1)
-  {remote_index=0
-   ircode_index=0
-   delay=0
-   remote=data['remote_index'][remote_index];
+  {remote=data['remote_index'][remote_index];
    ircode=data['remotes'][remote][ircode_index];
    item_data=data['macros'][item]['ircodes'].length;
    data['macros'][item]['ircodes'].push([remote,ircode,delay]);
-   event=true;
   }
   else
-  {
-   remote=data['macros'][item]['ircodes'][item_data][0];
+  {remote=data['macros'][item]['ircodes'][item_data][0];
    ircode=data['macros'][item]['ircodes'][item_data][1];
    delay=data['macros'][item]['ircodes'][item_data][2];
    remote_index=data['remote_reverse_index'][remote];
