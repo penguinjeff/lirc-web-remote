@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 //simple wrapper to allow not exposing another port to an outside network.
 function irsend(&$response,$arg1,$arg2,$arg3)
 {

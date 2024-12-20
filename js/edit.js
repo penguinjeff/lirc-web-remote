@@ -1,4 +1,4 @@
-var version=2;
+var version=3;
 var savedata={};
 const Edit=
 {
