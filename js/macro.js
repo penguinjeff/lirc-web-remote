@@ -86,7 +86,7 @@ var Macros=
   {'options':data['remote_index'],
    'name':'remote',
    'id':'remote-'+sub_item,
-   'onclick':'Macros.update('+item+',this,event)',
+   'onchange':'Macros.update('+item+',this,event)',
    'value':remote_index
   });
   intermediate_handle=createElement(intermediate_attributes);
@@ -123,7 +123,7 @@ var Macros=
    'min':0,
    'max':30000,
    'value':delay,
-   'onclick':'Macros.update('+item+',this,event)'
+   'onchange':'Macros.update('+item+',this,event)'
   }));
   box.appendChild(intermediate_handle);
   intermediate_handle=createElement(intermediate_attributes);
@@ -140,10 +140,10 @@ var Macros=
    'min':0,
    'max':1000,
    'value':loops,
-   'onclick':'Macros.update('+item+',this,event)'
+   'onchange':'Macros.update('+item+',this,event)'
   }));
   box.appendChild(intermediate_handle);
-  intermediate_handle=createElement(intermediate_attributes);
+  intermediate_handle=createElement({'tag':'div'});
   intermediate_handle.appendChild(createElement(
   {'tag':'label',
    'for':'remove-'+sub_item,
@@ -262,41 +262,43 @@ var sub_item=-1;
 if(handle.hasAttribute('id'))
 {sub_item=handle.getAttribute('id').match(regex);
 }
+
 if(handle.getAttribute('name')=='name')
-{
-data['macros'][item]['name']=handle.value;
-//update selectbox with new name
-this.update_list(item)
-return;
+{data['macros'][item]['name']=handle.value;
+ //update selectbox with new name
+ this.update_list(item)
+ return;
 }
+
 if(handle.getAttribute('name')=='delay')
-{
-data['macros'][item]['ircodes'][handle.parentElement.getAttribute('name')][2]=handle.value;
-return;
+{data['macros'][item]['ircodes'][sub_item][2]=handle.value;
+ return;
 }
+
 if(handle.getAttribute('name')=='loops')
-{
-data['macros'][item]['ircodes'][handle.parentElement.getAttribute('name')][3]=handle.value;
-return;
+{data['macros'][item]['ircodes'][sub_item][3]=handle.value;
+ return;
 }
+
 if(handle.getAttribute('name')=='remove_macro')
-{
-data['macros'].splice(item,1);
-this.update_list()
-return;
+{data['macros'].splice(item,1);
+ this.update_list()
+ return;
 }
+
 if(handle.getAttribute('name')=='remove')
-{
-data['macros'][item]['ircodes'].splice(handle.parentElement.getAttribute('name'),1);
-handle.parentElement.remove();
-this.edit(item);
-return;
+{data['macros'][item]['ircodes'].splice(sub_item,1);
+ handle.parentElement.remove();
+ this.edit(item);
+ return;
 }
+
 if(handle.getAttribute('name')=='ircode')
 {data['macros'][item]['ircodes'][sub_item][1]=
  data['remotes'][data['macros'][item]['ircodes'][sub_item][0]][handle.value];
-return;
+ return;
 }
+
 if(handle.getAttribute('name')=='test')
 {
  this.execute(data['macros'][item]['ircodes'],0,data['macros'][item]['ircodes'][0][3]);
@@ -314,7 +316,7 @@ if(handle.getAttribute('name')=='remote')
  {'options':data['remotes'][data['remote_index'][handle.value]],
   'name':'ircode',
   'id':'ircode-'+sub_item,
-  'onclick':'Macros.update('+item+',this,event)',
+  'onchange':'Macros.update('+item+',this,event)',
   'value':0
  }));
  return;
