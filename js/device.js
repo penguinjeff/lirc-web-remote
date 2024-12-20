@@ -54,17 +54,18 @@ var Devices=
     }
     return
    }
-   data['remote_index']=[];
    if(JSON.stringify(localdata['stderr'])!='["",""]')
    {alert(JSON.stringify(localdata['arg1']+' '+localdata['arg2']+' '+localdata['arg3']+' '+localdata['stderr']))
    }
    if(localdata['remotes'])
    {data['remotes']={'none':['none']};
+    data['remote_index']=[];
     var remotes_index=Object.keys(localdata['remotes'])
     for(var x=0;x<remotes_index.length;x++)
     {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]];
     }
     data['remote_index']=Object.keys(data['remotes']);
+    //alert(data['remote_index']);
     data['remote_reverse_index']=reverse_index(data['remote_index'])
     data['remotes_index']={}
     data['remotes_reverse_index']={};

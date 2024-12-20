@@ -16,7 +16,8 @@ function index(list)
 //since I am using class names because html do no provide searchbyname on subelements
 //I add name to classname 
 function createElement(items)
-{var item;
+{
+ var item;
  if(items['options'])
  {item=document.createElement('select');
   for(var x=0;x<items['options'].length;x++)
@@ -30,7 +31,9 @@ function createElement(items)
  {item=document.createElement(items['tag']);
  }
  else
- {alert('need either options or tag')
+ {
+  alert('need either options or tag')
+  alert(JSON.stringify(items))
   return null;
  }
  if(items['name'])

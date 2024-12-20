@@ -70,11 +70,13 @@ var Macros=
    ircode_index=data['remotes_reverse_index'][remote][ircode];
    event=false;
   }
-//  alert('item:'+item+' item_data:'+item_data+' '+JSON.stringify(data['macros'][item]['ircodes']))
   var box=createElement(
   {'tag':'div',
    'name':item_data
   });
+  if(data['remote_index'].length==0)
+  {alert('remote_index is empty')
+  }
   var remote_handle=createElement(
   {'options':data['remote_index'],
    'name':'remote',
@@ -88,8 +90,14 @@ var Macros=
    'class':'lefty',
    'name':'ircode_parent'
   }));
-  this.update(item,remote_handle,event)
-  box.getElementsByClassName('ircode')[0].value=ircode_index;
+  if(remote_handle.value!=remote_index)
+  {alert('remote_selection.value:'+remote_handle.value+' should be:'+remote_index);
+  }
+  else
+  {
+   this.update(item,remote_handle,event)
+   box.getElementsByClassName('ircode')[0].value=ircode_index;
+  }
   box.appendChild(createElement(
   {'tag':'input',
    'name':'delay',
@@ -210,7 +218,6 @@ if(handle.getAttribute('name')=='test')
 if(handle.getAttribute('name')=='remote')
 {var ircode_parent=handle.parentElement.getElementsByClassName('ircode_parent')[0];
  var ircode_index=handle.parentElement.getAttribute('name');
- alert('x:'+ircode_index)
  data['macros'][item]['ircodes'][ircode_index][0]=data['remote_index'][handle.value];
  if(event)
  {data['macros'][item]['ircodes'][ircode_index][1]=data['remotes'][data['remote_index'][handle.value]][0];
