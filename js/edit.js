@@ -39,7 +39,7 @@ const Edit=
  load(localdata)
  {this.load_data=JSON.parse(JSON.stringify(localdata));
   for(var x=0;x<this.modes.length;x++)
-  {if(this.modes[x]=='Activities'||this.modes[x]=='Macros')
+  {if(this.modes[x]=='Macros')
    {data[this.modes[x].toLowerCase()]=JSON.parse(JSON.stringify(this.load_data[this.modes[x].toLowerCase()]));
    }
    else

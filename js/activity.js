@@ -1,4 +1,4 @@
-data['activities']={'none':['none']}
+data['activities']=[{'name':'none','editable':false}]
 
 var Activities=
 {
@@ -11,8 +11,12 @@ var Activities=
  {
   into=document.getElementById('choose')
   into.innerHTML='';
+  var temp=[];
+  for(var x=0;x<data['activities'].length;x++)
+  {temp.push(data['activities'][x]['name'])
+  }
   into.appendChild(createElement(
-  {'options':Object.keys(data['activities']),
+  {'options':temp,
    'onchange':'activities.select(this)',
    'namevalues':true
   }));
@@ -26,10 +30,11 @@ var Activities=
 
  select(item)
  {if(item.value=='none')
-  {display(item.value)
+  {document.getElementById('remote').innerHTML='';
   }
   else
-  {document.getElementById('remote').innerHTML=''
+  {document.getElementById('remote').innerHTML='';
+   // do more when I get to this
  }},
 
  save()
