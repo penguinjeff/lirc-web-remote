@@ -10,6 +10,19 @@ var Modules=
  display(remote,module,buttons,rows,columns)
  {if(typeof(remote)=='undefined')
   {alert('Modules Edit Mode');
+   document.getElementById('EditDisplay').appendChild(createElement(
+   {'tag':'button',
+    'innerHTML':'Add Module'
+   }));
+   document.getElementById('EditDisplay').appendChild(createElement(
+   {'tag':'div',
+    'id':'module_selector_parent'
+   }));
+   var temp=[]
+   for(x=0;x<data['modules'].length;x++)
+   {if(data['modules'][x]['editable'])
+    {temp.push(data['modules'][x]['name'])
+   }}
    return;
   }
 
