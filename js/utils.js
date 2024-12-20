@@ -41,7 +41,7 @@ function createElement(items)
   else
   {items['class']=items['name'];
  }}
- keys=Object.keys(items);
+ var keys=Object.keys(items);
  for(var x=0;x<keys.length;x++)
  {if(keys[x]=='options'||keys[x]=='namevalues'||keys[x]=='tag'){continue;}
   if(keys[x]=='innerHTML')

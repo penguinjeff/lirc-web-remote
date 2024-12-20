@@ -28,30 +28,24 @@ var Devices=
  }},
  save()
  {alert('Saving Devices')
-}}
-
-
-
-function send_action(arg1,arg2,arg3,loop,remote,button)
-{if(typeof(arg1)=='undefined'){arg1='list';}
- if(typeof(arg2)=='undefined'){arg2='';}
- if(typeof(arg3)=='undefined'){arg3='';}
- if(typeof(loop)=='undefined'){loop=false;}
-//function getremotes() {
- var id = Math.round(+new Date()/1000);
- fetch('irsend.php?arg1='+arg1+'&arg2='+arg2+'&arg3='+arg3+'&id='+id)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
+ },
+ send_action(arg1,arg2,arg3,loop,remote,button)
+ {if(typeof(arg1)=='undefined'){arg1='list';}
+  if(typeof(arg2)=='undefined'){arg2='';}
+  if(typeof(arg3)=='undefined'){arg3='';}
+  if(typeof(loop)=='undefined'){loop=false;}
+  //function getremotes() {
+  var id = Math.round(+new Date()/1000);
+  fetch('irsend.php?arg1='+arg1+'&arg2='+arg2+'&arg3='+arg3+'&id='+id)
+  .then(response =>
+  {if (!response.ok)
+   {throw new Error("Network response was not ok");
+   }
+   return response.json();
   })
-  .then(localdata => {
-    // console.log(data); // Log the JSON response
-    // Process the data
-   if(loop)
-   {
-    if(eval(loop))
+  .then(localdata =>
+  {if(loop)
+   {if(eval(loop))
     {holdtimer=setTimeout(function(){ hold(remote,button); }, 10);
     }
     return
@@ -61,8 +55,7 @@ function send_action(arg1,arg2,arg3,loop,remote,button)
    {alert(JSON.stringify(localdata['arg1']+' '+localdata['arg2']+' '+localdata['arg3']+' '+localdata['stderr']))
    }
    if(localdata['remotes'])
-   {
-    data['remotes']={'none':['none']};
+   {data['remotes']={'none':['none']};
     var remotes_index=Object.keys(localdata['remotes'])
     for(var x=0;x<remotes_index.length;x++)
     {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]];
@@ -76,52 +69,59 @@ function send_action(arg1,arg2,arg3,loop,remote,button)
    }}
   })
   .catch(error => {});
+ },
+
+ presshold(remote,button,item,event)
+ {if(!event['button'])
+  {
+   item.setAttribute('class','button_clicked')
+ //document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
+   mousedown=true;
+   held=false;
+   holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
+   navigator.vibrate(500);
+   this.send_action('send_once',remote,button);
+ }},
+
+ hold(remote,button)
+ {
+  held=true;
+ // send_action('send_start',remote,button);
+  this.send_action('send_once',remote,button,'held',remote,button);
+ },
+
+
+ release(remote,button,item,event)
+ {if(!event['button'])
+  {altholdtimer=setTimeout(function(){ this.delayed_release(item); }, 100);
+ //  alert('stop')
+ // console.log(event);
+   clearTimeout(holdtimer);
+   mousedown=false;
+   if(held)
+   {
+    //send_action('send_stop',remote,button);
+    held=false;
+ }}},
+ delayed_release(item)
+ {item.setAttribute('class','button')
+ }
+
 }
+
+
+
 
 var holdtimer;
 var altholdtimer;
 var held=false;
 var mousedown=false;
-function presshold(remote,button,item,event)
-{if(!event['button'])
- {
-  item.setAttribute('class','button_clicked')
-//document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
-  mousedown=true;
-  held=false;
-  holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
-  navigator.vibrate(500);
-  send_action('send_once',remote,button);
-}}
 
-function hold(remote,button)
-{
- held=true;
-// send_action('send_start',remote,button);
- send_action('send_once',remote,button,'held',remote,button);
-}
 
-function release(remote,button,item,event)
-{if(!event['button'])
- {
-  altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
-//  alert('stop')
-// console.log(event);
-  clearTimeout(holdtimer);
-  mousedown=false;
-  if(held)
-  {
-   //send_action('send_stop',remote,button);
-   held=false;
-}}}
 
-function delayed_release(item)
-{
-  item.setAttribute('class','button')
-}
 
 
 function Device_init()
-{send_action();
+{Devices.send_action();
 }
 window.onload=Device_init();

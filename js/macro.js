@@ -156,23 +156,29 @@ var Macros=
     'id':'ircodes'
    }));
    if(data['macros'][item]['ircodes'])
-   {for(var x=0;x<data['macros'][item]['ircodes'].length;x++)
-    {this.add_ircode(item,x);
+   {for(var i=0;i<data['macros'][item]['ircodes'].length;i++)
+    {this.add_ircode(item,i);
    }}
  }},
 
- execute()
+ execute(list,item)
  {
+  if(item<list.length)
+  {Devices.send_action('send_once',list[item][0],list[item][1]);
+   holdtimer=setTimeout(function(){ Macros.execute(list,(item+1)); }, list[item][2]);
+  }
+  return;
  },
- load()
- {
-  alert(JSON.stringify(Edit.load_data));
-  data['macros']=JSON.parse(JSON.stringify(Edit.data_load['macros']));
-  return true;
- },
+
+
  save()
  {savedata['macros']=data['macros'];
  },
+
+
+//################ Update #######################
+
+
  update(item,handle,event)
  {
 if(handle.getAttribute('name')=='name')
@@ -200,12 +206,15 @@ if(handle.getAttribute('name')=='ircode')
 return;
 }
 if(handle.getAttribute('name')=='test')
-{alert(JSON.stringify(data['macros'][item]['ircodes']));
-return;
+{
+ this.execute(data['macros'][item]['ircodes'],0);
+ return;
 }
+
 if(handle.getAttribute('name')=='remote')
 {var ircode_parent=handle.parentElement.getElementsByClassName('ircode_parent')[0];
  var ircode_index=handle.parentElement.getAttribute('name');
+ alert('x:'+ircode_index)
  data['macros'][item]['ircodes'][ircode_index][0]=data['remote_index'][handle.value];
  if(event)
  {data['macros'][item]['ircodes'][ircode_index][1]=data['remotes'][data['remote_index'][handle.value]][0];
@@ -217,7 +226,7 @@ if(handle.getAttribute('name')=='remote')
   'onclick':'Macros.update('+item+',this,event)',
   'value':0
  }));
-return;
+ return;
 }
 
  }

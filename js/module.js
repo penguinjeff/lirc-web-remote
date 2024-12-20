@@ -131,9 +131,9 @@ x1 1  3
        box.appendChild(createElement(
        {'tag':'button',
         'class':'button',
-        'onpointerdown':'presshold(\''+remote+'\',\''+button+'\',this,event)',
-        'onpointerup':'release(\''+remote+'\',\''+button+'\',this,event)',
-        'onpointerleave':'release(\''+remote+'\',\''+button+'\',this,event)',
+        'onpointerdown':'Devices.presshold(\''+remote+'\',\''+button+'\',this,event)',
+        'onpointerup':'Devices.release(\''+remote+'\',\''+button+'\',this,event)',
+        'onpointerleave':'Devices.release(\''+remote+'\',\''+button+'\',this,event)',
         'innerHTML':buttondisplay
        }));
       }
@@ -182,9 +182,9 @@ x1 1  3
    {button=createElement(
     {'tag':'button',
      'class':'button',
-     'onpointerdown':'presshold(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
-     'onpointerup':'release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
-     'onpointerleave':'release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
+     'onpointerdown':'Devices.presshold(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
+     'onpointerup':'Devices.release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
+     'onpointerleave':'Devices.release(\''+remote+'\',\''+this.unused[item]+'\',this,event)',
      'innerHTML':this.unused[item].replace('KEY_','').replaceAll('_',' ')
     })
    }
@@ -219,19 +219,8 @@ x1 1  3
   }}
   return hasmodules;
  },
- load()
- {var x=0;
-  while(x<data['modules'].length)
-  {if(data['modules'][x]['editable'])
-   {data['modules'].splice(x,1);
-   }
-   else
-   {x++;
-  }}
-  for(x=0;x<data_load['modules'].length;x++)
-  {data['modules'].push(data_load['modules'][x])
-  }
- },
+
+
  save()
  {alert('Saving Modules')
   var temp=[];
