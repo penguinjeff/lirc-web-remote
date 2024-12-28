@@ -27,9 +27,6 @@ done
 # "extract arg1" should return test
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
-stderr_file=/tmp/${USER}_irsend_mult.err
-stdout_file=/tmp/${USER}_irsend_mult.out
-
 function lines()
 {
  local line="";
@@ -47,16 +44,24 @@ function add2ran()
  if [ "${ran}" != "" ];then ran="${ran},"; fi
  ran="${ran}{\n"
  ran="${ran}\"args\":[\"$1\",\"$2\",\"$3\"],\n"
- ran="${ran}\"stdout\":$(lines "$(cat ${stdout_file} | grep -v "^$" | sed 's/\"/%22/g')"),\n"
- ran="${ran}\"stderr\":$(lines "$(cat ${stderr_file} | grep -v "^$" | sed 's/\"/%22/g')")\n"
+ ran="${ran}\"stdout\":$(lines "$(echo -e "$4" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
+ ran="${ran}\"stderr\":$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")\n"
  ran="${ran}}\n"
+}
+
+function subprocess()
+{
+ local subvar=$(irsend "$1" "$2" "$3");
+ echo "stdout:\"$(echo -e "${subvar}"| sed 's/%/%25/g' | sed 's/\"/%22/g')\""
 }
 
 function process()
 {
 # echo "irsend \"$1\" \"$2\" \"$3\""
- irsend "$1" "$2" "$3" 2>${stderr_file} | grep -v "^$" > ${stdout_file}
- add2ran "$1" "$2" "$3"
+ local both=$(subprocess $1 $2 $3 2>&1)
+ stderr=$(echo -e "${both}"|sed -z 's/stdout:\".*\"//')
+ stdout=$(echo -e "${both}"|sed -z 's/.*stdout:\"\(.*\)\"/\1/')
+ add2ran "$1" "$2" "$3" "${stdout}" "${stderr}"
 }
 
 json=$(extract json)
@@ -96,12 +101,12 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   done
   if [ "${arg1}" = "list" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
  #  echo "remotes"
-   remotes=$(echo -e "$(cat ${stdout_file}|grep -v "^$")")
+   remotes=$(echo -e "${stdout}|grep -v "^$")")
    while read remote;do
  #   echo "remote:${remote}"
     process "list" "${remote}" ""
     if [ "${remotes_json}" != "" ];then remotes_json=$(echo -e "${remotes_json},\n"); fi
-    remotes_json="${remotes_json}{\"${remote}\":$(lines "$(cat ${stdout_file}|awk '{print $2}')")}"
+    remotes_json="${remotes_json}{\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")}"
    done <<< "$(echo -e "${remotes}")"
   fi
  fi

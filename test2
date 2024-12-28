@@ -6,6 +6,59 @@ Content-Type: application/json
   "remotes": [
     {
       "Logitech_Roku": [
+        "Vudu",
+        "KEY_SLEEP",
+        "Instant_Replay",
+        "Crackle",
+        "KEY_BACK",
+        "Asterisk",
+        "KEY_FASTFORWARD",
+        "Pandora",
+        "Showtime",
+        "HBO",
+        "Hulu",
+        "KEY_PAUSE",
+        "Netflix",
+        "Vix",
+        "Discovery_Plus",
+        "KEY_FASTREWIND",
+        "KEY_DOWN",
+        "KEY_RIGHT",
+        "KEY_OK",
+        "SlingTv",
+        "MGO",
+        "KEY_LEFT",
+        "LiveTV",
+        "KEY_UP",
+        "Disney",
+        "Fango",
+        "KEY_HOME",
+        "KEY_EXIT",
+        "RedBull",
+        "Spotify",
+        "TED",
+        "Starz",
+        "Amazon",
+        "Streaming_Store",
+        "NBA",
+        "Feature_Free",
+        "Directtv",
+        "Yupp",
+        "Roku",
+        "ParamountPlus",
+        "Fubo",
+        "Apple",
+        "Estresllatv",
+        "CW",
+        "HappyKids",
+        "ESPN",
+        "Rdio",
+        "Youtube",
+        "PageDown"
+      ]
+    },
+    {
+      "Logitech_Samsung": [
         "KEY_POWERON",
         "KEY_POWEROFF",
         "KEY_POWER",
@@ -80,43 +133,8 @@ Content-Type: application/json
       ]
     },
     {
-      "Logitech_Samsung": [
-        "KEY_POWERON",
-        "KEY_POWEROFF",
-        "KEY_VOLUMEDOWN",
-        "KEY_VOLUMEUP",
-        "KEY_BLURAY",
-        "KEY_DOCK",
-        "KEY_AM",
-        "KEY_DVD",
-        "KEY_FM",
-        "KEY_GAME",
-        "KEY_TUNER",
-        "KEY_SATCBL",
-        "KEY_TV",
-        "KEY_IPOD",
-        "KEY_VAUX",
-        "KEY_MUTE"
-      ]
-    },
-    {
-      "Logitech_Denon": [
-        "KEY_POWERON",
-        "KEY_POWEROFF",
-        "KEY_VOLUMEDOWN",
-        "KEY_VOLUMEUP",
-        "KEY_BLURAY",
-        "KEY_DOCK",
-        "KEY_AM",
-        "KEY_DVD",
-        "KEY_FM",
-        "KEY_GAME",
-        "KEY_TUNER",
-        "KEY_SATCBL",
-        "KEY_TV",
-        "KEY_IPOD",
-        "KEY_VAUX",
-        "KEY_MUTE"
+      "Logitech_Denon|grep -v ^)": [
+        "0.10.0"
       ]
     }
   ],
@@ -283,26 +301,11 @@ Content-Type: application/json
     {
       "args": [
         "list",
-        "Logitech_Denon",
+        "Logitech_Denon|grep -v ^)",
         ""
       ],
       "stdout": [
-        "0000000000000001 KEY_POWERON",
-        "0000000000000002 KEY_POWEROFF",
-        "0000000000000003 KEY_VOLUMEDOWN",
-        "0000000000000004 KEY_VOLUMEUP",
-        "0000000000000005 KEY_BLURAY",
-        "0000000000000006 KEY_DOCK",
-        "0000000000000007 KEY_AM",
-        "0000000000000008 KEY_DVD",
-        "0000000000000009 KEY_FM",
-        "000000000000000a KEY_GAME",
-        "000000000000000b KEY_TUNER",
-        "000000000000000c KEY_SATCBL",
-        "000000000000000d KEY_TV",
-        "000000000000000e KEY_IPOD",
-        "000000000000000f KEY_VAUX",
-        "0000000000000010 KEY_MUTE"
+        "irsend 0.10.0"
       ],
       "stderr": [
         ""

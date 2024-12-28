@@ -166,26 +166,11 @@ Content-Type: application/json
     {
       "args": [
         "list",
-        "Logitech_Denon",
+        "Logitech_Denon|grep -v ^)",
         ""
       ],
       "stdout": [
-        "0000000000000001 KEY_POWERON",
-        "0000000000000002 KEY_POWEROFF",
-        "0000000000000003 KEY_VOLUMEDOWN",
-        "0000000000000004 KEY_VOLUMEUP",
-        "0000000000000005 KEY_BLURAY",
-        "0000000000000006 KEY_DOCK",
-        "0000000000000007 KEY_AM",
-        "0000000000000008 KEY_DVD",
-        "0000000000000009 KEY_FM",
-        "000000000000000a KEY_GAME",
-        "000000000000000b KEY_TUNER",
-        "000000000000000c KEY_SATCBL",
-        "000000000000000d KEY_TV",
-        "000000000000000e KEY_IPOD",
-        "000000000000000f KEY_VAUX",
-        "0000000000000010 KEY_MUTE"
+        "irsend 0.10.0"
       ],
       "stderr": [
         ""
