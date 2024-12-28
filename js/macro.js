@@ -49,7 +49,7 @@ var Macros=
  {var remote_index=0;
   var ircode_index=0;
   var delay=0;
-  var loops=0;
+  var loops=1;
   var remote;
   var ircode;
   var event=true;
@@ -231,7 +231,7 @@ var Macros=
     {alert(JSON.stringify(localdata['arg1']+' '+localdata['arg2']+' '+localdata['arg3']+' '+localdata['stderr']))
      return;
     }
-    if(loops>0)
+    if(loops>1)
     {this.holdtimer=setTimeout(function(){ Macros.execute(list,item,(loops-1)); }, 10);
      return;
     }
