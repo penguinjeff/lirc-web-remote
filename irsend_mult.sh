@@ -75,7 +75,8 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   broke="true";
   break;
  fi
- if [ "$(echo "$row" | jq length)" -gt "4" ];then
+ count=$(echo "$row" | jq length)
+ if [ "${count}" -gt "4" ];then
   arg1=$(echo "$row" | jq -r '.[0]')
   arg2=$(echo "$row" | jq -r '.[1]')
   arg3=$(echo "$row" | jq -r '.[2]')
@@ -101,7 +102,7 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   done
   if [ "${arg1}" = "list" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
  #  echo "remotes"
-   remotes=$(echo -e "${stdout}|grep -v "^$")")
+   remotes=$(echo -e "${stdout}"|grep -v "^$")
    while read remote;do
  #   echo "remote:${remote}"
     process "list" "${remote}" ""
@@ -109,6 +110,8 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
     remotes_json="${remotes_json}{\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")}"
    done <<< "$(echo -e "${remotes}")"
   fi
+ else
+  ran="${ran},{\"error\":\"only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops.\"}"
  fi
 done
 
