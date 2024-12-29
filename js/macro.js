@@ -216,10 +216,17 @@ var Macros=
    }}
  }},
 
- execute(list,item,loops)
- {if(item<list.length)
-  {var id = Math.round(+new Date()/1000);
-   fetch('irsend.php?arg1=send_once&arg2='+list[item][0]+'&arg3='+list[item][1]+'&id='+id)
+ execute(list,action)
+ {
+   var id = Math.round(+new Date()/1000);
+   var reallist=[];
+   for(var x=0;x<list.length;x++)
+   {reallist.push([action,list[x][0],list[x][1],list[x][2],list[x][3]])
+   }
+   json='{%22ircodes%22:'+JSON.stringify(reallist).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
+   alert('irsend_mult.php?json='+json+'&id='+id);
+/*
+   fetch('irsend_mult.php?json='+json+'&id='+id)
    .then(response =>
    {if (!response.ok)
     {throw new Error("Network response was not ok");
@@ -227,26 +234,32 @@ var Macros=
     return response.json();
    })
    .then(localdata =>
-   {if(JSON.stringify(localdata['stderr'])!='["",""]')
-    {alert(JSON.stringify(localdata['arg1']+' '+localdata['arg2']+' '+localdata['arg3']+' '+localdata['stderr']))
-     return;
-    }
-    if(loops>1)
-    {this.holdtimer=setTimeout(function(){ Macros.execute(list,item,(loops-1)); }, 10);
-     return;
-    }
-    else
-    {if((item+1)<list.length){loops=list[(item+1)][3];}
-     this.holdtimer=setTimeout(function(){ Macros.execute(list,(item+1),loops); }, list[item][2]);
+   {if(JSON.stringify(localdata['errors'])!='false')
+    {alert(JSON.stringify(localdata))
      return;
     }
    })
    .catch(error => {});
-  }
+   */
   return;
  },
-
-
+ status(id)
+ {
+   fetch('status.php?id='+id)
+   .then(response =>
+   {if (!response.ok)
+    {throw new Error("Network response was not ok");
+    }
+    return response.json();
+   })
+   .then(localdata =>
+   {if(JSON.stringify(localdata['errors'])!='false')
+    {alert(JSON.stringify(localdata))
+     return;
+    }
+   })
+   .catch(error => {});
+ },
  save()
  {savedata['macros']=data['macros'];
  },
@@ -301,7 +314,7 @@ if(handle.getAttribute('name')=='ircode')
 
 if(handle.getAttribute('name')=='test')
 {
- this.execute(data['macros'][item]['ircodes'],0,data['macros'][item]['ircodes'][0][3]);
+ this.execute(data['macros'][item]['ircodes'],'send_once');
  return;
 }
 

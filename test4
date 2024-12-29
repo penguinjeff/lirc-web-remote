@@ -1,0 +1,25 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+
+{
+  "ran": [
+    {
+      "args": [
+        "list",
+        "badremote",
+        ""
+      ],
+      "delay": "0",
+      "loops": "1",
+      "stdout": [
+        "unknown remote: %22badremote%22"
+      ],
+      "stderr": [
+        "Error running command: Input/output error"
+      ]
+    }
+  ],
+  "broke": "false",
+  "errors": "true"
+}

@@ -7,6 +7,7 @@
 
 #example: echo GET "arg1=list&arg2=&arg3=" | ./irsend.sh
 echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
+errors="false"
 
 
 #last time since we want to kill any existing ones when we end new ones.
@@ -15,7 +16,9 @@ time_start=$(date +%s)-$RANDOM
 echo ${time_start} > ${time_start_file}
 
 #get input from user and sanatize it.
-while read -t .01 line;do sanatized=$(echo "${line}" | sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' )
+while read -t .01 line;do sanatized=$(echo "${line}" | \
+sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
+ | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
 [ "$(echo $sanatized|awk '{print $1}')" = "GET" ] && break
 [ "${line}" = "" ] && break
 done
@@ -44,9 +47,14 @@ function add2ran()
  if [ "${ran}" != "" ];then ran="${ran},"; fi
  ran="${ran}{\n"
  ran="${ran}\"args\":[\"$1\",\"$2\",\"$3\"],\n"
- ran="${ran}\"stdout\":$(lines "$(echo -e "$4" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
- ran="${ran}\"stderr\":$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")\n"
+ ran="${ran}\"delay\":\"$4\",\n"
+ ran="${ran}\"loops\":\"$5\",\n"
+ ran="${ran}\"stdout\":$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
+ ran="${ran}\"stderr\":$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")\n"
  ran="${ran}}\n"
+ if [ "$(echo -e "$5" | grep -v "^$")" != "" ];then
+  errors="true"
+ fi
 }
 
 function subprocess()
@@ -61,7 +69,7 @@ function process()
  local both=$(subprocess $1 $2 $3 2>&1)
  stderr=$(echo -e "${both}"|sed -z 's/stdout:\".*\"//')
  stdout=$(echo -e "${both}"|sed -z 's/.*stdout:\"\(.*\)\"/\1/')
- add2ran "$1" "$2" "$3" "${stdout}" "${stderr}"
+ add2ran "$1" "$2" "$3" "$4" "$5" "${stdout}" "${stderr}"
 }
 
 json=$(extract json)
@@ -70,6 +78,9 @@ json=$(extract json)
 remotes_json=""
 broke="false";
 
+check=$(echo "${json}" | jq -c '.ircodes[]' 2>&1 1>/dev/null)
+
+if [ "$check" = "" ];then
 for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  if [ "$(cat ${time_start_file})" != "${time_start}" ];then
   broke="true";
@@ -85,7 +96,7 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do
-   process "${arg1}" "${arg2}" "${arg3}"
+   process "${arg1}" "${arg2}" "${arg3}" "${delay}" "${loops}"
    loops=$((${loops}-1))
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";
@@ -111,13 +122,22 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
    done <<< "$(echo -e "${remotes}")"
   fi
  else
-  ran="${ran},{\"error\":\"only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops.\"}"
+ if [ "${ran}" != "" ];then ran="${ran},"; fi
+  ran="${ran}{\"error\":\"only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops.\"}"
+  errors="true"
  fi
 done
+else
+ if [ "${ran}" != "" ];then ran="${ran},"; fi
+ ran="${ran}{\"error\":\"Not given a proper json\"}"
+ errors="true"
+fi
 
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
- echo -e "{\"remotes\":[${remotes_json}]\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\"}"|jq . 2>&1
+ echo -e "{\"remotes\":[${remotes_json}]\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1 || \
+ echo -e "{\"remotes\":[${remotes_json}]\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"
 else
- echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\"}"|jq . 2>&1
+ echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1 || \
+ echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"
 fi
 
