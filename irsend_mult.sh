@@ -30,16 +30,7 @@ done
 # "extract arg1" should return test
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
-function lines()
-{
- local line="";
- local lines2strings="";
- while read line;do
-  if [ "${lines2strings}" != "" ];then lines2strings=$(echo -e "${lines2strings}\n,");   fi;
-  lines2strings="${lines2strings}\"${line}\"";
- done <<< "$(echo -e "$1")";  echo "[${lines2strings}]";
-}
-
+function lines() {  echo -ne "$1"|jq -M -R -s -c 'split("\n")'; }
 
 ran=""
 function add2ran()
