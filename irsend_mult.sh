@@ -118,7 +118,7 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  #   echo "remote:${remote}"
     process "list" "${remote}" ""
     if [ "${remotes_json}" != "" ];then remotes_json=$(echo -e "${remotes_json},\n"); fi
-    remotes_json="${remotes_json}{\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")}"
+    remotes_json="${remotes_json}\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")"
    done <<< "$(echo -e "${remotes}")"
   fi
  else
@@ -134,8 +134,8 @@ else
 fi
 
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
- echo -e "{\"remotes\":[${remotes_json}]\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1 || \
- echo -e "{\"remotes\":[${remotes_json}]\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"
+ echo -e "{\"remotes\":{${remotes_json}}\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1 || \
+ echo -e "{\"remotes\":{${remotes_json}}\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"
 else
  echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1 || \
  echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"

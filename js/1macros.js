@@ -225,7 +225,6 @@ var Macros=
   {reallist.push([action,list[x][0],list[x][1],list[x][2],list[x][3]])
   }
   json='{%22ircodes%22:'+JSON.stringify(reallist).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
-  //alert('irsend_mult.php?json='+json+'&id='+id);
   fetch('irsend_mult.php?json='+json+'&id='+id,{signal: AbortSignal.timeout(5000)})
   .then(response =>
   {if (!response.ok)
@@ -233,7 +232,23 @@ var Macros=
    }
    return response.json();
   })
-  .then(localdata => {})
+  .then(localdata =>
+  {
+   if(localdata['remotes'])
+   {data['remotes']={'none':['none']};
+    data['remote_index']=[];
+    var index=Object.keys(localdata['remotes'])
+    for(var x=0;x<index.length;x++)
+    {data['remotes'][index[x]]=localdata['remotes'][index[x]];
+    }
+    data['remote_index']=Object.keys(data['remotes']);
+    data['remote_reverse_index']=reverse_index(data['remote_index'])
+    data['remotes_index']={}
+    data['remotes_reverse_index']={};
+    for(var x=0;x<data['remote_index'].length;x++)
+    {data['remotes_reverse_index'][data['remote_index'][x]]=reverse_index(data['remotes'][data['remote_index'][x]]);
+   }}
+  })
   .catch(error => {});
   this.holdtimer=setTimeout(function(){ Macros.status(id); }, 1000);
   return;
@@ -258,23 +273,8 @@ var Macros=
     this.holdtimer=setTimeout(function(){ Macros.status(id); }, 3000);
     return;
    }
-   if(localdata['remotes'])
-   {data['remotes']={'none':['none']};
-    data['remote_index']=[];
-    var remotes_index=Object.keys(localdata['remotes'])
-    for(var x=0;x<remotes_index.length;x++)
-    {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]];
-     }
-     data['remote_index']=Object.keys(data['remotes']);
-     //alert(data['remote_index']);
-     data['remote_reverse_index']=reverse_index(data['remote_index'])
-     data['remotes_index']={}
-     data['remotes_reverse_index']={};
-     for(var x=0;x<data['remote_index'].length;x++)
-     {data['remotes_reverse_index'][data['remote_index'][x]]=reverse_index(data['remotes'][data['remote_index'][x]]);
-    }}
-   })
-   .catch(error => {});
+  })
+  .catch(error => {});
  },
  save()
  {savedata['macros']=data['macros'];

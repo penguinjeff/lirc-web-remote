@@ -65,7 +65,6 @@ var Devices=
     {data['remotes'][remotes_index[x]]=localdata['remotes'][remotes_index[x]];
     }
     data['remote_index']=Object.keys(data['remotes']);
-    //alert(data['remote_index']);
     data['remote_reverse_index']=reverse_index(data['remote_index'])
     data['remotes_index']={}
     data['remotes_reverse_index']={};
@@ -80,34 +79,32 @@ var Devices=
  {if(!event['button'])
   {
    item.setAttribute('class','button_clicked')
- //document.getElementById("Show").innerHTML='pressed '+remote+' '+button;
    this.mousedown=true;
-   this.held=false;
-   this.holdtimer=setTimeout(function(){ hold(remote,button); }, 500);
+   this.held=true;
+   this.holdtimer=setTimeout(function(){ Devices.hold(remote,button); }, 500);
    navigator.vibrate(500);
-   this.send_action('send_once',remote,button);
+   Macros.execute([[remote,button,0,1]],'send_once')
  }},
 
  hold(remote,button)
  {
-  this.held=true;
- // send_action('send_start',remote,button);
-  this.send_action('send_once',remote,button,'held',remote,button);
+  if(this.held)
+  {
+   // loop an unresanable amount of times 1000 is unreasonable and should be cut off long before reached
+   Macros.execute([[remote,button,0,1000]],'send_once')
+  }
  },
 
 
  release(remote,button,item,event)
  {if(!event['button'])
-  {this.altholdtimer=setTimeout(function(){ Devices.delayed_release(item); }, 100);
- //  alert('stop')
- // console.log(event);
+  {
    clearTimeout(this.holdtimer);
+   Macros.execute([],'');
+   this.altholdtimer=setTimeout(function(){ Devices.delayed_release(item); }, 100);
    this.mousedown=false;
-   if(this.held)
-   {
-    //send_action('send_stop',remote,button);
-    this.held=false;
- }}},
+   this.held=false;
+ }},
  delayed_release(item)
  {item.setAttribute('class','button')
  }
@@ -121,8 +118,8 @@ var Devices=
 
 
 
-
 function Device_init()
-{Devices.send_action();
+{Macros.execute([['','',0,1]],'list');
+// Devices.send_action();
 }
 window.onload=Device_init();
