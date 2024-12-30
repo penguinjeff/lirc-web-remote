@@ -5,7 +5,7 @@
 # it will return a JSON with the remotes with thier understood irsignals
 # defined in your lirc files
 
-#example: echo GET "arg1=list&arg2=&arg3=" | ./irsend.sh
+#example: echo GET "json={%22ircodes%22:[[%22list%22,%22%22,%22%22,%220%22,%221%22]]" | ./irsend_mult.sh
 echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
 
