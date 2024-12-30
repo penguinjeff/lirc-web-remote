@@ -12,10 +12,10 @@
 sudo cp -r . /var/www/html/lirc-web-remote
 sudo chmod a+x /var/www/html/lirc-web-remote/irsend.sh
 # To install irsend service
-sudo cp irsend.service /etc/systemd/system/irsend.service
+sudo cp irsend_mult.service /etc/systemd/system/irsend_mult.service
 sudo systemctl daemon-reload
-sudo systemctl start irsend
-sudo systemctl enable irsend
+sudo systemctl start irsend_mult
+sudo systemctl enable irsend_mult
 
 ##### Warning this part may be Dangerous ######
 # I set this directory writable by all for the first save
@@ -31,5 +31,26 @@ sudo chmod go-w /var/www/html/lirc-web-remote/data/
 #
 
 #
-# I will soon implement an indicator to let you know it sent a command and I will need to show when a button is depressed
+# I will soon implement an indicator to let you know it sent a command
+#
+
+#
+# Finnished moving from running a single command to multiple
+#
+
+#
+# Finnished macros 
+#
+
+#
+# Next I will work on modules so that I can add macros to modules
+#
+
+#
+# After that I can work on Activities so that I can add the modules to activites
+#
+
+#
+# I was trying to think how to add more that one of a module with different remotes.
+# I have some ideas I'll work on that when I implement editing and selecting displays
 #
