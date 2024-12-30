@@ -52,8 +52,8 @@ function add2ran()
  ran="${ran}\"stdout\":$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
  ran="${ran}\"stderr\":$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")\n"
  ran="${ran}}\n"
- if [ "$(echo -e "$5" | grep -v "^$")" != "" ];then
-  errors="true"
+ if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
+  errors="true from ran"
  fi
 }
 
@@ -124,13 +124,13 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  else
  if [ "${ran}" != "" ];then ran="${ran},"; fi
   ran="${ran}{\"error\":\"only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops.\"}"
-  errors="true"
+  errors="true bad count"
  fi
 done
 else
  if [ "${ran}" != "" ];then ran="${ran},"; fi
  ran="${ran}{\"error\":\"Not given a proper json\"}"
- errors="true"
+ errors="true bad json"
 fi
 
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
