@@ -115,7 +115,8 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   fi
  else
  if [ "${ran}" != "" ];then ran="${ran},"; fi
-  ran="${ran}$(jq -n stderr "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." '$ARGS.named')"
+  ran="${ran}$(jq -n \
+    --arg stderr "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." '$ARGS.named')"
   errors="true bad count"
  fi
 done
