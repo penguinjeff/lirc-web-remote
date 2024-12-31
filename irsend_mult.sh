@@ -44,8 +44,6 @@ function add2ran()
                   --argjson stderr "$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   '$ARGS.named' \
              )"
-
-
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
   errors="true from ran"
  fi
