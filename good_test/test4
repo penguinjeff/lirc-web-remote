@@ -10,8 +10,8 @@ Content-Type: application/json
         "badremote",
         ""
       ],
-      "delay": "0",
-      "loops": "1",
+      "delay": "arg4",
+      "loops": "arg5",
       "stdout": [
         "unknown remote: %22badremote%22"
       ],

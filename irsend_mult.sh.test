@@ -30,28 +30,20 @@ done
 # "extract arg1" should return test
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
-function lines()
-{
- local line="";
- local lines2strings="";
- while read line;do
-  if [ "${lines2strings}" != "" ];then lines2strings=$(echo -e "${lines2strings}\n,");   fi;
-  lines2strings="${lines2strings}\"${line}\"";
- done <<< "$(echo -e "$1")";  echo "[${lines2strings}]";
-}
+function lines() {  echo -ne "$1"|jq -M -R -s 'split("\n")'; }
 
-
-ran=""
+declare -a ran
 function add2ran()
 {
  if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}{\n"
- ran="${ran}\"args\":[\"$1\",\"$2\",\"$3\"],\n"
- ran="${ran}\"delay\":\"$4\",\n"
- ran="${ran}\"loops\":\"$5\",\n"
- ran="${ran}\"stdout\":$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
- ran="${ran}\"stderr\":$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")\n"
- ran="${ran}}\n"
+ ran+=("$(jq -c -n \
+                  --argjson args "$(lines "$1\n$2\n$3")" \
+                  --arg delay "arg4" \
+                  --arg loops "arg5" \
+                  --argjson stdout "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stderr "$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  '$ARGS.named' \
+ )")
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
   errors="true from ran"
  fi
@@ -75,7 +67,7 @@ function process()
 json=$(extract json)
 
 #echo ${json}
-remotes_json=""
+declare -a remotes_json
 broke="false";
 
 check=$(echo "${json}" | jq -c '.ircodes[]' 2>&1 1>/dev/null)
@@ -118,23 +110,38 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  #   echo "remote:${remote}"
     process "list" "${remote}" ""
     if [ "${remotes_json}" != "" ];then remotes_json=$(echo -e "${remotes_json},\n"); fi
-    remotes_json="${remotes_json}\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")"
+    remotes_json+=("$(jq -c -n --argjson ${remote} "$(lines "$(echo -e "${stdout}" |awk '{print $2}')")" '$ARGS.named')")
    done <<< "$(echo -e "${remotes}")"
   fi
  else
- if [ "${ran}" != "" ];then ran="${ran},"; fi
-  ran="${ran}{\"error\":\"only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops.\"}"
+  ran+=("$(jq -c -n --arg error "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." '$ARGS.named')")
   errors="true bad count"
  fi
 done
 else
- if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}{\"error\":\"Not given a proper json\"}"
+ ran+=("$(jq -c -n --arg error "Not given a proper json" '$ARGS.named')")
  errors="true bad json"
 fi
 
-if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
- echo -e "{\"remotes\":{${remotes_json}}\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1
-else
- echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1
-fi
+function display()
+{
+jq -c -s . <<< "$(for item in "$@"; do echo "$item";done)"
+}
+
+display  "${remotes_json[@]}"
+
+#if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
+# jq -n \
+# --argjson remotes "$(display "${remotes_json[@]}")" \
+# --argjson ran "$(display "${ran[@]}")" \
+# --arg broke "${broke}" \
+# --arg errors "${errors}" \
+# '$ARGS.named'
+#else
+# jq -n \
+# --argjson ran "$(display "${ran[@]}")" \
+# --arg broke "${broke}" \
+# --arg errors "${errors}" \
+# '$ARGS.named'
+#fi
+
