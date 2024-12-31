@@ -5,6 +5,27 @@
 # it will return a JSON with the remotes with thier understood irsignals
 # defined in your lirc files
 
+urlencode()
+{
+ # urlencode <string>
+ local length="${#1}"
+ for (( i = 0; i < length; i++ )); do
+  local c="${1:i:1}"
+   case $c in
+    [a-zA-Z0-9.~_-]) printf "$c" ;;
+    *) printf '%%%02X' "'$c" ;;
+   esac
+ done
+}
+
+urldecode()
+{
+ # urldecode <string>
+ local url_encoded="${1//+/ }"
+ printf '%b' "${url_encoded//%/\\x}"
+}
+
+
 #example: echo GET "json={%22ircodes%22:[[%22list%22,%22%22,%22%22,%220%22,%221%22]]" | ./irsend_mult.sh
 echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
@@ -50,16 +71,17 @@ function add2ran()
 
 function subprocess()
 {
- local subvar=$(irsend "$1" "$2" "$3");
- echo "stdout:\"$(echo -e "${subvar}"| sed 's/%/%25/g' | sed 's/\"/%22/g')\""
+ local stdout=$(irsend "$1" "$2" "$3");
+ jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
 function process()
 {
 # echo "irsend \"$1\" \"$2\" \"$3\""
  local both=$(subprocess $1 $2 $3 2>&1)
- stderr=$(echo -e "${both}"|sed -z 's/stdout:\".*\"//')
- stdout=$(echo -e "${both}"|sed -z 's/.*stdout:\"\(.*\)\"/\1/')
+ stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
+ #Reform stdout back to it's original form
+ stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
  add2ran "$1" "$2" "$3" "$4" "$5" "${stdout}" "${stderr}"
 }
 
