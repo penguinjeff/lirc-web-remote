@@ -30,28 +30,22 @@ done
 # "extract arg1" should return test
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
-function lines()
-{
- local line="";
- local lines2strings="";
- while read line;do
-  if [ "${lines2strings}" != "" ];then lines2strings=$(echo -e "${lines2strings}\n,");   fi;
-  lines2strings="${lines2strings}\"${line}\"";
- done <<< "$(echo -e "$1")";  echo "[${lines2strings}]";
-}
-
+function lines() {  echo -ne "$1"|jq -M -R -s 'split("\n")'; }
 
 ran=""
 function add2ran()
 {
  if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}{\n"
- ran="${ran}\"args\":[\"$1\",\"$2\",\"$3\"],\n"
- ran="${ran}\"delay\":\"$4\",\n"
- ran="${ran}\"loops\":\"$5\",\n"
- ran="${ran}\"stdout\":$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')"),\n"
- ran="${ran}\"stderr\":$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")\n"
- ran="${ran}}\n"
+ ran="${ran}$(jq -c -n \
+                  --argjson args "$(lines "$1\n$2\n$3")" \
+                  --arg delay "$4" \
+                  --arg loops "$5" \
+                  --argjson stdout "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stderr "$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  '$ARGS.named' \
+             )"
+
+
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
   errors="true from ran"
  fi

@@ -154,14 +154,16 @@ Content-Type: application/json
         "",
         ""
       ],
-      "delay": "arg4",
-      "loops": "arg5",
+      "delay": "0",
+      "loops": "1",
       "stdout": [
         "Logitech_Roku",
         "Logitech_Samsung",
         "Logitech_Denon"
       ],
-      "stderr": []
+      "stderr": [
+        ""
+      ]
     },
     {
       "args": [
@@ -169,8 +171,8 @@ Content-Type: application/json
         "Logitech_Roku",
         ""
       ],
-      "delay": "arg4",
-      "loops": "arg5",
+      "delay": "",
+      "loops": "",
       "stdout": [
         "0000000057430ff0 Vudu",
         "0000000057436798 KEY_SLEEP",
@@ -222,7 +224,9 @@ Content-Type: application/json
         "00000000574342bd Youtube",
         "000000005743ab54 PageDown"
       ],
-      "stderr": []
+      "stderr": [
+        ""
+      ]
     },
     {
       "args": [
@@ -230,8 +234,8 @@ Content-Type: application/json
         "Logitech_Samsung",
         ""
       ],
-      "delay": "arg4",
-      "loops": "arg5",
+      "delay": "",
+      "loops": "",
       "stdout": [
         "00000000e0e09966 KEY_POWERON",
         "00000000e0e019e6 KEY_POWEROFF",
@@ -305,7 +309,9 @@ Content-Type: application/json
         "00000000e0e08877 KEY_0",
         "00000000e0e0c43b KEY_MINUS"
       ],
-      "stderr": []
+      "stderr": [
+        ""
+      ]
     },
     {
       "args": [
@@ -313,8 +319,8 @@ Content-Type: application/json
         "Logitech_Denon",
         ""
       ],
-      "delay": "arg4",
-      "loops": "arg5",
+      "delay": "",
+      "loops": "",
       "stdout": [
         "0000000000000001 KEY_POWERON",
         "0000000000000002 KEY_POWEROFF",
@@ -333,7 +339,9 @@ Content-Type: application/json
         "000000000000000f KEY_VAUX",
         "0000000000000010 KEY_MUTE"
       ],
-      "stderr": []
+      "stderr": [
+        ""
+      ]
     }
   ],
   "broke": "false",
