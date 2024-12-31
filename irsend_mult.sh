@@ -116,13 +116,15 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  else
  if [ "${ran}" != "" ];then ran="${ran},"; fi
   ran="${ran}$(jq -n \
-    --arg stderr "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." '$ARGS.named')"
+    --arg stderr \
+    "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." \
+    '$ARGS.named')"
   errors="true bad count"
  fi
 done
 else
  if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}{\"error\":\"Not given a proper json\"}"
+ ran="${ran}$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')"
  errors="true bad json"
 fi
 

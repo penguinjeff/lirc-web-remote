@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "ran": [
     {
-      "error": "Not given a proper json"
+      "stderr": "Not given a proper json"
     }
   ],
   "broke": "false",

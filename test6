@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+
+{
+  "ran": [
+    {
+      "stderr": "only 4 of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops."
+    }
+  ],
+  "broke": "false",
+  "errors": "true bad count"
+}
