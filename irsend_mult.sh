@@ -30,7 +30,7 @@ done
 # "extract arg1" should return test
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
-function lines() {  echo -ne "$1"|jq -M -R -s 'split("\n")'; }
+function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
 ran=""
 function add2ran()
@@ -67,7 +67,7 @@ function process()
 json=$(extract json)
 
 #echo ${json}
-remotes_json=""
+declare -a remotes_json
 broke="false";
 
 check=$(echo "${json}" | jq -c '.ircodes[]' 2>&1 1>/dev/null)
@@ -107,10 +107,9 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  #  echo "remotes"
    remotes=$(echo -e "${stdout}"|grep -v "^$")
    while read remote;do
- #   echo "remote:${remote}"
+#    echo "remote:${remote}"
     process "list" "${remote}" ""
-    if [ "${remotes_json}" != "" ];then remotes_json=$(echo -e "${remotes_json},\n"); fi
-    remotes_json="${remotes_json}\"${remote}\":$(lines "$(echo -e "${stdout}" |awk '{print $2}')")"
+    remotes_json+=("$(jq -c -n --argjson ${remote} $(lines "$(echo -e "${stdout}" |awk '{print $2}')") '$ARGS.named')")
    done <<< "$(echo -e "${remotes}")"
   fi
  else
@@ -128,9 +127,11 @@ else
  errors="true bad json"
 fi
 
+#echo -e  "$(for item in "${remotes_json[@]}"; do echo "$item";done)" | jq -s add
+
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
  jq -n \
- --argjson remotes "{${remotes_json}}" \
+ --argjson remotes "$(echo -e  "$(for item in "${remotes_json[@]}"; do echo "$item";done)" | jq -s add)" \
  --argjson ran "[${ran}]" \
  --arg broke "${broke}" \
  --arg errors "${errors}" \
