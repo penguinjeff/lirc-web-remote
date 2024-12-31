@@ -39,8 +39,11 @@ var Activities=
 
  save()
  {alert('Saving Activities')
-  var temp=JSON.parse(JSON.stringify(data['activities']));
-  delete temp['none'];
+  var temp=[]
+  for(var x=0;x<data['activities'].length;x++)
+  {if(data['activities'][x]['editable'])
+   {temp.push(data['activities'][x])
+  }}
   savedata['activities']=temp;
 }}
 
