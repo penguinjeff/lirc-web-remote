@@ -126,7 +126,16 @@ else
 fi
 
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
- echo -e "{\"remotes\":{${remotes_json}}\n,\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1
+ jq -n \
+ --argjson remotes "{${remotes_json}}" \
+ --argjson ran "[${ran}]" \
+ --arg broke "${broke}" \
+ --arg errors "${errors}" \
+ '$ARGS.named'
 else
- echo -e "{\"ran\":[${ran}]\n,\"broke\":\"${broke}\",\"errors\":\"${errors}\"}"|jq . 2>&1
+ jq -n \
+ --argjson ran "[${ran}]" \
+ --arg broke "${broke}" \
+ --arg errors "${errors}" \
+ '$ARGS.named'
 fi
