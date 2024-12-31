@@ -7,14 +7,27 @@ var Modules=
  current:0,
  per:0,
  //with just remote it uses best fit to find modules
+ add()
+ {
+  if(!data['modules'])
+  {data['modules']=[];
+  }
+  data['modules'].push({'name':'Module'+(data['modules'].length+1),'editable':true,'rows':[]});
+  this.update_list(data['modules'].length-1);
+ },
+ update_list(item)
+ {
+ },
  display(remote,module,buttons,rows,columns)
  {if(typeof(remote)=='undefined')
   {alert('Modules Edit Mode');
-   document.getElementById('EditDisplay').appendChild(createElement(
+   var editarea=document.getElementById('EditDisplay');
+   editarea.appendChild(createElement(
    {'tag':'button',
-    'innerHTML':'Add Module'
+    'innerHTML':'Add Module',
+    'onclick':'Modules.add()'
    }));
-   document.getElementById('EditDisplay').appendChild(createElement(
+   editarea.appendChild(createElement(
    {'tag':'div',
     'id':'module_selector_parent'
    }));
@@ -172,7 +185,6 @@ x1 1  3
     }
     else{alert('could not find id:'+module)}
  }}},
-
 
  CatchAllAdvanceRewind(remote,columns,rows,advance,item,event)
  {console.log(event);
