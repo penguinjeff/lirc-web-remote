@@ -32,18 +32,17 @@ function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=
 
 function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
-ran=""
+declare -a ran
 function add2ran()
 {
- if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}$(jq -c -n \
+ ran+=("$(jq -c -n \
                   --argjson args "$(lines "$1\n$2\n$3")" \
                   --arg delay "$4" \
                   --arg loops "$5" \
                   --argjson stdout "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   --argjson stderr "$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   '$ARGS.named' \
-             )"
+             )")
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
   errors="true from ran"
  fi
@@ -113,32 +112,28 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
    done <<< "$(echo -e "${remotes}")"
   fi
  else
- if [ "${ran}" != "" ];then ran="${ran},"; fi
-  ran="${ran}$(jq -n \
+  ran+=("$(jq -n \
     --arg stderr \
     "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." \
-    '$ARGS.named')"
+    '$ARGS.named')")
   errors="true bad count"
  fi
 done
 else
- if [ "${ran}" != "" ];then ran="${ran},"; fi
- ran="${ran}$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')"
+ ran+=("$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')")
  errors="true bad json"
 fi
-
-#echo -e  "$(for item in "${remotes_json[@]}"; do echo "$item";done)" | jq -s add
 
 if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
  jq -n \
  --argjson remotes "$(echo -e  "$(for item in "${remotes_json[@]}"; do echo "$item";done)" | jq -s add)" \
- --argjson ran "[${ran}]" \
+ --argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
  --arg broke "${broke}" \
  --arg errors "${errors}" \
  '$ARGS.named'
 else
  jq -n \
- --argjson ran "[${ran}]" \
+ --argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
  --arg broke "${broke}" \
  --arg errors "${errors}" \
  '$ARGS.named'
