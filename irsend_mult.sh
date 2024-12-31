@@ -5,7 +5,7 @@
 # it will return a JSON with the remotes with thier understood irsignals
 # defined in your lirc files
 
-urlencode()
+function urlencode()
 {
  # urlencode <string>
  local length="${#1}"
@@ -18,11 +18,29 @@ urlencode()
  done
 }
 
-urldecode()
+function urldecode()
 {
  # urldecode <string>
  local url_encoded="${1//+/ }"
  printf '%b' "${url_encoded//%/\\x}"
+}
+
+sleepvar=0
+
+function sleepfor()
+{
+ local start=$(echo "$(date +%s.%N)*1000/1"|bc)
+ local current=${start};
+ local delay=${sleepvar};
+ local interval=0
+ while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
+  sleep .0001
+  interval=$((${interval}+1))
+  current=$(echo "$(date +%s.%N)*1000/1"|bc)
+  [ "${interval}" -gt 1000 ] && interval=0 && echo "${sleepvar}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
+ done
+ sleepvar=0
+ echo 0 > /tmp/${USER}_irsend_sleep
 }
 
 
@@ -32,7 +50,7 @@ errors="false"
 
 
 #last time since we want to kill any existing ones when we end new ones.
-time_start_file=/tmp/${USER}_irsent_started_time.txt
+time_start_file=/tmp/${USER}_irsend_started_time.txt
 time_start=$(date +%s)-$RANDOM
 echo ${time_start} > ${time_start_file}
 
@@ -116,14 +134,20 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
     break;
    fi
   done
-  while [ "${delay}" -gt "0" ];do
+  start=$(echo "$(date +%s.%N)*1000/1"|bc)
+  current=${start};
+  interval=0
+  while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";
     break;
    fi
-   delay=$((${delay}-1))
-   sleep 0.001
+   sleep .0001
+   interval=$((${interval}+1))
+   current=$(echo "$(date +%s.%N)*1000/1"|bc)
+   [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
   done
+  echo 0 > /tmp/${USER}_irsend_sleep
   if [ "${arg1}" = "list" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
  #  echo "remotes"
    remotes=$(echo -e "${stdout}"|grep -v "^$")
