@@ -10,7 +10,7 @@ Content-Type: application/json
         "",
         ""
       ],
-      "delay": "2000",
+      "delay": "20000",
       "loops": "1",
       "stdout": [
         "Logitech_Roku",

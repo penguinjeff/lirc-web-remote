@@ -5,6 +5,26 @@
 # it will return a JSON with the remotes with thier understood irsignals
 # defined in your lirc files
 
+#example: echo GET "json={%22ircodes%22:[[%22list%22,%22%22,%22%22,%220%22,%221%22]]" | ./irsend_mult.sh
+echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
+errors="false"
+
+broke='false'
+#last time since we want to kill any existing ones when we end new ones.
+time_start_file=/tmp/${USER}_irsend_started_time.txt
+time_start=$(date +%s)-$RANDOM
+echo ${time_start} > ${time_start_file}
+
+function watch_startfile()
+{
+ while true;do
+  if [ "$(cat ${time_start_file})" != "${time_start}" ];then break; fi
+  sleep 1
+ done
+}
+watch_startfile &
+pid=$!
+
 function urlencode()
 {
  # urlencode <string>
@@ -44,15 +64,8 @@ function sleepfor()
 }
 
 
-#example: echo GET "json={%22ircodes%22:[[%22list%22,%22%22,%22%22,%220%22,%221%22]]" | ./irsend_mult.sh
-echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
-errors="false"
 
 
-#last time since we want to kill any existing ones when we end new ones.
-time_start_file=/tmp/${USER}_irsend_started_time.txt
-time_start=$(date +%s)-$RANDOM
-echo ${time_start} > ${time_start_file}
 
 #get input from user and sanatize it.
 while read -t .01 line;do sanatized=$(echo "${line}" | \
@@ -107,7 +120,6 @@ json=$(extract json)
 
 #echo ${json}
 declare -a remotes_json
-broke="false";
 
 check=$(echo "${json}" | jq -c '.ircodes[]' 2>&1 1>/dev/null)
 
@@ -129,19 +141,13 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   while [ "${loops}" -gt "0" ];do
    process "${arg1}" "${arg2}" "${arg3}" "${delay}" "${loops}"
    loops=$((${loops}-1))
-   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-    broke="true";
-    break;
-   fi
+   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then broke="true";break;fi
   done
   start=$(echo "$(date +%s.%N)*1000/1"|bc)
   current=${start};
   interval=0
   while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
-   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-    broke="true";
-    break;
-   fi
+   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then broke="true";break;fi
    sleep .0001
    interval=$((${interval}+1))
    current=$(echo "$(date +%s.%N)*1000/1"|bc)
@@ -183,4 +189,8 @@ else
  --arg broke "${broke}" \
  --arg errors "${errors}" \
  '$ARGS.named'
+fi
+
+if [ "$(cat ${time_start_file})" == "${time_start}" ];then
+ echo $(date +%s)-$RANDOM > ${time_start_file};
 fi
