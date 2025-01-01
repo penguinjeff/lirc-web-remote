@@ -203,6 +203,7 @@ else
  '$ARGS.named'
 fi
 
-if [ "$(cat ${time_start_file})" == "${time_start}" ];then
- echo $(date +%s)-$RANDOM > ${time_start_file};
-fi
+# This was to kill off the background process
+#if [ "$(cat ${time_start_file})" == "${time_start}" ];then
+# echo $(date +%s)-$RANDOM > ${time_start_file};
+#fi
