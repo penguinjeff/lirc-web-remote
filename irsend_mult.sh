@@ -15,15 +15,21 @@ time_start_file=/tmp/${USER}_irsend_started_time.txt
 time_start=$(date +%s)-$RANDOM
 echo ${time_start} > ${time_start_file}
 
-function watch_startfile()
-{
- while true;do
-  if [ "$(cat ${time_start_file})" != "${time_start}" ];then break; fi
-  sleep 1
- done
-}
-watch_startfile &
-pid=$!
+# THIS IS WRONG somehow reading a file takes less time than using ps
+# I'll leave this here commented out so I can use it as reference
+# I thought reading from a file would take longer than checking if a background process is running
+# I created this process to run in the background to check the file
+#function watch_startfile()
+#{
+# while true;do
+#  if [ "$(cat ${time_start_file})" != "${time_start}" ];then
+#   break;
+#  fi
+#  sleep .01
+# done
+#}
+#watch_startfile &
+#pid=$!
 
 function urlencode()
 {
@@ -141,13 +147,19 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   while [ "${loops}" -gt "0" ];do
    process "${arg1}" "${arg2}" "${arg3}" "${delay}" "${loops}"
    loops=$((${loops}-1))
-   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then broke="true";break;fi
+#   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then
+   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
+    broke="true";break;
+   fi
   done
   start=$(echo "$(date +%s.%N)*1000/1"|bc)
   current=${start};
   interval=0
   while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
-   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then broke="true";break;fi
+#   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then
+   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
+    broke="true";break;
+   fi
    sleep .0001
    interval=$((${interval}+1))
    current=$(echo "$(date +%s.%N)*1000/1"|bc)
