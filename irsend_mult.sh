@@ -106,10 +106,26 @@ function add2ran()
  fi
 }
 
+function subrestart
+{
+ local stdout=$(systemctl restart irsend_mult.sh);
+ jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
+}
+
 function subprocess()
 {
  local stdout=$(irsend "$1" "$2" "$3");
  jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
+}
+
+function restart()
+{
+# echo "irsend \"$1\" \"$2\" \"$3\""
+ local both=$(subrestart 2>&1)
+ stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
+ #Reform stdout back to it's original form
+ stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
+ add2ran "$1" "" "" "0" "1" "${stdout}" "${stderr}"
 }
 
 function process()
@@ -166,6 +182,9 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
    [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
   done
   echo 0 > /tmp/${USER}_irsend_sleep
+  if [ "${arg1}" = "restart" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
+   restart
+  fi
   if [ "${arg1}" = "list" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
  #  echo "remotes"
    remotes=$(echo -e "${stdout}"|grep -v "^$")

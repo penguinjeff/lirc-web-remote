@@ -1,0 +1,25 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+
+{
+  "ran": [
+    {
+      "args": [
+        "reboot",
+        "",
+        ""
+      ],
+      "delay": "0",
+      "loops": "1",
+      "stdout": [
+        "unknown directive: %22reboot%22"
+      ],
+      "stderr": [
+        "Error running command: Input/output error"
+      ]
+    }
+  ],
+  "broke": "false",
+  "errors": "true from ran"
+}
