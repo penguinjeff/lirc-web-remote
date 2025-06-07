@@ -1,7 +1,8 @@
 [Unit]
 Description=irsend interface for php
-Wants=lircd.service
-After=network-online.target lircd.service
+Requires=lircd.service network-online.target
+Wants=lircd.service network-online.target
+After=lircd.service network-online.target
 
 [Service]
 Type=simple
