@@ -17,6 +17,10 @@ var Modules=
  },
  update_list(item)
  {
+   for(x=0;x<data['modules'].length;x++)
+   {if(data['modules'][x]['editable'])
+    {temp.push(data['modules'][x]['name'])
+   }}
  },
  display(remote,module,buttons,rows,columns)
  {if(typeof(remote)=='undefined')
