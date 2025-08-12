@@ -4,9 +4,13 @@
 # If you give it the list argument like the first example
 # it will return a JSON with the remotes with thier understood irsignals
 # defined in your lirc files
-
-#example: echo GET "json={%22ircodes%22:[[%22list%22,%22%22,%22%22,%220%22,%221%22]]" | ./irsend_mult.sh
-echo -e "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
+#                                              name of the remote listed in irsend list EX: samsungTVremote
+#                                              |           the ircode that would you want sent from that remote EX: key_power
+#                                              |            |         delay in miliseconds
+#                                              |            |         |        loops minimum 1
+#                                              V            V         V        V
+#example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]" | ./irsend_mult.sh
+printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
 
 broke='false'
@@ -94,11 +98,11 @@ declare -a ran
 function add2ran()
 {
  ran+=("$(jq -c -n \
-                  --argjson args "$(lines "$1\n$2\n$3")" \
-                  --arg delay "$4" \
-                  --arg loops "$5" \
-                  --argjson stdout "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
-                  --argjson stderr "$(lines "$(echo -e "$7" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson args "$(lines "$1\n$2")" \
+                  --arg delay "$3" \
+                  --arg loops "$4" \
+                  --argjson stdout "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stderr "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   '$ARGS.named' \
              )")
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
@@ -112,30 +116,30 @@ function subrestart
  jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
-function subprocess()
-{
- local stdout=$(irsend "$1" "$2" "$3");
- jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
-}
-
 function restart()
 {
-# echo "irsend \"$1\" \"$2\" \"$3\""
+# echo "irsend \"$1\" \"$2\""
  local both=$(subrestart 2>&1)
  stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
  #Reform stdout back to it's original form
  stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
- add2ran "$1" "" "" "0" "1" "${stdout}" "${stderr}"
+ add2ran "restart" "" "0" "1" "${stdout}" "${stderr}"
+}
+
+function subprocess()
+{
+ local stdout=$(irsend "send_once" "$1" "$2");
+ jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
 function process()
 {
-# echo "irsend \"$1\" \"$2\" \"$3\""
- local both=$(subprocess $1 $2 $3 2>&1)
+# echo "irsend \"send_once\" \"$1\" \"$2\""
+ local both=$(subprocess $1 $2 2>&1)
  stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
  #Reform stdout back to it's original form
  stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
- add2ran "$1" "$2" "$3" "$4" "$5" "${stdout}" "${stderr}"
+ add2ran "$1" "$2" "$3" "$4" "${stdout}" "${stderr}"
 }
 
 json=$(extract json)
@@ -155,13 +159,12 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
  if [ "${count}" -gt "4" ];then
   arg1=$(echo "$row" | jq -r '.[0]')
   arg2=$(echo "$row" | jq -r '.[1]')
-  arg3=$(echo "$row" | jq -r '.[2]')
   delay=$(echo "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
   loops=$(echo "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do
-   process "${arg1}" "${arg2}" "${arg3}" "${delay}" "${loops}"
+   process "${arg1}" "${arg2}" "${delay}" "${loops}"
    loops=$((${loops}-1))
 #   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
@@ -182,24 +185,9 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
    [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
   done
   echo 0 > /tmp/${USER}_irsend_sleep
-  if [ "${arg1}" = "restart" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
+  if [ "${arg1}" = "restart" ] && [ "${arg2}" = "" ];then
    restart
   fi
-  if [ "${arg1}" = "list" ] && [ "${arg2}" = "" ] && [ "${arg3}" = "" ];then
- #  echo "remotes"
-   remotes=$(echo -e "${stdout}"|grep -v "^$")
-   while read remote;do
-#    echo "remote:${remote}"
-    process "list" "${remote}" ""
-    remotes_json+=("$(jq -c -n --argjson ${remote} $(lines "$(echo -e "${stdout}" |awk '{print $2}')") '$ARGS.named')")
-   done <<< "$(echo -e "${remotes}")"
-  fi
- else
-  ran+=("$(jq -n \
-    --arg stderr \
-    "only ${count} of 5 args irsend expects list|send_once|send_start|send_stop remote|BLANK ircode_name|BLANK then I need the delay and how many loops." \
-    '$ARGS.named')")
-  errors="true bad count"
  fi
 done
 else
@@ -207,20 +195,11 @@ else
  errors="true bad json"
 fi
 
-if [ "${remotes}" != "" ] && [ "${broke}" = "false" ];then
- jq -n \
- --argjson remotes "$(echo -e  "$(for item in "${remotes_json[@]}"; do echo "$item";done)" | jq -s add)" \
+jq -n \
  --argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
  --arg broke "${broke}" \
  --arg errors "${errors}" \
  '$ARGS.named'
-else
- jq -n \
- --argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
- --arg broke "${broke}" \
- --arg errors "${errors}" \
- '$ARGS.named'
-fi
 
 # This was to kill off the background process
 #if [ "$(cat ${time_start_file})" == "${time_start}" ];then

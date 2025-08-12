@@ -217,14 +217,11 @@ var Macros=
    }}
  }},
 
- execute(list,action)
+ execute(list)
  {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
-  for(var x=0;x<list.length;x++)
-  {reallist.push([action,list[x][0],list[x][1],list[x][2],list[x][3]])
-  }
-  json='{%22ircodes%22:'+JSON.stringify(reallist).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
+  json='{%22ircodes%22:'+JSON.stringify(list).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
   fetch('irsend_mult.php?json='+json+'&id='+id,{signal: AbortSignal.timeout(5000)})
   .then(response =>
   {if (!response.ok)
@@ -234,20 +231,6 @@ var Macros=
   })
   .then(localdata =>
   {
-   if(localdata['remotes'])
-   {data['remotes']={'none':['none']};
-    data['remote_index']=[];
-    var index=Object.keys(localdata['remotes'])
-    for(var x=0;x<index.length;x++)
-    {data['remotes'][index[x]]=localdata['remotes'][index[x]];
-    }
-    data['remote_index']=Object.keys(data['remotes']);
-    data['remote_reverse_index']=reverse_index(data['remote_index'])
-    data['remotes_index']={}
-    data['remotes_reverse_index']={};
-    for(var x=0;x<data['remote_index'].length;x++)
-    {data['remotes_reverse_index'][data['remote_index'][x]]=reverse_index(data['remotes'][data['remote_index'][x]]);
-   }}
   })
   .catch(error => {});
   this.holdtimer=setTimeout(function(){ Macros.status(id); }, 1000);
@@ -279,6 +262,40 @@ var Macros=
  save()
  {savedata['macros']=data['macros'];
  },
+
+//############### remoterefresh ################
+
+remote_refresh()
+{
+  var id = Math.round(+new Date()/1000);
+  data['remotes']={'none':['none']};
+  data['remotes_index']={}
+  data['remotes_reverse_index']={};
+
+  data['remote_index']=[];
+  data['remote_reverse_index']=reverse_index(data['remote_index']);
+
+  fetch('irsend_list.php?id='+id)
+  .then(function () {})
+
+  fetch('remotes/remotes.js?id='+id)
+  .then(function (a) {
+	return a.json(); // call the json method on the response to get JSON
+  })
+  .then(function (localdata){
+	if(localdata['remotes']){
+		var index=Object.keys(localdata['remotes'])
+		for(var x=0;x<index.length;x++){
+			data['remotes'][index[x]]=localdata['remotes'][index[x]];
+		}
+		data['remote_index']=Object.keys(data['remotes']);
+		data['remote_reverse_index']=reverse_index(data['remote_index'])
+		for(var x=0;x<data['remote_index'].length;x++){
+			data['remotes_reverse_index'][data['remote_index'][x]]=reverse_index(data['remotes'][data['remote_index'][x]]);
+		}
+	}
+  })
+},
 
 
 //################ Update #######################
@@ -330,7 +347,7 @@ if(handle.getAttribute('name')=='ircode')
 
 if(handle.getAttribute('name')=='test')
 {
- this.execute(data['macros'][item]['ircodes'],'send_once');
+ this.execute(data['macros'][item]['ircodes']);
  return;
 }
 
