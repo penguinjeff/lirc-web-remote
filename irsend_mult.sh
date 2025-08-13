@@ -73,18 +73,6 @@ function sleepfor()
  echo 0 > /tmp/${USER}_irsend_sleep
 }
 
-
-
-
-
-#get input from user and sanatize it.
-while read -t .01 line;do sanatized=$(echo "${line}" | \
-sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
- | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-[ "$(echo $sanatized|awk '{print $1}')" = "GET" ] && break
-[ "${line}" = "" ] && break
-done
-
 # extract function
 # get a specified variable name from input
 # example:
@@ -94,7 +82,6 @@ function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=
 
 function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
-declare -a ran
 function add2ran()
 {
  ran+=("$(jq -c -n \
@@ -116,16 +103,6 @@ function subrestart
  jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
-function restart()
-{
-# echo "irsend \"$1\" \"$2\""
- local both=$(subrestart 2>&1)
- stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
- #Reform stdout back to it's original form
- stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
- add2ran "restart" "" "0" "1" "${stdout}" "${stderr}"
-}
-
 function subprocess()
 {
  local stdout=$(irsend "send_once" "$1" "$2");
@@ -142,31 +119,40 @@ function process()
  add2ran "$1" "$2" "$3" "$4" "${stdout}" "${stderr}"
 }
 
+#get input from user and sanatize it.
+while read -t .01 line;do sanatized=$(echo "${line}" | \
+sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
+ | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
+[ "$(echo $sanatized|awk '{print $1}')" = "GET" ] && break
+[ "${line}" = "" ] && break
+done
+
+declare -a ran
+
 json=$(extract json)
 
-#echo ${json}
-declare -a remotes_json
+#printf '%s' ${json} >> /tmp/irsend_mult-$(date +%s).txt
 
-check=$(echo "${json}" | jq -c '.ircodes[]' 2>&1 1>/dev/null)
+#error checking if json is bad it will give check something otherwise it will be empty
+check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
 
 if [ "$check" = "" ];then
-for row in $(echo "${json}" | jq -c '.ircodes[]'); do
+while read row; do
  if [ "$(cat ${time_start_file})" != "${time_start}" ];then
   broke="true";
   break;
  fi
- count=$(echo "$row" | jq length)
+ count=$(printf '%s' "$row" | jq length)
  if [ "${count}" -gt "4" ];then
-  arg1=$(echo "$row" | jq -r '.[0]')
-  arg2=$(echo "$row" | jq -r '.[1]')
-  delay=$(echo "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
-  loops=$(echo "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
+  arg1=$(printf '%s' "$row" | jq -r '.[0]')
+  arg2=$(printf '%s' "$row" | jq -r '.[1]')
+  delay=$(printf '%s' "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
+  loops=$(printf '%s' "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do
    process "${arg1}" "${arg2}" "${delay}" "${loops}"
    loops=$((${loops}-1))
-#   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";break;
    fi
@@ -175,7 +161,6 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
   current=${start};
   interval=0
   while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
-#   if [ "$(ps -hp ${pid} 2>/dev/null)" == "" ];then
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";break;
    fi
@@ -185,11 +170,8 @@ for row in $(echo "${json}" | jq -c '.ircodes[]'); do
    [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
   done
   echo 0 > /tmp/${USER}_irsend_sleep
-  if [ "${arg1}" = "restart" ] && [ "${arg2}" = "" ];then
-   restart
-  fi
  fi
-done
+done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
 else
  ran+=("$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')")
  errors="true bad json"
@@ -200,8 +182,3 @@ jq -n \
  --arg broke "${broke}" \
  --arg errors "${errors}" \
  '$ARGS.named'
-
-# This was to kill off the background process
-#if [ "$(cat ${time_start_file})" == "${time_start}" ];then
-# echo $(date +%s)-$RANDOM > ${time_start_file};
-#fi
