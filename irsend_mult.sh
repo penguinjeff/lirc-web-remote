@@ -143,7 +143,7 @@ while read row; do
   break;
  fi
  count=$(printf '%s' "$row" | jq length)
- if [ "${count}" -gt "4" ];then
+ if [ "${count}" = "4" ];then
   arg1=$(printf '%s' "$row" | jq -r '.[0]')
   arg2=$(printf '%s' "$row" | jq -r '.[1]')
   delay=$(printf '%s' "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
