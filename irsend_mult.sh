@@ -10,14 +10,36 @@
 #                                              |            |         |        loops minimum 1
 #                                              V            V         V        V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]" | ./irsend_mult.sh
+
+if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
+        function realtime(){ echo $EPOCHREALTIME; }
+else
+    	echo "using date"
+        function realtime(){ date +%s.%6N; }
+fi
+
+microseconds() {
+        #remove zero padding
+        rzp() {
+               	local number="${1#${1%%[!0]*}}";
+                [ -z $number ]&&number=0
+                echo $number
+        }
+	echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
+                ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
+}
+
+
+
 printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
 
 broke='false'
 #last time since we want to kill any existing ones when we end new ones.
 time_start_file=/tmp/${USER}_irsend_started_time.txt
-time_start=$(date +%s)-$RANDOM
+time_start=$(realtime)
 echo ${time_start} > ${time_start_file}
+
 
 # THIS IS WRONG somehow reading a file takes less time than using ps
 # I'll leave this here commented out so I can use it as reference
@@ -34,25 +56,6 @@ echo ${time_start} > ${time_start_file}
 #}
 #watch_startfile &
 #pid=$!
-
-if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
-        function realtime(){ echo $EPOCHREALTIME; }
-else
-        echo "using date"
-        function realtime(){ date +%s.%6N; }
-fi
-
-microseconds() {
-        #remove zero padding
-        rzp() {
-                local number="${1#${1%%[!0]*}}";
-                [ -z $number ]&&number=0
-                echo $number
-        }
-        echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
-                ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
-}
-
 
 function urlencode()
 {
@@ -134,7 +137,7 @@ declare -a ran
 
 json=$(extract json)
 
-#printf '%s' ${json} >> /tmp/irsend_mult-$(date +%s).txt
+#printf '%s' ${json} >> /tmp/irsend_mult-$(realtime).txt
 
 #error checking if json is bad it will give check something otherwise it will be empty
 check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
@@ -163,14 +166,14 @@ while read row; do
   start=$(realtime)
   current=${start};
   interval=0
-  while [ "$((delay-$(microseconds $start $current))" -gt "0" ];do
+  while [ "$((delay-$(microseconds $start $current)))" -gt "0" ];do
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";break;
    fi
    sleep .0001
    ((interval++))
-   current=$(echo "$(date +%s.%N)*1000/1"|bc)
-   [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
+   current=$(realtime)
+   [ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
   done
   echo 0 > /tmp/${USER}_irsend_sleep
  fi
