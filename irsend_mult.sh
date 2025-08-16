@@ -35,6 +35,25 @@ echo ${time_start} > ${time_start_file}
 #watch_startfile &
 #pid=$!
 
+if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
+        function realtime(){ echo $EPOCHREALTIME; }
+else
+        echo "using date"
+        function realtime(){ date +%s.%6N; }
+fi
+
+microseconds() {
+        #remove zero padding
+        rzp() {
+                local number="${1#${1%%[!0]*}}";
+                [ -z $number ]&&number=0
+                echo $number
+        }
+        echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
+                ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
+}
+
+
 function urlencode()
 {
  # urlencode <string>
@@ -56,22 +75,6 @@ function urldecode()
 }
 
 sleepvar=0
-
-function sleepfor()
-{
- local start=$(echo "$(date +%s.%N)*1000/1"|bc)
- local current=${start};
- local delay=${sleepvar};
- local interval=0
- while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
-  sleep .0001
-  interval=$((${interval}+1))
-  current=$(echo "$(date +%s.%N)*1000/1"|bc)
-  [ "${interval}" -gt 1000 ] && interval=0 && echo "${sleepvar}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
- done
- sleepvar=0
- echo 0 > /tmp/${USER}_irsend_sleep
-}
 
 # extract function
 # get a specified variable name from input
@@ -142,12 +145,12 @@ while read row; do
   broke="true";
   break;
  fi
- count=$(printf '%s' "$row" | jq length)
+ count=$(echo "$row" | jq length)
  if [ "${count}" = "4" ];then
-  arg1=$(printf '%s' "$row" | jq -r '.[0]')
-  arg2=$(printf '%s' "$row" | jq -r '.[1]')
-  delay=$(printf '%s' "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
-  loops=$(printf '%s' "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
+  arg1=$(echo "$row" | jq -r '.[0]')
+  arg2=$(echo "$row" | jq -r '.[1]')
+  delay=$(echo "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
+  loops=$(echo "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do
@@ -157,15 +160,15 @@ while read row; do
     broke="true";break;
    fi
   done
-  start=$(echo "$(date +%s.%N)*1000/1"|bc)
+  start=$(realtime)
   current=${start};
   interval=0
-  while [ "$(echo "${delay}-(${current}-${start})"|bc)" -gt "0" ];do
+  while [ "$((delay-$(microseconds $start $current))" -gt "0" ];do
    if [ "$(cat ${time_start_file})" != "${time_start}" ];then
     broke="true";break;
    fi
    sleep .0001
-   interval=$((${interval}+1))
+   ((interval++))
    current=$(echo "$(date +%s.%N)*1000/1"|bc)
    [ "${interval}" -gt 1000 ] && interval=0 && echo "${delay}-(${current}-${start})" | bc > /tmp/${USER}_irsend_sleep
   done

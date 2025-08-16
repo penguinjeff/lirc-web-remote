@@ -222,42 +222,8 @@ var Macros=
   var id = Math.round(+new Date()/1000);
   var reallist=[];
   json='{%22ircodes%22:'+JSON.stringify(list).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
-  fetch('irsend_mult.php?json='+json+'&id='+id,{signal: AbortSignal.timeout(5000)})
-  .then(response =>
-  {if (!response.ok)
-   {throw new Error("Network response was not ok");
-   }
-   return response.json();
-  })
-  .then(localdata =>
-  {
-  })
-  .catch(error => {});
-  this.holdtimer=setTimeout(function(){ Macros.status(id); }, 1000);
+  fetch('irsend_mult.php?json='+json+'&id='+id,{signal: AbortSignal.timeout(5000)});
   return;
- },
- status(id)
- {
-  fetch('status.php?id='+id)
-  .then(response =>
-  {if (!response.ok)
-   {throw new Error("Network response was not ok");
-   }
-   return response.json();
-  })
-  .then(localdata =>
-  {if(localdata['errors'] && localdata['errors']!='false')
-   {alert(JSON.stringify(localdata))
-    return;
-   }
-   if(localdata['status']&&localdata['status']=='wait')
-   {
-    //wait 3 seconds before looking again
-    this.holdtimer=setTimeout(function(){ Macros.status(id); }, 3000);
-    return;
-   }
-  })
-  .catch(error => {});
  },
  save()
  {savedata['macros']=data['macros'];

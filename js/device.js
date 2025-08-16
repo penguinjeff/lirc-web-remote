@@ -39,16 +39,18 @@ var Devices=
   {
    item.setAttribute('class','button_clicked')
    this.mousedown=true;
-   this.held=true;
-   this.holdtimer=setTimeout(function(){ Devices.hold(remote,button); }, 500);
-   navigator.vibrate(500);
+   this.holding=true;
+   this.held=false;
+   this.holdtimer=setTimeout(function(){ Devices.hold(remote,button); }, 700);
+   navigator.vibrate(700);
    Macros.execute([[remote,button,0,1]])
  }},
 
  hold(remote,button)
  {
-  if(this.held)
+  if(this.holding)
   {
+   this.held=true
    // loop an unresanable amount of times 1000 is unreasonable and should be cut off long before reached
    Macros.execute([[remote,button,0,1000]])
   }
@@ -58,8 +60,9 @@ var Devices=
  release(remote,button,item,event)
  {if(!event['button'])
   {
+   this.holding=false;
    clearTimeout(this.holdtimer);
-   Macros.execute([]);
+   if(this.held){Macros.execute([]);}
    this.altholdtimer=setTimeout(function(){ Devices.delayed_release(item); }, 100);
    this.mousedown=false;
    this.held=false;
