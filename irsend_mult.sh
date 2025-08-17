@@ -95,8 +95,7 @@ function add2ran()
                   --argjson args "$(lines "$1\n$2")" \
                   --arg delay "$3" \
                   --arg loops "$4" \
-                  --argjson stdout "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
-                  --argjson stderr "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stderr "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   '$ARGS.named' \
              )")
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
@@ -112,26 +111,21 @@ function subrestart
 
 function subprocess()
 {
- local stdout=$(irsend "send_once" "$1" "$2");
-# echo "$(realtime) irsend send_once $1 $2" >> /tmp/activity.txt
- jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
+ irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false;
 }
 
 function process()
 {
 # echo "irsend \"send_once\" \"$1\" \"$2\""
- local both=$(subprocess $1 $2 2>&1)
- stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
- #Reform stdout back to it's original form
- stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
- add2ran "$1" "$2" "$3" "$4" "${stdout}" "${stderr}"
+ local both=$(subprocess $1 $2)
+ [ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
 }
 
 #get input from user and sanatize it.
 while read -t .01 line;do sanatized=$(echo "${line}" | \
 sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
  | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-[ "$(echo $sanatized|awk '{print $1}')" = "GET" ] && break
+[ "${sanatized:0:3}" != "GET " ] && break
 [ "${line}" = "" ] && break
 done
 
