@@ -9,7 +9,7 @@
 #                                              |            |         delay in miliseconds
 #                                              |            |         |        loops minimum 1
 #                                              V            V         V        V
-#example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]" | ./irsend_mult.sh
+#example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
 if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
         function realtime(){ echo $EPOCHREALTIME; }
@@ -28,6 +28,7 @@ microseconds() {
 	echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
                 ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
 }
+
 
 
 
@@ -112,6 +113,7 @@ function subrestart
 function subprocess()
 {
  local stdout=$(irsend "send_once" "$1" "$2");
+# echo "$(realtime) irsend send_once $1 $2" >> /tmp/activity.txt
  jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
@@ -150,10 +152,12 @@ while read row; do
  fi
  count=$(echo "$row" | jq length)
  if [ "${count}" = "4" ];then
+#  echo "$(realtime) $row" >> /tmp/activity.txt
   arg1=$(echo "$row" | jq -r '.[0]')
   arg2=$(echo "$row" | jq -r '.[1]')
-  delay=$(echo "$row" | jq -r '.[3]'|sed "s/[^0-9]*//g")
-  loops=$(echo "$row" | jq -r '.[4]'|sed "s/[^0-9]*//g")
+  delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
+  loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
+#  echo "$(realtime) $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do
