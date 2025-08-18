@@ -41,12 +41,38 @@ ircodes=${unwrapped:10}
 [ "${ircodes:0:1}" != '[' ] && bad "malformed ircodes outer [ missing"
 [ "${ircodes:0-1}" != ']' ] && bad "malformed ircodes outer ] missing"
 unwrapped="${ircodes:1:$((${#ircodes}-2))}"
+x=0
+y=0
+quotelocation[$((x++))]=remote
+quotelocation[$((x++))]=signal
+quotelocation[$((x++))]=pause
+quotelocation[$((x++))]=loops
+ircode_array=''
+x=0
 while [ -n "${unwrapped}" ];do
  [ "${unwrapped:0:1}" != '[' ] && bad "malformed ircodes inner [ missing"
  [ "${unwrapped:0-1}" != ']' ] && bad "malformed ircodes inner ] missing"
  ircode_wrapped=${unwrapped%%\]*}
- ircode="${ircode_wrapped:1:$((${#ircode_wrapped}-2))}"
- echo -e "$unwrapped"
- echo -e "ircode:$ircode"
+ ircode="${ircode_wrapped:1:$((${#ircode_wrapped}-1))}"
+#  echo "$ircode"
+ while [ "${ircode:0-1}" = '"' ];do
+  [ "${ircode:0:1}" != '"' ] && bad "missing open quote for ${quotelocation[$((x-y))]}"
+  part=${ircode:1}
+  part=${part%%\"*}
+  #echo "${x}part:${part}"
+  ircode=${ircode:$((${#part}+3))}
+  ircode_array[$x]=$part
+  ((x++))||true
+  [ "${ircode:0-1}" != '"' ] && [ -n "${ircode:0-1}" ] && bad "missing closing quote"
+ done
+# echo -e "test:$x:$y:${ircode_array[$((0+y*4))]}:${ircode_array[$((1+y*4))]}:${ircode_array[$((2+y*4))]}:${ircode_array[$((3+y*4))]}"
+ ((y++))||true
+# echo -e "$unwrapped"
+# echo -e "ircode:$ircode"
  unwrapped=${unwrapped:$((${#ircode_wrapped}+2))}
+done
+z=0
+while [ "$z" -lt "$y" ];do
+ echo -e "test:$z:${ircode_array[$((0+z*4))]}:${ircode_array[$((1+z*4))]}:${ircode_array[$((2+z*4))]}:${ircode_array[$((3+z*4))]}"
+ ((z++))||true
 done
