@@ -16,7 +16,6 @@ bad()
  exit
 }
 
-x=0
 line='something'
 prev='something'
 start='false'
@@ -24,6 +23,7 @@ accum=''
 while [ -n "$prev" ] || [ -n "$line" ];do
 prev=$line
 read -t .01 line
+#echo "$line"
 [ "$prev" = "$(echo -e "\r")" ] && start=""
 [ -z "$start" ] && [ -n "$line" ] && accum+="$line"
 done
@@ -72,6 +72,8 @@ while [ -n "${unwrapped}" ];do
  unwrapped=${unwrapped:$((${#ircode_wrapped}+2))}
 done
 z=0
+
+##recall
 while [ "$z" -lt "$y" ];do
  echo -e "test:$z:${ircode_array[$((0+z*4))]}:${ircode_array[$((1+z*4))]}:${ircode_array[$((2+z*4))]}:${ircode_array[$((3+z*4))]}"
  ((z++))||true
