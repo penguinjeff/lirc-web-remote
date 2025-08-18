@@ -6,57 +6,12 @@
 # defined in your lirc files
 #                                              name of the remote listed in irsend list EX: samsungTVremote
 #                                              |           the ircode that would you want sent from that remote EX: key_power
-#                                              |            |         delay in miliseconds 0
-#                                              |            |          |       loops minimum 1
-#                                              V            V          V       V
+#                                              |            |         delay in miliseconds
+#                                              |            |         |        loops minimum 1
+#                                              V            V         V        V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
-if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
-        function realtime(){ echo $EPOCHREALTIME; }
-else
-    	echo "using date"
-        function realtime(){ date +%s.%6N; }
-fi
-
-microseconds() {
-        #remove zero padding
-        rzp() {
-               	local number="${1#${1%%[!0]*}}";
-                [ -z $number ]&&number=0
-                echo $number
-        }
-	echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
-                ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
-}
-
-
-
-
-printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
-errors="false"
-
-broke='false'
-#last time since we want to kill any existing ones when we end new ones.
-time_start_file=/tmp/${USER}_irsend_started_time.txt
-time_start=$(realtime)
-echo ${time_start} > ${time_start_file}
-
-
-# THIS IS WRONG somehow reading a file takes less time than using ps
-# I'll leave this here commented out so I can use it as reference
-# I thought reading from a file would take longer than checking if a background process is running
-# I created this process to run in the background to check the file
-#function watch_startfile()
-#{
-# while true;do
-#  if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-#   break;
-#  fi
-#  sleep .01
-# done
-#}
-#watch_startfile &
-#pid=$!
+input="GET json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}"
 
 function urlencode()
 {
@@ -95,7 +50,8 @@ function add2ran()
                   --argjson args "$(lines "$1\n$2")" \
                   --arg delay "$3" \
                   --arg loops "$4" \
-                  --argjson stderr "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stdout "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
+                  --argjson stderr "$(lines "$(echo -e "$6" | grep -v "^$" | sed 's/\"/%22/g')")" \
                   '$ARGS.named' \
              )")
  if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
@@ -111,21 +67,26 @@ function subrestart
 
 function subprocess()
 {
- irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false;
+ local stdout=$(irsend "send_once" "$1" "$2");
+ echo "$(realtime) irsend send_once $1 $2" >> /tmp/activity.txt
+ jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
 }
 
 function process()
 {
 # echo "irsend \"send_once\" \"$1\" \"$2\""
- local both=$(subprocess $1 $2)
- [ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
+ local both=$(subprocess $1 $2 2>&1)
+ stderr=$(echo -e "${both}"|sed -z 's/{[^{]*$//')
+ #Reform stdout back to it's original form
+ stdout=$(urldecode "$(echo -e "${both}"|sed -z 's/.*\({[^{]*\)$/\1/'|jq -r .stdout)")
+ add2ran "$1" "$2" "$3" "$4" "${stdout}" "${stderr}"
 }
 
 #get input from user and sanatize it.
 while read -t .01 line;do sanatized=$(echo "${line}" | \
 sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
  | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-[ "${sanatized:0:3}" != "GET " ] && break
+[ "$(echo $sanatized|awk '{print $1}')" = "GET" ] && break
 [ "${line}" = "" ] && break
 done
 
@@ -146,12 +107,11 @@ while read row; do
  fi
  count=$(echo "$row" | jq length)
  if [ "${count}" = "4" ];then
-#  echo "$(realtime) $row" >> /tmp/activity.txt
+  echo "$(realtime) $row" >> /tmp/activity.txt
   arg1=$(echo "$row" | jq -r '.[0]')
   arg2=$(echo "$row" | jq -r '.[1]')
-  delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
-  loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
-#  echo "$(realtime) $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
+  delay=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
+  loops=$(echo "$row" | jq -r '.[4]'|sed "s/^0*[^0-9]*//")
   if [ "${delay}" = "" ];then delay=0; fi
   if [ "${loops}" = "" ];then loops=1; fi
   while [ "${loops}" -gt "0" ];do

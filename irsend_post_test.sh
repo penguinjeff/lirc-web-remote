@@ -1,0 +1,6 @@
+curl --data "{%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" 127.0.0.1:4334
+curl --data '{"ircodes":[["remote","ircode","0","1"]]}' 127.0.0.1:4334
+curl --data '{"ircodes":[["remote","ircode1","0","1"],["remote","ircode2","0","1"]]}' 127.0.0.1:4334
+curl --data '{"ircodes":[["remote","ircode1","0","1"],["remote","ircode2","0","1"],["remote","ircode3","0","1"]]}' 127.0.0.1:4334
+curl --data '{"ircodes":[["remote","ircode","0","1"]]' 127.0.0.1:4334
+curl --data '{"ircodes":[["remote","ircode","0","1"]}' 127.0.0.1:4334
