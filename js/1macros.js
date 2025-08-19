@@ -221,10 +221,19 @@ var Macros=
  {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
-  json='{%22ircodes%22:'+JSON.stringify(list).replaceAll('"','%22').replaceAll('[','%5B').replaceAll(']','%5D')+'}'
-  fetch('irsend_mult.php?json='+json+'&id='+id,{signal: AbortSignal.timeout(5000)});
+  json='{"ircodes":'+JSON.stringify(list)+'}'
+  fetch('irsend_mult.php',{
+	method: 'POST',
+	headers: {
+		'Accept':'application/json',
+		'Content-Type':'application/json'
+	},
+	body:'json='+json+'&id='+id,
+        signal: AbortSignal.timeout(5000)
+  });
   return;
  },
+
  save()
  {savedata['macros']=data['macros'];
  },
