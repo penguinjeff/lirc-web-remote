@@ -6,3 +6,4 @@ curl --data '{"ircodes":[["remote","ircode1","0","1"],["remote","ircode2","0","1
 curl --data '{"ircodes":[["remote","ircode1","0","1"],["remote","ircode2","0","1"],["remote","ircode3","0","1"]]}' 127.0.0.1:4334
 curl --data '{"ircodes":[["remote","ircode","0","1"]]' 127.0.0.1:4334
 curl --data '{"ircodes":[["remote","ircode","0","1"]}' 127.0.0.1:4334
+curl --data 'json={"ircodes":[["remote","ircode","0","1"]]}' http://127.0.0.1/lirc-web-remote/irsend_post.php

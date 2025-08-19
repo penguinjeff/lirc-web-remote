@@ -18,14 +18,10 @@ bad()
 
 line='something'
 prev='something'
-start='false'
 accum=''
-while [ -n "$prev" ] || [ -n "$line" ];do
-prev=$line
-read -t .01 line
-#echo "$line"
-[ "$prev" = $'\r' ] && start=""
-[ -z "$start" ] && [ -n "$line" ] && accum+="$line"
+while [ -n "$line" ];do
+read -t .001 line
+[ "${line:0-1}" != $'\r' ] && accum+="$line"
 done
 #sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g'
 replace "$accum" '[^A-Za-z0-9_.\-+=&\{\}%\[\] :,\"]' '' %5B \[ %5D \] %22 \"
