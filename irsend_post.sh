@@ -31,38 +31,30 @@ printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 #echo -e "$result"
 [ "${steralized:0:1}" != '{' ] && bad "missing { at beginning"
 [ "${steralized:0-1}" != '}' ] && bad "missing } at end"
-unwrapped="${steralized:1:$((${#steralized}-2))}"
+unwrapped="${steralized:1:-1}"
 #echo -e "$unwrapped"
-[ "${unwrapped:0:11}" != "\"ircodes\":[" ] && bad "missing ircodes"
+[ "${unwrapped:0:10}" != '"ircodes":' ] && bad "missing ircodes"
 ircodes=${unwrapped:10}
 #echo -e "${ircodes}"
 [ "${ircodes:0:1}" != '[' ] && bad "malformed ircodes outer [ missing"
 [ "${ircodes:0-1}" != ']' ] && bad "malformed ircodes outer ] missing"
-unwrapped="${ircodes:1:$((${#ircodes}-2))}"
+unwrapped="${ircodes:1:-1}"
 x=0
 y=0
-quotelocation[$((x++))]=remote
-quotelocation[$((x++))]=signal
-quotelocation[$((x++))]=pause
-quotelocation[$((x++))]=loops
+quotelocation[$((x++))]='remote'
+quotelocation[$((x++))]='signal'
+quotelocation[$((x++))]='pause'
+quotelocation[$((x++))]='loops'
 ircode_array=''
 x=0
 while [ -n "${unwrapped}" ];do
  [ "${unwrapped:0:1}" != '[' ] && bad "malformed ircodes inner [ missing"
  [ "${unwrapped:0-1}" != ']' ] && bad "malformed ircodes inner ] missing"
  ircode_wrapped=${unwrapped%%\]*}
- ircode="${ircode_wrapped:1:$((${#ircode_wrapped}-1))}"
+ ircode="${ircode_wrapped:1}"
+ IFS=, read ircode_array[$((x++))] ircode_array[$((x++))] \
+  ircode_array[$((x++))] ircode_array[$((x++))] <<< $ircode
 #  echo "$ircode"
- while [ "${ircode:0-1}" = '"' ];do
-  [ "${ircode:0:1}" != '"' ] && bad "missing open quote for ${quotelocation[$((x-y))]}"
-  part=${ircode:1}
-  part=${part%%\"*}
-  #echo "${x}part:${part}"
-  ircode=${ircode:$((${#part}+3))}
-  ircode_array[$x]=$part
-  ((x++))||true
-  [ "${ircode:0-1}" != '"' ] && [ -n "${ircode:0-1}" ] && bad "missing closing quote"
- done
 # echo -e "test:$x:$y:${ircode_array[$((0+y*4))]}:${ircode_array[$((1+y*4))]}:${ircode_array[$((2+y*4))]}:${ircode_array[$((3+y*4))]}"
  ((y++))||true
 # echo -e "$unwrapped"
