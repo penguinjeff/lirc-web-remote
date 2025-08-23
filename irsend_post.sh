@@ -19,12 +19,15 @@ bad()
 line='something'
 prev='something'
 accum=''
-while [ -n "$line" ];do
+while true;do
 read -t .001 line
-[ "${line:0-1}" != $'\r' ] && accum+="$line"
+[ -z "${line}" ] && break;
+accum+="$line"
 done
+r=$'\r'
+data="${accum//*$r$r/}"
 #sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g'
-replace "$accum" '[^A-Za-z0-9_.\-+=&\{\}%\[\] :,\"]' '' %5B \[ %5D \] %22 \"
+replace "$data" '[^A-Za-z0-9_.\-+=&\{\}%\[\] :,\"]' '' %5B \[ %5D \] %22 \"
 steralized=$result
 printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 #echo -e "$accum"

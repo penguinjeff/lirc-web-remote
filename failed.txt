@@ -1,0 +1,66 @@
+Loaded config.
+MACHINE_ID=4a823c79e2714faeaec8b601f3e4f049 set via /etc/machine-id.
+Found container virtualization none.
+/dev/md127: Failed to probe PART_ENTRY_SCHEME: Cannot assign requested address
+Couldn't find an XBOOTLDR partition.
+File system "/dev/md125" is not located on a partitioned block device.
+File system "/boot" is not a FAT EFI System Partition (ESP) file system.
+File system "/dev/md125" is not located on a partitioned block device.
+Couldn't find EFI system partition, ignoring.
+KERNEL_INSTALL_BOOT_ROOT autodetection yielded no candidates, using "/boot".
+Using entry token: 4a823c79e2714faeaec8b601f3e4f049
+kernel version (6.15.6-200) set via command line.
+kernel image file (/boot/vmlinuz-6.15.5-200.fc42.x86_64) set via command line.
+Entry-token directory not found, using layout=other.
+Using ENTRY_DIR=/boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200
+Using plugins: 
+  /usr/lib/kernel/install.d/05-rpmostree.install
+  /usr/lib/kernel/install.d/10-devicetree.install
+  /usr/lib/kernel/install.d/20-grub.install
+  /usr/lib/kernel/install.d/50-depmod.install
+  /usr/lib/kernel/install.d/50-dracut.install
+  /usr/lib/kernel/install.d/51-dracut-rescue.install
+  /usr/lib/kernel/install.d/60-kdump.install
+  /usr/lib/kernel/install.d/90-loaderentry.install
+  /usr/lib/kernel/install.d/90-uki-copy.install
+  /usr/lib/kernel/install.d/92-crashkernel.install
+  /usr/lib/kernel/install.d/92-tuned.install
+  /usr/lib/kernel/install.d/95-kernel-hooks.install
+  /usr/lib/kernel/install.d/99-grub-mkconfig.install
+  /usr/lib/kernel/install.d/99-uki-uefi-setup.install
+Plugin environment: 
+  LC_COLLATE=C.UTF-8
+  KERNEL_INSTALL_VERBOSE=1
+  KERNEL_INSTALL_IMAGE_TYPE=pe
+  KERNEL_INSTALL_MACHINE_ID=4a823c79e2714faeaec8b601f3e4f049
+  KERNEL_INSTALL_ENTRY_TOKEN=4a823c79e2714faeaec8b601f3e4f049
+  KERNEL_INSTALL_BOOT_ROOT=/boot
+  KERNEL_INSTALL_LAYOUT=other
+  KERNEL_INSTALL_INITRD_GENERATOR=
+  KERNEL_INSTALL_UKI_GENERATOR=
+  KERNEL_INSTALL_STAGING_AREA=/tmp/kernel-install.staging.KVbWDj
+Plugin arguments: add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(sd-exec-strv)' as PID 834207.
+About to execute /usr/lib/kernel/install.d/05-rpmostree.install add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(exec-inner)' as PID 834208.
+/usr/lib/kernel/install.d/05-rpmostree.install succeeded.
+About to execute /usr/lib/kernel/install.d/10-devicetree.install add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(exec-inner)' as PID 834210.
+/usr/lib/kernel/install.d/10-devicetree.install succeeded.
+About to execute /usr/lib/kernel/install.d/20-grub.install add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(exec-inner)' as PID 834214.
+grub2-mkrelpath: error: failed to get canonical path of `/boot/vmlinuz-6.15.6-200'.
+dirname: missing operand
+Try 'dirname --help' for more information.
+/usr/lib/kernel/install.d/20-grub.install succeeded.
+About to execute /usr/lib/kernel/install.d/50-depmod.install add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(exec-inner)' as PID 834247.
+/usr/lib/kernel/install.d/50-depmod.install succeeded.
+About to execute /usr/lib/kernel/install.d/50-dracut.install add 6.15.6-200 /boot/4a823c79e2714faeaec8b601f3e4f049/6.15.6-200 /boot/vmlinuz-6.15.5-200.fc42.x86_64
+Successfully forked off '(exec-inner)' as PID 834248.
+realpath: /lib/modules/6.15.6-200: No such file or directory
+dracut[F]: Cannot find module directory 
+dracut[F]: and --no-kernel was not specified
+/usr/lib/kernel/install.d/50-dracut.install failed with exit status 1.
+/usr/lib/kernel/install.d/50-dracut.install failed with exit status 1.
+(sd-exec-strv) failed with exit status 1.
