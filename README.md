@@ -26,6 +26,7 @@ sudo chown -R $(ls -l /var/www/html/lirc-web-remote/data/|grep "saved-data-"|awk
 # remove write flag for all other users
 sudo chmod go-w /var/www/html/lirc-web-remote/data/
 
+#making lots of changes
 #
 # I used irscrutinizer to help create my lirc files.
 #
