@@ -6,7 +6,7 @@ After=lircd.service network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/nc -k -l 3434 -c /var/www/html/lirc-web-remote/irsend_list.sh
+ExecStart=/usr/bin/nc -k -l 127.0.0.1 3434 -c /var/www/html/lirc-web-remote/irsend_list.sh
 
 User=lirc
 Group=lirc

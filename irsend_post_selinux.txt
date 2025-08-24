@@ -1,0 +1,1 @@
+semanage port -a -t dns_port -p tcp 4334

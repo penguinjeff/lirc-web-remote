@@ -1,5 +1,74 @@
 #!/bin/bash
+
+printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
+pidfile="/tmp/${USER}_irsend_POST"
+echo "$$" > "$pidfile"
 result=''
+tmp="$EPOCHREALTIME"
+sleep .1
+if [ "$tmp" != "$EPOCHREALTIME" ];then
+        function realtime(){ result="$EPOCHREALTIME"; }
+else
+        echo "using date"
+        function realtime(){ result=$(date +%s.%6N); }
+fi
+
+microseconds() {
+        #remove zero padding
+        rzp() {
+                local number="${1#${1%%[!0]*}}";
+                [ -z $number ]&&number=0
+                result=$number
+        }
+        rzp "${1##*.}"
+        ms1="$result"
+        rzp "${2##*.}"
+        ms2="$result"
+        result=$(( (${2%%.*} - ${1%%.*})*1000000 + ($ms2 - $ms1) ));
+}
+
+function urlencode()
+{
+ # urlencode <string>
+ local length="${#1}"
+ local add
+ result=''
+ for (( i = 0; i < length; i++ )); do
+  local c="${1:i:1}"
+   case $c in
+    [a-zA-Z0-9.~_-]) printf -v add "$c" ;;
+    *) printf -v add '%%%02X' "'$c" ;;
+   esac
+   result+="$add"
+ done
+}
+
+function urldecode()
+{
+ # urldecode <string>
+ local url_encoded="${1//+/ }"
+ printf -v result '%b' "${url_encoded//%/\\x}"
+}
+
+ran=''
+errors="false"
+function add2ran()
+{
+ urlencode $5
+ ran+=',["'"$1"'","'"$2"'","'"$3"'","'"$4"'","'"$result"'"]'
+ errors="true"
+}
+
+function process()
+{
+ urldecode $1
+ remote=$result
+ urldecode $2
+ local out=$(irsend "send_once" "$remote" "$result" 2>&1&&echo ".true-"||echo ".false")
+ urlencode "${out%%.}"
+ [ "${out##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "$result"
+}
+
 function replace()
 {
  result=$1
@@ -16,8 +85,7 @@ bad()
  exit
 }
 
-line='something'
-prev='something'
+line=''
 accum=''
 while true;do
 read -t .001 line
@@ -29,19 +97,18 @@ data="${accum//*$r$r/}"
 #sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g'
 replace "$data" '[^A-Za-z0-9_.\-+=&\{\}%\[\] :,\"]' '' %5B \[ %5D \] %22 \"
 steralized=$result
-printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 #echo -e "$accum"
 #echo -e "$result"
 [ "${steralized:0:1}" != '{' ] && bad "missing { at beginning"
 [ "${steralized:0-1}" != '}' ] && bad "missing } at end"
-unwrapped="${steralized:1:-1}"
+unwrapped="${steralized:1:0-1}"
 #echo -e "$unwrapped"
 [ "${unwrapped:0:10}" != '"ircodes":' ] && bad "missing ircodes"
 ircodes=${unwrapped:10}
 #echo -e "${ircodes}"
 [ "${ircodes:0:1}" != '[' ] && bad "malformed ircodes outer [ missing"
 [ "${ircodes:0-1}" != ']' ] && bad "malformed ircodes outer ] missing"
-unwrapped="${ircodes:1:-1}"
+unwrapped="${ircodes:1:0-1}"
 x=0
 y=0
 quotelocation[$((x++))]='remote'
@@ -66,8 +133,36 @@ while [ -n "${unwrapped}" ];do
 done
 z=0
 
+interuptchk()
+{
+ read pid < "$pidfile"
+ [ "$pid" != "$$" ] && echo "interupted" && exit
+}
+
 ##recall
 while [ "$z" -lt "$y" ];do
- echo -e "test:$z:${ircode_array[$((0+z*4))]}:${ircode_array[$((1+z*4))]}:${ircode_array[$((2+z*4))]}:${ircode_array[$((3+z*4))]}"
+ interuptchk
+ remote="${ircode_array[$((0+z*4))]}"
+ code="${ircode_array[$((1+z*4))]}"
+ delay="${ircode_array[$((2+z*4))]}"
+ loops="${ircode_array[$((3+z*4))]}"
+ realtime
+ start="$result"
+ realtime
+ microseconds "$start" "$result"
+ cdelay="$result"
+ while [ "$cdelay" -lt "$delay" ]; do
+  interuptchk
+  sleep .001
+  realtime
+  microseconds "$start" "$result"
+  cdelay="$result"
+ done
+ interuptchk
+ loop=0
+ while [ "$loop" -lt "$loops" ]; do
+  process "${remote:1:0-1}" "${code:1:0-1}" "$delay" "$loops"
+ done
+ echo -e "test:$z:${remote:1:0-1}:${code:1:0-1}:$delay:$loops"
  ((z++))||true
 done

@@ -28,11 +28,13 @@ if(isset($_REQUEST['json']))
 {
 echo "json=" . $_REQUEST['json'] . "\n\n";
 irsend($response,$_REQUEST['json']);
+echo "$respomse\n";
 }
 //allows to test via command line
 //example: php ./irsend.php list "" ""
 if(isset($argv[1]))
 {
 irsend($response,$argv[1]);
+echo "$respomse\n";
 }
 ?>
