@@ -52,11 +52,20 @@ function urldecode()
 
 ran=''
 errors="false"
-function add2ran()
-{
- urlencode $5
+function add2ran() {
+ urlencode "$5"
  ran+=',["'"$1"'","'"$2"'","'"$3"'","'"$4"'","'"$result"'"]'
  errors="true"
+}
+
+interupted="false"
+function interuptchk() {
+ read pid < "$pidfile"
+ [ "$pid" != "$$" ] && interupted="true" && print_ran && exit
+}
+
+function print_ran() {
+ printf '{"ran":%s,"errors":"%s","interupted":"%s"}\n' "${ran:1}" "$errors" "$interupted"
 }
 
 function process()
@@ -133,11 +142,6 @@ while [ -n "${unwrapped}" ];do
 done
 z=0
 
-interuptchk()
-{
- read pid < "$pidfile"
- [ "$pid" != "$$" ] && echo "interupted" && exit
-}
 
 ##recall
 while [ "$z" -lt "$y" ];do
@@ -162,6 +166,7 @@ while [ "$z" -lt "$y" ];do
  loop=0
  while [ "$loop" -lt "$loops" ]; do
   process "${remote:1:0-1}" "${code:1:0-1}" "$delay" "$loops"
+  interuptchk
  done
  echo -e "test:$z:${remote:1:0-1}:${code:1:0-1}:$delay:$loops"
  ((z++))||true
