@@ -112,6 +112,12 @@ steralized=$result
 [ "${steralized:0-1}" != '}' ] && bad "missing } at end"
 unwrapped="${steralized:1:0-1}"
 #echo -e "$unwrapped"
+[ "${unwrapped:0:5}" != '"id":' ] && bad "missing id"
+unwrapped="${unwrapped:5}"
+#echo -e "$unwrapped"
+id="${unwrapped%%,*}"
+unwrapped="${unwrapped#*,}"
+#echo -e "$unwrapped"
 [ "${unwrapped:0:10}" != '"ircodes":' ] && bad "missing ircodes"
 ircodes=${unwrapped:10}
 #echo -e "${ircodes}"
@@ -148,26 +154,33 @@ while [ "$z" -lt "$y" ];do
  interuptchk
  remote="${ircode_array[$((0+z*4))]}"
  code="${ircode_array[$((1+z*4))]}"
+ re='^[0-9]+$'
  delay="${ircode_array[$((2+z*4))]}"
+ [[ "$delay" =~ $re ]] || delay=0
  loops="${ircode_array[$((3+z*4))]}"
+ [[ "$loops" =~ $re ]] || loops=1
  realtime
  start="$result"
  realtime
  microseconds "$start" "$result"
  cdelay="$result"
+ echo "$cdelay < $delay"
  while [ "$cdelay" -lt "$delay" ]; do
   interuptchk
-  sleep .001
+  sleep .1
   realtime
+  echo "start=$start"
+  echo "ctime=$result"
   microseconds "$start" "$result"
   cdelay="$result"
+  echo "$cdelay < $delay"
  done
  interuptchk
  loop=0
- while [ "$loop" -lt "$loops" ]; do
-  process "${remote:1:0-1}" "${code:1:0-1}" "$delay" "$loops"
-  interuptchk
- done
+# while [ "$loop" -lt "$loops" ]; do
+#  process "${remote:1:0-1}" "${code:1:0-1}" "$delay" "$loops"
+#  interuptchk
+# done
  echo -e "test:$z:${remote:1:0-1}:${code:1:0-1}:$delay:$loops"
  ((z++))||true
 done

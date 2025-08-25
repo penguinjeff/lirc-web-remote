@@ -219,9 +219,8 @@ var Macros=
 
  execute(list)
  {
-  var id = Math.round(+new Date()/1000);
   var reallist=[];
-  json='{"ircodes":'+JSON.stringify(list)+'}'
+  json='{"id":'+Math.round(+new Date()/1000)+',"ircodes":'+JSON.stringify(list)+'}'
   fetch('irsend_mult.php',{
 	method: 'POST',
 	headers: {
