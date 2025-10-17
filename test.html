@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<script src="js/0utils.js?1"></script>
+	<script>
+if(Array.isArray(['one','two']))
+{console.log('test is an array');
+}
+else
+{console.log('test is not an array');
+}
+if(Array.isArray({'one':'two'}))
+{console.log('test is an array');
+}
+else
+{console.log('test is not an array');
+}
+
+var types=['light','dark']
+var redtypes=types.concat(['maroon']);
+var greentypes=types.concat(['forest']);
+var bluetypes=types.concat(['torquoise']);
+var colorchoices={'red':redtypes,'green':greentypes,'blue':bluetypes};
+var colors=Object.keys(colorchoices)
+var test={'dependent':colorchoices,'noneOptions':true,'label':'Colour','name':'Color'}
+var elem=createElement(test);
+var test2={'dependent':colorchoices}
+var elem2=createElement(test2);
+var test3={'radio':colors};
+var elem3=createElement(test3);
+var test4={'multiple':{'Color1':test,'Color2':test2,'Color3':test3},'labels':true}
+var elem4=createElement(test4);
+window.addEventListener('load', function () {
+ var bodyElement = document.body;
+ bodyElement.appendChild(elem);
+ bodyElement.appendChild(elem2);
+ bodyElement.appendChild(elem3);
+ bodyElement.appendChild(elem4);
+ console.log("It's loaded!")
+})
+
+	</script>
+</head>
+<body>
+<form>
+  <label for="adate0">Date:</label><label onclick="relativeFor('n')">Date:</label><input type="date" id="adate0"><br>
+  <label for="adate1">DateTime:</label><input type="datetime-local" id="adate1"><br>
+  <label for="acolor">Color:</label><label onclick="relativeFor('n')">Color:</label><input type="color" id="acolor"><br>
+  <input type="radio" id="fav0" name="fav_language" value="HTML">
+  <label onclick="relativeFor('b')">HTML</label><label for="fav0">HTML</label><br>
+  <input type="radio" id="fav1" name="fav_language" value="CSS">
+  <label onclick="relativeFor('b')">CSS</label><br>
+  <input type="radio" id="fav2" name="fav_language" value="JavaScript">
+  <label onclick="relativeFor('b')">JavaScript</label><br><br>
+  <div><label onclick="relativeFor('pl')">Input</label><input></div>
+  <div><label onclick="relativeFor('pl')">Submit</label>
+  <input type="submit" value="Submit"></div>
+</form>
+
+</body>
+</html>
