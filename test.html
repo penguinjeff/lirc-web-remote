@@ -2,30 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-<script src="js/0utils.js?1"></script>
+<script src="js/0utils.js?7"></script>
 	<script>
-if(Array.isArray(['one','two']))
-{console.log('test is an array');
-}
-else
-{console.log('test is not an array');
-}
-if(Array.isArray({'one':'two'}))
-{console.log('test is an array');
-}
-else
-{console.log('test is not an array');
-}
 
 var types=['light','dark']
 var redtypes=types.concat(['maroon']);
 var greentypes=types.concat(['forest']);
 var bluetypes=types.concat(['torquoise']);
-var colorchoices={'red':redtypes,'green':greentypes,'blue':bluetypes};
+var colorchoices={'red':redtypes,'green':greentypes,'blue':bluetypes,'yellow':{'noway':'yesway'}};
 var colors=Object.keys(colorchoices)
-var test={'dependent':colorchoices,'noneOptions':true,'label':'Colour','name':'Color'}
+var test={'select':colorchoices,'noneoptions':true,'label':'Colour','name':'Color'}
 var elem=createElement(test);
-var test2={'dependent':colorchoices}
+var test2={'select':colorchoices}
 var elem2=createElement(test2);
 var test3={'radio':colors};
 var elem3=createElement(test3);
