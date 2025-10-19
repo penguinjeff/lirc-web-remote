@@ -17,7 +17,7 @@ function finddepth(item)
 {var ref=item.parentNode;
  var max=ref.childNodes.length;
  ref=ref.firstChild;
- var x=0;
+ var x=1;
  while(ref!=item&&x<max){x++;ref=ref.nextElementSibling;}
  return x;
 }
@@ -30,23 +30,18 @@ function select(item)
  var data=selected.getAttribute('data');
  var onchange=selected.getAttribute('onchange');
  var noneOptions=selected.getAttribute('noneoptions');
- console.log('data:'+data);
- console.log('onchange:'+onchange);
- console.log('noneoptions:'+noneOptions);
- console.log('item:'+item.getAttribute('name'));
- console.log('item:'+parent.getAttribute('name'));
  var depth=finddepth(item);
- console.log('depth:'+depth);
- while(parent.childNodes.length>depth+1)
+ while(parent.childNodes.length>depth)
  {parent.removeChild(parent.lastChild);
  }
  if(selected.value!='')
  {
-  parent.appendChild(
-   createElement(
-    {'select':JSON.parse(data),'onchange':onchange,'noneoptions':noneOptions}
-   )
-  );
+ var newselectproperties={};
+  newselectproperties['select']=JSON.parse(data);
+  newselectproperties['onchange']=onchange;
+  newselectproperties['noneoptions']=noneOptions;
+  var newselect=createElement(newselectproperties);
+  parent.appendChild(newselect);
  }
  if(onchange)
  {setTimeout(onchange,0);
@@ -117,12 +112,10 @@ function createElement(items)
   case 'select':
    item=document.createElement('select');
    var noneOptions=false;
-   console.log('noneoptions:'+JSON.stringify(items));
    if(items['noneoptions'])
    {if(items['noneoptions']==true||items['noneoptions']=='true')
     {noneOptions=true;
    }}
-   console.log('noneoptions:'+noneOptions);
    if(noneOptions)
    {var option=document.createElement('option');
     option.text="None"
@@ -198,6 +191,7 @@ function createElement(items)
   label.setAttribute('onclick', "relativeFor('pll')");
   container.appendChild(label);
   container.appendChild(item);
+  if(hassubs){select(item);}
   return container;
  }
  if(hassubs)
