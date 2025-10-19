@@ -13,31 +13,40 @@ function index(list)
 }
 
 
-function optionsOptions(json,onchange,noneOptions,item)
-{
- if(!item){item=event.target;}
- if(item.parentNode.childNodes.length>1)
- {item.parentNode.removeChild(item.parentNode.lastChild);
- }
- if(item.value!='')
- {var keys=Object.keys(json);
-  item.parentNode.appendChild(createElement({'options':json[keys[item.value]],'onchange':onchange,'noneOptions':noneOptions}));
- }
- if(onchange)
- {setTimeout(onchange,0);
- }
+function finddepth(item)
+{var ref=item.parentNode;
+ var max=ref.childNodes.length;
+ ref=ref.firstChild;
+ var x=0;
+ while(ref!=item&&x<max){x++;ref=ref.nextElementSibling;}
+ return x;
 }
 
-function dependent(json,onchange,noneOptions,item)
+function select(item)
 {
  if(!item){item=event.target;}
- if(item.parentNode.childNodes.length>1)
- {item.parentNode.removeChild(item.parentNode.lastChild);
+ var parent=item.parentNode;
+ var selected=item.options[item.selectedIndex];
+ var data=selected.getAttribute('data');
+ var onchange=selected.getAttribute('onchange');
+ var noneOptions=selected.getAttribute('noneoptions');
+ console.log('data:'+data);
+ console.log('onchange:'+onchange);
+ console.log('noneoptions:'+noneOptions);
+ console.log('item:'+item.getAttribute('name'));
+ console.log('item:'+parent.getAttribute('name'));
+ var depth=finddepth(item);
+ console.log('depth:'+depth);
+ while(parent.childNodes.length>depth+1)
+ {parent.removeChild(parent.lastChild);
  }
- if(item.value!='')
- {var keys=Object.keys(json);
-  console.log('depentand:'+typeof(json[keys[item.value]]));
-  item.parentNode.appendChild(createElement({'select':json[keys[item.value]],'onchange':onchange,'noneOptions':noneOptions}));
+ if(selected.value!='')
+ {
+  parent.appendChild(
+   createElement(
+    {'select':JSON.parse(data),'onchange':onchange,'noneoptions':noneOptions}
+   )
+  );
  }
  if(onchange)
  {setTimeout(onchange,0);
@@ -51,18 +60,19 @@ function dependent(json,onchange,noneOptions,item)
 
 var radioinc=0;
 function createElement(items)
-{var onchange=''
+{var onchange='';
  var name='';
  var type='unknown';
+ var hassubs=false;
  if(items['name']){name=items['name']}
  if(items[onchange]){onchange=items[onchange];}
  var item;
- var types=['multiple','dependent','select','tag','radio'];
+ var types=['multiple','select','tag','radio'];
  var ItemsKeys=new Set(Object.keys(items));
  for(var x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}
  }
- var keytags=new Set(types.concat(['noneOptions','namevalues','labels','label']));
+ var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label']));
  if(onchange==''){keytags.add('onchange');}
  switch(type)
  {case 'multiple':
@@ -79,30 +89,6 @@ function createElement(items)
     }
     item.appendChild(createElement(object));
    }  
-  break;
-  case 'dependent':
-   item=document.createElement('div');
-   subitem=document.createElement('select');
-   keytags.add('onchange');
-   if(items['noneOptions'])
-   {var option=document.createElement('option');
-    option.text="None"
-    option.value='';
-    subitem.appendChild(option);
-   }
-   var keys=Object.keys(items['dependent']);
-   for(var x=0;x<keys.length;x++)
-   {var option=document.createElement('option');
-    if(items['namevalues']){option.value=keys[x];}
-    else{option.value=x;}
-    option.text=keys[x];
-    subitem.appendChild(option);
-   }
-   subitem.setAttribute('onchange','dependent('+JSON.stringify(items['dependent'])+',\''+onchange+'\','+items['noneOptions']+')');
-   item.appendChild(subitem);
-   if(!items['noneOptions'])
-   {dependent(items['dependent'],onchange,items['noneOptions'],item.firstChild);
-   }
   break;
   case 'radio':
    var name='radio'+radioinc;
@@ -130,26 +116,57 @@ function createElement(items)
   break;
   case 'select':
    item=document.createElement('select');
-   if(items['noneOptions'])
+   var noneOptions=false;
+   console.log('noneoptions:'+JSON.stringify(items));
+   if(items['noneoptions'])
+   {if(items['noneoptions']==true||items['noneoptions']=='true')
+    {noneOptions=true;
+   }}
+   console.log('noneoptions:'+noneOptions);
+   if(noneOptions)
    {var option=document.createElement('option');
     option.text="None"
     option.value='';
     item.appendChild(option);
    }
-   for(var x=0;x<items['select'].length;x++)
+   var keys=[];
+   if(Array.isArray(items['select'])){keys=items['select'];}
+   else
+   {var subkeys=Object.keys(items['select']);
+    for(var x=0;x<subkeys.length;x++)
+    {var object={};
+     object[subkeys[x]]=items['select'][subkeys[x]];
+     keys.push(object);
+   }}
+   for(var x=0;x<keys.length;x++)
    {var option=document.createElement('option');
-    if(items['namevalues']){option.value=items['select'][x];}
-    else{option.value=x;}
-    option.text=items['select'][x];
+    var optionshow='';
+    if(typeof(keys[x])=='string'){optionshow=keys[x]}
+    else
+    {optionshow=Object.keys(keys[x])[0];
+     hassubs=true;
+     var onchange='';
+     if(items['onchange']){onchange=items['onchange'];}
+     option.setAttribute('data',JSON.stringify(keys[x][optionshow]));
+     option.setAttribute('onchange',onchange);
+     option.setAttribute('noneoptions',noneOptions);
+    }
+    if(items['indexvalues']){option.value=x;}
+    else{option.value=optionshow;}
+    option.text=optionshow;
     item.appendChild(option);
+   }
+   if(hassubs)
+   {keytags.add('onchange');
+    item.setAttribute('onchange','select()');
    }
   break;
   case 'tag':
    item=document.createElement(items['tag']);
   break;
   default:
-   console.log('need either multiple, dependent, options or tag')
-   console.log(JSON.stringify(items))
+   console.log('need either select, multiple, options or tag');
+   console.log(JSON.stringify(items));
    return document.createElement('div');
   break;
  }
@@ -181,6 +198,12 @@ function createElement(items)
   label.setAttribute('onclick', "relativeFor('pll')");
   container.appendChild(label);
   container.appendChild(item);
+  return container;
+ }
+ if(hassubs)
+ {var container=document.createElement('div');
+  container.appendChild(item);
+  select(item);
   return container;
  }
  return item;

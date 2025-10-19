@@ -1,0 +1,1864 @@
+Aug 23 15:51:34 kernel: Linux version 6.15.10-200.fc42.x86_64 (mockbuild@14a33d64645143cab3659d1335d9f80c) (gcc (GCC) 15.2.1 20250808 (Red Hat 15.2.1-1), GNU ld version 2.44-6.fc42) #1 SMP PREEMPT_DYNAMIC Fri Aug 15 15:57:06 UTC 2025
+Aug 23 15:51:34 kernel: Command line: BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.10-200.fc42.x86_64 root=/dev/mapper/fedora-root ro rd.lvm.lv=fedora/root rhgb quiet
+Aug 23 15:51:34 kernel: BIOS-provided physical RAM map:
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000000100000-0x0000000009bfffff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000009c00000-0x0000000009e00fff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000009e01000-0x0000000009efffff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000009f00000-0x0000000009f3bfff] ACPI NVS
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000009f3c000-0x000000002f518fff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000002f519000-0x0000000030d18fff] ACPI NVS
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000030d19000-0x0000000030d98fff] ACPI data
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000030d99000-0x0000000034598fff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000034599000-0x0000000076afdfff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000076afe000-0x000000007a9fdfff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007a9fe000-0x000000007bfe8fff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007bfe9000-0x000000007bfecfff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007bfed000-0x000000007bfeefff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007bfef000-0x000000007cffffff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007d790000-0x000000007d7effff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x000000007d7f5000-0x000000007fffffff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x00000000fdf00000-0x00000000fdffffff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x0000000100000000-0x00000003fe2fffff] usable
+Aug 23 15:51:34 kernel: BIOS-e820: [mem 0x00000003ff340000-0x00000004a01fffff] reserved
+Aug 23 15:51:34 kernel: NX (Execute Disable) protection: active
+Aug 23 15:51:34 kernel: APIC: Static calls initialized
+Aug 23 15:51:34 kernel: efi: EFI v2.7 by Phoenix Technologies
+Aug 23 15:51:34 kernel: efi: ACPI=0x30d98000 ACPI 2.0=0x30d98014 SMBIOS=0x34307000 SMBIOS 3.0=0x342fa000 TPMFinalLog=0x30cf2000 MEMATTR=0x72a5b018 ESRT=0x72b59000 MOKvar=0x31bd4000 RNG=0x30d96018 TPMEventLog=0x30d88018 
+Aug 23 15:51:34 kernel: random: crng init done
+Aug 23 15:51:34 kernel: efi: Remove mem71: MMIO range=[0xfdf00000-0xfdffffff] (1MB) from e820 map
+Aug 23 15:51:34 kernel: e820: remove [mem 0xfdf00000-0xfdffffff] reserved
+Aug 23 15:51:34 kernel: efi: Not removing mem72: MMIO range=[0xfed80000-0xfed80fff] (4KB) from e820 map
+Aug 23 15:51:34 kernel: efi: Remove mem74: MMIO range=[0x480000000-0x4a01fffff] (514MB) from e820 map
+Aug 23 15:51:34 kernel: e820: remove [mem 0x480000000-0x4a01fffff] reserved
+Aug 23 15:51:34 kernel: secureboot: Secure boot enabled
+Aug 23 15:51:34 kernel: Kernel is locked down from EFI Secure Boot mode; see man kernel_lockdown.7
+Aug 23 15:51:34 kernel: SMBIOS 3.3.0 present.
+Aug 23 15:51:34 kernel: DMI: LENOVO 83DS/LNVNB161216, BIOS P1CN29WW 06/26/2025
+Aug 23 15:51:34 kernel: DMI: Memory slots populated: 4/4
+Aug 23 15:51:34 kernel: tsc: Fast TSC calibration using PIT
+Aug 23 15:51:34 kernel: tsc: Detected 3792.648 MHz processor
+Aug 23 15:51:34 kernel: e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+Aug 23 15:51:34 kernel: e820: remove [mem 0x000a0000-0x000fffff] usable
+Aug 23 15:51:34 kernel: last_pfn = 0x3fe300 max_arch_pfn = 0x400000000
+Aug 23 15:51:34 kernel: MTRR map: 7 entries (3 fixed + 4 variable; max 20), built from 9 variable MTRRs
+Aug 23 15:51:34 kernel: x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+Aug 23 15:51:34 kernel: last_pfn = 0x7bfef max_arch_pfn = 0x400000000
+Aug 23 15:51:34 kernel: esrt: Reserving ESRT space from 0x0000000072b59000 to 0x0000000072b590b0.
+Aug 23 15:51:34 kernel: e820: update [mem 0x72b59000-0x72b59fff] usable ==> reserved
+Aug 23 15:51:34 kernel: Using GB pages for direct mapping
+Aug 23 15:51:34 kernel: secureboot: Secure boot enabled
+Aug 23 15:51:34 kernel: RAMDISK: [mem 0x26bea000-0x2c31afff]
+Aug 23 15:51:34 kernel: ACPI: Early table checksum verification disabled
+Aug 23 15:51:34 kernel: ACPI: RSDP 0x0000000030D98014 000024 (v02 LENOVO)
+Aug 23 15:51:34 kernel: ACPI: XSDT 0x0000000030D97228 00017C (v01 LENOVO CB-01    00000003 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: FACP 0x0000000031C5C000 000114 (v06 LENOVO CB-01    00000003 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: DSDT 0x0000000031C42000 015E85 (v02 LENOVO AMD_EDK2 00000000 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: FACS 0x0000000030CEF000 000040
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x000000003433C000 0012E2 (v01 LENOVO UsbCTabl 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x000000003430B000 008416 (v02 LENOVO AmdTable 00000002 MSFT 02000002)
+Aug 23 15:51:34 kernel: ACPI: MSDM 0x0000000034098000 000055 (v03 LENOVO CB-01    00000000 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: BATB 0x0000000034082000 00004A (v02 LENOVO CB-01    00000000 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: HPET 0x0000000031C5B000 000038 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: APIC 0x0000000031C5A000 000142 (v05 LENOVO CB-01    00000000 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: MCFG 0x0000000031C59000 00003C (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: WSMT 0x0000000031C58000 000028 (v01 LENOVO CB-01    00000000 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031C3C000 00547E (v02 LENOVO AmdTable 00000001 AMD  00000001)
+Aug 23 15:51:34 kernel: ACPI: CRAT 0x0000000031C3B000 000EE8 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: CDIT 0x0000000031C3A000 000029 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SDEV 0x0000000031C39000 000144 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031C38000 0003D5 (v02 LENOVO Tpm2Tabl 00009999 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: TPM2 0x0000000031C37000 000044 (v05 LENOVO CB-01    20505348 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: VFCT 0x0000000031C32000 004284 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: FPDT 0x0000000031C09000 000034 (v01 LENOVO CB-01    00000002 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031C08000 000D46 (v02 LENOVO OEMACP   00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031C06000 0015FF (v02 LENOVO CPMDFIG2 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031C03000 002C4D (v02 LENOVO CDFAAIG2 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF8000 00A154 (v02 LENOVO CPMCMN   00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: BGRT 0x0000000031BF7000 000038 (v01 LENOVO CB-01    00000002 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF5000 001CC7 (v02 LENOVO AOD      00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF4000 000D42 (v02 LENOVO WwanSsdt 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF2000 0012C9 (v01 LENOVO WLAN     00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF1000 000CCE (v02 LENOVO NVME     00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BF0000 000C2F (v02 LENOVO GpMsSsdt 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BEF000 0004D2 (v02 LENOVO GPP1     00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BEE000 000058 (v02 LENOVO GPP0     00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BEC000 001937 (v02 LENOVO UPEP     00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BEB000 0007DF (v02 LENOVO THERMAL0 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BE9000 001097 (v02 LENOVO GPP_PME_ 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BDF000 009BE9 (v02 LENOVO INTGPP03 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BD9000 0052BC (v02 LENOVO INTGPP01 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BD8000 0008F1 (v02 LENOVO CPMGPIO0 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: UEFI 0x0000000030CED000 000116 (v01 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: MHSP 0x0000000031BD7000 0000C8 (v04 LENOVO CB-01    20505348 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000031BD6000 0000E7 (v02 LENOVO MHSP     00000004 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: IVRS 0x0000000031BD5000 0001B8 (v02 LENOVO CB-01    00000001 PTEC 00000002)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000034339000 000995 (v02 LENOVO CPMMSOSC 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000034338000 000090 (v02 LENOVO CPMMSLPI 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000034337000 000507 (v02 LENOVO CPMSFAML 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: SSDT 0x0000000034335000 00115F (v02 LENOVO CPMACPV5 00000001 INTL 20180313)
+Aug 23 15:51:34 kernel: ACPI: Reserving FACP table memory at [mem 0x31c5c000-0x31c5c113]
+Aug 23 15:51:34 kernel: ACPI: Reserving DSDT table memory at [mem 0x31c42000-0x31c57e84]
+Aug 23 15:51:34 kernel: ACPI: Reserving FACS table memory at [mem 0x30cef000-0x30cef03f]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x3433c000-0x3433d2e1]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x3430b000-0x34313415]
+Aug 23 15:51:34 kernel: ACPI: Reserving MSDM table memory at [mem 0x34098000-0x34098054]
+Aug 23 15:51:34 kernel: ACPI: Reserving BATB table memory at [mem 0x34082000-0x34082049]
+Aug 23 15:51:34 kernel: ACPI: Reserving HPET table memory at [mem 0x31c5b000-0x31c5b037]
+Aug 23 15:51:34 kernel: ACPI: Reserving APIC table memory at [mem 0x31c5a000-0x31c5a141]
+Aug 23 15:51:34 kernel: ACPI: Reserving MCFG table memory at [mem 0x31c59000-0x31c5903b]
+Aug 23 15:51:34 kernel: ACPI: Reserving WSMT table memory at [mem 0x31c58000-0x31c58027]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31c3c000-0x31c4147d]
+Aug 23 15:51:34 kernel: ACPI: Reserving CRAT table memory at [mem 0x31c3b000-0x31c3bee7]
+Aug 23 15:51:34 kernel: ACPI: Reserving CDIT table memory at [mem 0x31c3a000-0x31c3a028]
+Aug 23 15:51:34 kernel: ACPI: Reserving SDEV table memory at [mem 0x31c39000-0x31c39143]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31c38000-0x31c383d4]
+Aug 23 15:51:34 kernel: ACPI: Reserving TPM2 table memory at [mem 0x31c37000-0x31c37043]
+Aug 23 15:51:34 kernel: ACPI: Reserving VFCT table memory at [mem 0x31c32000-0x31c36283]
+Aug 23 15:51:34 kernel: ACPI: Reserving FPDT table memory at [mem 0x31c09000-0x31c09033]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31c08000-0x31c08d45]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31c06000-0x31c075fe]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31c03000-0x31c05c4c]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf8000-0x31c02153]
+Aug 23 15:51:34 kernel: ACPI: Reserving BGRT table memory at [mem 0x31bf7000-0x31bf7037]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf5000-0x31bf6cc6]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf4000-0x31bf4d41]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf2000-0x31bf32c8]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf1000-0x31bf1ccd]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bf0000-0x31bf0c2e]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bef000-0x31bef4d1]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bee000-0x31bee057]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bec000-0x31bed936]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31beb000-0x31beb7de]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31be9000-0x31bea096]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bdf000-0x31be8be8]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bd9000-0x31bde2bb]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bd8000-0x31bd88f0]
+Aug 23 15:51:34 kernel: ACPI: Reserving UEFI table memory at [mem 0x30ced000-0x30ced115]
+Aug 23 15:51:34 kernel: ACPI: Reserving MHSP table memory at [mem 0x31bd7000-0x31bd70c7]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x31bd6000-0x31bd60e6]
+Aug 23 15:51:34 kernel: ACPI: Reserving IVRS table memory at [mem 0x31bd5000-0x31bd51b7]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x34339000-0x34339994]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x34338000-0x3433808f]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x34337000-0x34337506]
+Aug 23 15:51:34 kernel: ACPI: Reserving SSDT table memory at [mem 0x34335000-0x3433615e]
+Aug 23 15:51:34 kernel: No NUMA configuration found
+Aug 23 15:51:34 kernel: Faking a node at [mem 0x0000000000000000-0x00000003fe2fffff]
+Aug 23 15:51:34 kernel: NODE_DATA(0) allocated [mem 0x3fe2d5280-0x3fe2fffff]
+Aug 23 15:51:34 kernel: Zone ranges:
+Aug 23 15:51:34 kernel:   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+Aug 23 15:51:34 kernel:   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+Aug 23 15:51:34 kernel:   Normal   [mem 0x0000000100000000-0x00000003fe2fffff]
+Aug 23 15:51:34 kernel:   Device   empty
+Aug 23 15:51:34 kernel: Movable zone start for each node
+Aug 23 15:51:34 kernel: Early memory node ranges
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000000100000-0x0000000009bfffff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000009e01000-0x0000000009efffff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000009f3c000-0x000000002f518fff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000034599000-0x0000000076afdfff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x000000007a9fe000-0x000000007bfe8fff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x000000007bfed000-0x000000007bfeefff]
+Aug 23 15:51:34 kernel:   node   0: [mem 0x0000000100000000-0x00000003fe2fffff]
+Aug 23 15:51:34 kernel: Initmem setup node 0 [mem 0x0000000000001000-0x00000003fe2fffff]
+Aug 23 15:51:34 kernel: On node 0, zone DMA: 1 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA: 96 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA32: 513 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA32: 60 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA32: 20608 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA32: 16128 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone DMA32: 4 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone Normal: 16401 pages in unavailable ranges
+Aug 23 15:51:34 kernel: On node 0, zone Normal: 7424 pages in unavailable ranges
+Aug 23 15:51:34 kernel: ACPI: PM-Timer IO Port: 0x408
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x00] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x01] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x02] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x03] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x04] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x05] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x06] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x07] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x08] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x09] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0a] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0b] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0c] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0d] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0e] high edge lint[0x1])
+Aug 23 15:51:34 kernel: ACPI: LAPIC_NMI (acpi_id[0x0f] high edge lint[0x1])
+Aug 23 15:51:34 kernel: IOAPIC[0]: apic_id 33, version 33, address 0xfec00000, GSI 0-23
+Aug 23 15:51:34 kernel: IOAPIC[1]: apic_id 34, version 33, address 0xfec01000, GSI 24-55
+Aug 23 15:51:34 kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 1 global_irq 1 low edge)
+Aug 23 15:51:34 kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Aug 23 15:51:34 kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+Aug 23 15:51:34 kernel: ACPI: Using ACPI (MADT) for SMP configuration information
+Aug 23 15:51:34 kernel: ACPI: HPET id: 0x43538210 base: 0xfed00000
+Aug 23 15:51:34 kernel: e820: update [mem 0x71fd3000-0x720e1fff] usable ==> reserved
+Aug 23 15:51:34 kernel: CPU topo: Max. logical packages:   1
+Aug 23 15:51:34 kernel: CPU topo: Max. logical dies:       1
+Aug 23 15:51:34 kernel: CPU topo: Max. dies per package:   1
+Aug 23 15:51:34 kernel: CPU topo: Max. threads per core:   2
+Aug 23 15:51:34 kernel: CPU topo: Num. cores per package:     8
+Aug 23 15:51:34 kernel: CPU topo: Num. threads per package:  16
+Aug 23 15:51:34 kernel: CPU topo: Allowing 16 present CPUs plus 0 hotplug CPUs
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x000a0000-0x000fffff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x09c00000-0x09e00fff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x09f00000-0x09f3bfff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x2f519000-0x34598fff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x71fd3000-0x720e1fff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x72b59000-0x72b59fff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x76afe000-0x7a9fdfff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x7bfe9000-0x7bfecfff]
+Aug 23 15:51:34 kernel: PM: hibernation: Registered nosave memory: [mem 0x7bfef000-0xffffffff]
+Aug 23 15:51:34 kernel: [mem 0x80000000-0xdfffffff] available for PCI devices
+Aug 23 15:51:34 kernel: Booting paravirtualized kernel on bare hardware
+Aug 23 15:51:34 kernel: clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+Aug 23 15:51:34 kernel: setup_percpu: NR_CPUS:8192 nr_cpumask_bits:16 nr_cpu_ids:16 nr_node_ids:1
+Aug 23 15:51:34 kernel: percpu: Embedded 83 pages/cpu s217088 r8192 d114688 u524288
+Aug 23 15:51:34 kernel: pcpu-alloc: s217088 r8192 d114688 u524288 alloc=1*2097152
+Aug 23 15:51:34 kernel: pcpu-alloc: [0] 00 01 02 03 [0] 04 05 06 07 
+Aug 23 15:51:34 kernel: pcpu-alloc: [0] 08 09 10 11 [0] 12 13 14 15 
+Aug 23 15:51:34 kernel: Kernel command line: BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.10-200.fc42.x86_64 root=/dev/mapper/fedora-root ro rd.lvm.lv=fedora/root rhgb quiet
+Aug 23 15:51:34 kernel: Unknown kernel command line parameters "rhgb BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.10-200.fc42.x86_64", will be passed to user space.
+Aug 23 15:51:34 kernel: printk: log buffer data + meta data: 262144 + 917504 = 1179648 bytes
+Aug 23 15:51:34 kernel: Dentry cache hash table entries: 2097152 (order: 12, 16777216 bytes, linear)
+Aug 23 15:51:34 kernel: Inode-cache hash table entries: 1048576 (order: 11, 8388608 bytes, linear)
+Aug 23 15:51:34 kernel: software IO TLB: area num 16.
+Aug 23 15:51:34 kernel: Fallback order for Node 0: 0 
+Aug 23 15:51:34 kernel: Built 1 zonelists, mobility grouping on.  Total pages: 3608781
+Aug 23 15:51:34 kernel: Policy zone: Normal
+Aug 23 15:51:34 kernel: mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+Aug 23 15:51:34 kernel: SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=16, Nodes=1
+Aug 23 15:51:34 kernel: ftrace: allocating 60951 entries in 240 pages
+Aug 23 15:51:34 kernel: ftrace: allocated 240 pages with 4 groups
+Aug 23 15:51:34 kernel: Dynamic Preempt: lazy
+Aug 23 15:51:34 kernel: rcu: Preemptible hierarchical RCU implementation.
+Aug 23 15:51:34 kernel: rcu:         RCU event tracing is enabled.
+Aug 23 15:51:34 kernel: rcu:         RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=16.
+Aug 23 15:51:34 kernel:         Trampoline variant of Tasks RCU enabled.
+Aug 23 15:51:34 kernel:         Rude variant of Tasks RCU enabled.
+Aug 23 15:51:34 kernel:         Tracing variant of Tasks RCU enabled.
+Aug 23 15:51:34 kernel: rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+Aug 23 15:51:34 kernel: rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=16
+Aug 23 15:51:34 kernel: RCU Tasks: Setting shift to 4 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=16.
+Aug 23 15:51:34 kernel: RCU Tasks Rude: Setting shift to 4 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=16.
+Aug 23 15:51:34 kernel: RCU Tasks Trace: Setting shift to 4 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=16.
+Aug 23 15:51:34 kernel: NR_IRQS: 524544, nr_irqs: 1096, preallocated irqs: 16
+Aug 23 15:51:34 kernel: rcu: srcu_init: Setting srcu_struct sizes based on contention.
+Aug 23 15:51:34 kernel: kfence: initialized - using 2097152 bytes for 255 objects at 0x(____ptrval____)-0x(____ptrval____)
+Aug 23 15:51:34 kernel: Console: colour dummy device 80x25
+Aug 23 15:51:34 kernel: printk: legacy console [tty0] enabled
+Aug 23 15:51:34 kernel: ACPI: Core revision 20240827
+Aug 23 15:51:34 kernel: clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 133484873504 ns
+Aug 23 15:51:34 kernel: APIC: Switch to symmetric I/O mode setup
+Aug 23 15:51:34 kernel: AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0, rdevid:0xa0
+Aug 23 15:51:34 kernel: AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1, rdevid:0xa0
+Aug 23 15:51:34 kernel: AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2, rdevid:0xa0
+Aug 23 15:51:34 kernel: AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3, rdevid:0xa0
+Aug 23 15:51:34 kernel: AMD-Vi: Using global IVHD EFR:0x246577efa2054ada, EFR2:0x0
+Aug 23 15:51:34 kernel: x2apic: IRQ remapping doesn't support X2APIC mode
+Aug 23 15:51:34 kernel: ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+Aug 23 15:51:34 kernel: clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x6d566e81ef8, max_idle_ns: 881591114352 ns
+Aug 23 15:51:34 kernel: Calibrating delay loop (skipped), value calculated using timer frequency.. 7585.29 BogoMIPS (lpj=3792648)
+Aug 23 15:51:34 kernel: x86/cpu: User Mode Instruction Prevention (UMIP) activated
+Aug 23 15:51:34 kernel: LVT offset 1 assigned for vector 0xf9
+Aug 23 15:51:34 kernel: LVT offset 2 assigned for vector 0xf4
+Aug 23 15:51:34 kernel: Last level iTLB entries: 4KB 512, 2MB 512, 4MB 256
+Aug 23 15:51:34 kernel: Last level dTLB entries: 4KB 3072, 2MB 3072, 4MB 1536, 1GB 0
+Aug 23 15:51:34 kernel: process: using mwait in idle threads
+Aug 23 15:51:34 kernel: Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+Aug 23 15:51:34 kernel: Spectre V2 : Mitigation: Enhanced / Automatic IBRS
+Aug 23 15:51:34 kernel: Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+Aug 23 15:51:34 kernel: Spectre V2 : User space: Mitigation: STIBP always-on protection
+Aug 23 15:51:34 kernel: Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+Aug 23 15:51:34 kernel: Speculative Return Stack Overflow: Mitigation: Safe RET
+Aug 23 15:51:34 kernel: Transient Scheduler Attacks: Mitigation: Clear CPU buffers
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+Aug 23 15:51:34 kernel: x86/fpu: Supporting XSAVE feature 0x800: 'Control-flow User registers'
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[9]: 2432, xstate_sizes[9]:    8
+Aug 23 15:51:34 kernel: x86/fpu: xstate_offset[11]: 2440, xstate_sizes[11]:   16
+Aug 23 15:51:34 kernel: x86/fpu: Enabled xstate features 0xae7, context size is 2456 bytes, using 'compacted' format.
+Aug 23 15:51:34 kernel: Freeing SMP alternatives memory: 56K
+Aug 23 15:51:34 kernel: pid_max: default: 32768 minimum: 301
+Aug 23 15:51:34 kernel: LSM: initializing lsm=lockdown,capability,yama,selinux,bpf,landlock,ipe,ima,evm
+Aug 23 15:51:34 kernel: Yama: becoming mindful.
+Aug 23 15:51:34 kernel: SELinux:  Initializing.
+Aug 23 15:51:34 kernel: LSM support for eBPF active
+Aug 23 15:51:34 kernel: landlock: Up and running.
+Aug 23 15:51:34 kernel: Mount-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+Aug 23 15:51:34 kernel: Mountpoint-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+Aug 23 15:51:34 kernel: smpboot: CPU0: AMD Ryzen 7 8845HS w/ Radeon 780M Graphics (family: 0x19, model: 0x75, stepping: 0x2)
+Aug 23 15:51:34 kernel: Performance Events: Fam17h+ 16-deep LBR, core perfctr, AMD PMU driver.
+Aug 23 15:51:34 kernel: ... version:                2
+Aug 23 15:51:34 kernel: ... bit width:              48
+Aug 23 15:51:34 kernel: ... generic registers:      6
+Aug 23 15:51:34 kernel: ... value mask:             0000ffffffffffff
+Aug 23 15:51:34 kernel: ... max period:             00007fffffffffff
+Aug 23 15:51:34 kernel: ... fixed-purpose events:   0
+Aug 23 15:51:34 kernel: ... event mask:             000000000000003f
+Aug 23 15:51:34 kernel: signal: max sigframe size: 3376
+Aug 23 15:51:34 kernel: rcu: Hierarchical SRCU implementation.
+Aug 23 15:51:34 kernel: rcu:         Max phase no-delay instances is 400.
+Aug 23 15:51:34 kernel: Timer migration: 2 hierarchy levels; 8 children per group; 2 crossnode level
+Aug 23 15:51:34 kernel: NMI watchdog: Enabled. Permanently consumes one hw-PMU counter.
+Aug 23 15:51:34 kernel: smp: Bringing up secondary CPUs ...
+Aug 23 15:51:34 kernel: smpboot: x86: Booting SMP configuration:
+Aug 23 15:51:34 kernel: .... node  #0, CPUs:        #2  #4  #6  #8 #10 #12 #14
+Aug 23 15:51:34 kernel: TSC synchronization [CPU#0 -> CPU#2]:
+Aug 23 15:51:34 kernel: Measured 3818505278 cycles TSC warp between CPUs, turning off TSC clock.
+Aug 23 15:51:34 kernel: tsc: Marking TSC unstable due to check_tsc_sync_source failed
+Aug 23 15:51:34 kernel:   #1  #3  #5  #7  #9 #11 #13 #15
+Aug 23 15:51:34 kernel: Spectre V2 : Update user space SMT mitigation: STIBP always-on
+Aug 23 15:51:34 kernel: smp: Brought up 1 node, 16 CPUs
+Aug 23 15:51:34 kernel: smpboot: Total of 16 processors activated (121364.73 BogoMIPS)
+Aug 23 15:51:34 kernel: Memory: 13929724K/14435124K available (21678K kernel code, 4521K rwdata, 17652K rodata, 5060K init, 4268K bss, 480780K reserved, 0K cma-reserved)
+Aug 23 15:51:34 kernel: devtmpfs: initialized
+Aug 23 15:51:34 kernel: x86/mm: Memory block size: 128MB
+Aug 23 15:51:34 kernel: ACPI: PM: Registering ACPI NVS region [mem 0x09f00000-0x09f3bfff] (245760 bytes)
+Aug 23 15:51:34 kernel: ACPI: PM: Registering ACPI NVS region [mem 0x2f519000-0x30d18fff] (25165824 bytes)
+Aug 23 15:51:34 kernel: clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+Aug 23 15:51:34 kernel: posixtimers hash table entries: 8192 (order: 5, 131072 bytes, linear)
+Aug 23 15:51:34 kernel: futex hash table entries: 4096 (order: 6, 262144 bytes, linear)
+Aug 23 15:51:34 kernel: pinctrl core: initialized pinctrl subsystem
+Aug 23 15:51:34 kernel: PM: RTC time: 21:51:33, date: 2025-08-23
+Aug 23 15:51:34 kernel: NET: Registered PF_NETLINK/PF_ROUTE protocol family
+Aug 23 15:51:34 kernel: DMA: preallocated 2048 KiB GFP_KERNEL pool for atomic allocations
+Aug 23 15:51:34 kernel: DMA: preallocated 2048 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+Aug 23 15:51:34 kernel: DMA: preallocated 2048 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+Aug 23 15:51:34 kernel: audit: initializing netlink subsys (disabled)
+Aug 23 15:51:34 kernel: audit: type=2000 audit(1755985893.150:1): state=initialized audit_enabled=0 res=1
+Aug 23 15:51:34 kernel: thermal_sys: Registered thermal governor 'fair_share'
+Aug 23 15:51:34 kernel: thermal_sys: Registered thermal governor 'bang_bang'
+Aug 23 15:51:34 kernel: thermal_sys: Registered thermal governor 'step_wise'
+Aug 23 15:51:34 kernel: thermal_sys: Registered thermal governor 'user_space'
+Aug 23 15:51:34 kernel: cpuidle: using governor menu
+Aug 23 15:51:34 kernel: acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Aug 23 15:51:34 kernel: PCI: ECAM [mem 0xe0000000-0xefffffff] (base 0xe0000000) for domain 0000 [bus 00-ff]
+Aug 23 15:51:34 kernel: PCI: Using configuration type 1 for base access
+Aug 23 15:51:34 kernel: kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+Aug 23 15:51:34 kernel: HugeTLB: allocation took 0ms with hugepage_allocation_threads=4
+Aug 23 15:51:34 kernel: HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+Aug 23 15:51:34 kernel: HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+Aug 23 15:51:34 kernel: HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+Aug 23 15:51:34 kernel: HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+Aug 23 15:51:34 kernel: cryptd: max_cpu_qlen set to 1000
+Aug 23 15:51:34 kernel: raid6: skipped pq benchmark and selected avx512x4
+Aug 23 15:51:34 kernel: raid6: using avx512x2 recovery algorithm
+Aug 23 15:51:34 kernel: ACPI: Added _OSI(Module Device)
+Aug 23 15:51:34 kernel: ACPI: Added _OSI(Processor Device)
+Aug 23 15:51:34 kernel: ACPI: Added _OSI(Processor Aggregator Device)
+Aug 23 15:51:34 kernel: ACPI: Actual Package length (3) is larger than NumElements field (2), truncated
+Aug 23 15:51:34 kernel: ACPI BIOS Error (bug): Failure creating named object [\_SB.PCI0.GPP6._S0W], AE_ALREADY_EXISTS (20240827/dswload2-326)
+Aug 23 15:51:34 kernel: ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20240827/psobject-220)
+Aug 23 15:51:34 kernel: ACPI BIOS Error (bug): Failure creating named object [\_SB.PCI0.GPP6._PRW], AE_ALREADY_EXISTS (20240827/dswload2-326)
+Aug 23 15:51:34 kernel: ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20240827/psobject-220)
+Aug 23 15:51:34 kernel: ACPI: Skipping parse of AML opcode: Method (0x0014)
+Aug 23 15:51:34 kernel: ACPI BIOS Error (bug): Failure creating named object [\_SB.PCI0.GPP6.RTKW], AE_ALREADY_EXISTS (20240827/dswload2-326)
+Aug 23 15:51:34 kernel: ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20240827/psobject-220)
+Aug 23 15:51:34 kernel: ACPI: Skipping parse of AML opcode: Method (0x0014)
+Aug 23 15:51:34 kernel: ACPI BIOS Error (bug): Failure creating named object [\_SB.PCI0.GPP1._PRW], AE_ALREADY_EXISTS (20240827/dswload2-326)
+Aug 23 15:51:34 kernel: ACPI Error: AE_ALREADY_EXISTS, During name lookup/catalog (20240827/psobject-220)
+Aug 23 15:51:34 kernel: ACPI: Skipping parse of AML opcode: Method (0x0014)
+Aug 23 15:51:34 kernel: ACPI: 27 ACPI AML tables successfully acquired and loaded
+Aug 23 15:51:34 kernel: ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+Aug 23 15:51:34 kernel: ACPI: EC: EC started
+Aug 23 15:51:34 kernel: ACPI: EC: interrupt blocked
+Aug 23 15:51:34 kernel: ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.LPC0.EC0_: Boot DSDT EC used to handle transactions
+Aug 23 15:51:34 kernel: ACPI: Interpreter enabled
+Aug 23 15:51:34 kernel: ACPI: PM: (supports S0 S4 S5)
+Aug 23 15:51:34 kernel: ACPI: Using IOAPIC for interrupt routing
+Aug 23 15:51:34 kernel: PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Aug 23 15:51:34 kernel: PCI: Ignoring E820 reservations for host bridge windows
+Aug 23 15:51:34 kernel: ACPI: Enabled 3 GPEs in block 00 to 1F
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GPP6.PWSR: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GPP6.WLAN.WRST: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GPP7.P0WW: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GPP8.P0NV: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP11.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP11.SWUS.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP12.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP12.SWUS.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.VGA_.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.ACP_.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.AZAL.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.HDAU.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.XHC0.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.XHC0.RHUB.PRT5.BRST: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP17.XHC1.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP19.XHC2.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP19.NHI0.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP19.XHC3.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP19.NHI1.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.GP19.XHC4.PWRS: New power resource
+Aug 23 15:51:34 kernel: ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+Aug 23 15:51:34 kernel: acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+Aug 23 15:51:34 kernel: acpi PNP0A08:00: _OSC: platform does not support [SHPCHotplug AER]
+Aug 23 15:51:34 kernel: acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug PME PCIeCapability LTR DPC]
+Aug 23 15:51:34 kernel: PCI host bridge to bus 0000:00
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000effff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [mem 0x80000000-0xdfffffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [mem 0xf0000000-0xfdbfffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [mem 0x4a0200000-0x7f3fffffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: root bus resource [bus 00-ff]
+Aug 23 15:51:34 kernel: pci 0000:00:00.0: [1022:14e8] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:00.2: [1022:14e9] type 00 class 0x080600 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:01.0: [1022:14ea] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:02.0: [1022:14ea] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: [1022:14ee] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: PCI bridge to [bus 01]
+Aug 23 15:51:34 kernel: pci 0000:00:02.1:   bridge window [mem 0x80b00000-0x80bfffff]
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: [1022:14ee] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: PCI bridge to [bus 02]
+Aug 23 15:51:34 kernel: pci 0000:00:02.2:   bridge window [mem 0x4c0900000-0x4c0afffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: [1022:14ee] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: PCI bridge to [bus 03]
+Aug 23 15:51:34 kernel: pci 0000:00:02.4:   bridge window [mem 0x80a00000-0x80afffff]
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:03.0: [1022:14ea] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:04.0: [1022:14ea] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:08.0: [1022:14ea] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: [1022:14eb] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: PCI bridge to [bus 04]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [io  0x1000-0x1fff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [mem 0x80000000-0x806fffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [mem 0x4b0000000-0x4c07fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: [1022:14eb] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: PCI bridge to [bus 05]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2:   bridge window [mem 0x80900000-0x809fffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2:   bridge window [mem 0x4c0800000-0x4c08fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: [1022:14eb] type 01 class 0x060400 PCIe Root Port
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: PCI bridge to [bus 06]
+Aug 23 15:51:34 kernel: pci 0000:00:08.3:   bridge window [mem 0x80700000-0x808fffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:14.0: [1022:790b] type 00 class 0x0c0500 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:14.3: [1022:790e] type 00 class 0x060100 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.0: [1022:14f0] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.1: [1022:14f1] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.2: [1022:14f2] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.3: [1022:14f3] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.4: [1022:14f4] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.5: [1022:14f5] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.6: [1022:14f6] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:00:18.7: [1022:14f7] type 00 class 0x060000 conventional PCI endpoint
+Aug 23 15:51:34 kernel: pci 0000:01:00.0: [17a0:9750] type 00 class 0x080501 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:01:00.0: BAR 0 [mem 0x80b00000-0x80b00fff]
+Aug 23 15:51:34 kernel: pci 0000:01:00.0: supports D1 D2
+Aug 23 15:51:34 kernel: pci 0000:01:00.0: PME# supported from D1 D2 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: PCI bridge to [bus 01]
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: [14c3:7961] type 00 class 0x028000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: BAR 0 [mem 0x4c0900000-0x4c09fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: BAR 2 [mem 0x4c0a00000-0x4c0a03fff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: BAR 4 [mem 0x4c0a04000-0x4c0a04fff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: supports D1 D2
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x1 link at 0000:00:02.2 (capable of 4.000 Gb/s with 5.0 GT/s PCIe x1 link)
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: PCI bridge to [bus 02]
+Aug 23 15:51:34 kernel: pci 0000:03:00.0: [144d:a80d] type 00 class 0x010802 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:03:00.0: BAR 0 [mem 0x80a00000-0x80a03fff 64bit]
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: PCI bridge to [bus 03]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: [1002:1900] type 00 class 0x030000 PCIe Legacy Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: BAR 0 [mem 0x4b0000000-0x4bfffffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: BAR 2 [mem 0x80000000-0x801fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: BAR 4 [io  0x1000-0x10ff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: BAR 5 [mem 0x80600000-0x8067ffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: PME# supported from D1 D2 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: [1002:1640] type 00 class 0x040300 PCIe Legacy Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: BAR 0 [mem 0x806c8000-0x806cbfff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: PME# supported from D1 D2 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.2: [1022:15c7] type 00 class 0x108000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.2: BAR 2 [mem 0x80500000-0x805fffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.2: BAR 5 [mem 0x806ce000-0x806cffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.2: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.3: [1022:15b9] type 00 class 0x0c0330 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.3: BAR 0 [mem 0x80200000-0x802fffff 64bit]
+Aug 23 15:51:34 kernel: pci 0000:04:00.3: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.3: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.4: [1022:15ba] type 00 class 0x0c0330 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.4: BAR 0 [mem 0x80300000-0x803fffff 64bit]
+Aug 23 15:51:34 kernel: pci 0000:04:00.4: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.4: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: [1022:15e2] type 00 class 0x048000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: BAR 0 [mem 0x80680000-0x806bffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: BAR 2 [mem 0x4c0000000-0x4c07fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.6: [1022:15e3] type 00 class 0x040300 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.6: BAR 0 [mem 0x806c0000-0x806c7fff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.6: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:04:00.6: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:04:00.7: [1022:164a] type 00 class 0x118000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:04:00.7: BAR 2 [mem 0x80400000-0x804fffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.7: BAR 5 [mem 0x806cc000-0x806cdfff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.7: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: PCI bridge to [bus 04]
+Aug 23 15:51:34 kernel: pci 0000:05:00.0: [1022:14ec] type 00 class 0x130000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:05:00.0: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:05:00.0: PME# supported from D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: [1022:1502] type 00 class 0x118000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: BAR 0 [mem 0x80900000-0x8097ffff]
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: BAR 1 [mem 0x809c0000-0x809c1fff]
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: BAR 2 [mem 0x4c0800000-0x4c083ffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: BAR 4 [mem 0x80980000-0x809bffff]
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: PCI bridge to [bus 05]
+Aug 23 15:51:34 kernel: pci 0000:06:00.0: [1022:14ec] type 00 class 0x130000 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:06:00.0: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:06:00.3: [1022:15c0] type 00 class 0x0c0330 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:06:00.3: BAR 0 [mem 0x80700000-0x807fffff 64bit]
+Aug 23 15:51:34 kernel: pci 0000:06:00.3: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:06:00.3: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:06:00.4: [1022:15c1] type 00 class 0x0c0330 PCIe Endpoint
+Aug 23 15:51:34 kernel: pci 0000:06:00.4: BAR 0 [mem 0x80800000-0x808fffff 64bit]
+Aug 23 15:51:34 kernel: pci 0000:06:00.4: enabling Extended Tags
+Aug 23 15:51:34 kernel: pci 0000:06:00.4: PME# supported from D0 D3hot D3cold
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: PCI bridge to [bus 06]
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKA configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKA disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKB configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKB disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKC configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKC disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKD configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKD disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKE configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKE disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKF configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKF disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKG configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKG disabled
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKH configured for IRQ 0
+Aug 23 15:51:34 kernel: ACPI: PCI: Interrupt link LNKH disabled
+Aug 23 15:51:34 kernel: Low-power S0 idle used by default for system suspend
+Aug 23 15:51:34 kernel: ACPI: EC: interrupt unblocked
+Aug 23 15:51:34 kernel: ACPI: EC: event unblocked
+Aug 23 15:51:34 kernel: ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+Aug 23 15:51:34 kernel: ACPI: EC: GPE=0xb
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.LPC0.EC0_: Boot DSDT EC initialization complete
+Aug 23 15:51:34 kernel: ACPI: \_SB_.PCI0.LPC0.EC0_: EC: Used to handle transactions and events
+Aug 23 15:51:34 kernel: iommu: Default domain type: Translated
+Aug 23 15:51:34 kernel: iommu: DMA domain TLB invalidation policy: lazy mode
+Aug 23 15:51:34 kernel: SCSI subsystem initialized
+Aug 23 15:51:34 kernel: libata version 3.00 loaded.
+Aug 23 15:51:34 kernel: ACPI: bus type USB registered
+Aug 23 15:51:34 kernel: usbcore: registered new interface driver usbfs
+Aug 23 15:51:34 kernel: usbcore: registered new interface driver hub
+Aug 23 15:51:34 kernel: usbcore: registered new device driver usb
+Aug 23 15:51:34 kernel: i2c_designware AMDI0010:00: [Firmware Bug]: DSDT uses known not-working I2C bus speed 400000, forcing it to 100000
+Aug 23 15:51:34 kernel: pps_core: LinuxPPS API ver. 1 registered
+Aug 23 15:51:34 kernel: pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+Aug 23 15:51:34 kernel: PTP clock support registered
+Aug 23 15:51:34 kernel: EDAC MC: Ver: 3.0.0
+Aug 23 15:51:34 kernel: efivars: Registered efivars operations
+Aug 23 15:51:34 kernel: NetLabel: Initializing
+Aug 23 15:51:34 kernel: NetLabel:  domain hash size = 128
+Aug 23 15:51:34 kernel: NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+Aug 23 15:51:34 kernel: NetLabel:  unlabeled traffic allowed by default
+Aug 23 15:51:34 kernel: mctp: management component transport protocol core
+Aug 23 15:51:34 kernel: NET: Registered PF_MCTP protocol family
+Aug 23 15:51:34 kernel: PCI: Using ACPI for IRQ routing
+Aug 23 15:51:34 kernel: PCI: pci_cache_line_size set to 64 bytes
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x09c00000-0x0bffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x09f00000-0x0bffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x2f519000-0x2fffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x71fd3000-0x73ffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x72b59000-0x73ffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x76afe000-0x77ffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x7bfe9000-0x7bffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x7bfef000-0x7bffffff]
+Aug 23 15:51:34 kernel: e820: reserve RAM buffer [mem 0x3fe300000-0x3ffffffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: vgaarb: setting as boot VGA device
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: vgaarb: bridge control possible
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+Aug 23 15:51:34 kernel: vgaarb: loaded
+Aug 23 15:51:34 kernel: hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+Aug 23 15:51:34 kernel: hpet0: 3 comparators, 32-bit 14.318180 MHz counter
+Aug 23 15:51:34 kernel: clocksource: Switched to clocksource hpet
+Aug 23 15:51:34 kernel: VFS: Disk quotas dquot_6.6.0
+Aug 23 15:51:34 kernel: VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+Aug 23 15:51:34 kernel: pnp: PnP ACPI init
+Aug 23 15:51:34 kernel: system 00:00: [mem 0xfec00000-0xfec01fff] could not be reserved
+Aug 23 15:51:34 kernel: system 00:00: [mem 0xfee00000-0xfee00fff] has been reserved
+Aug 23 15:51:34 kernel: system 00:00: [mem 0xe0000000-0xefffffff] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0400-0x04cf] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x04d0-0x04d1] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x04d6] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0c00-0x0c01] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0c14] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0c50-0x0c52] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0c6c] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0c6f] has been reserved
+Aug 23 15:51:34 kernel: system 00:02: [io  0x0cd0-0x0cdb] has been reserved
+Aug 23 15:51:34 kernel: system 00:03: [mem 0xff000000-0xffffffff] has been reserved
+Aug 23 15:51:34 kernel: pnp: PnP ACPI: found 5 devices
+Aug 23 15:51:34 kernel: clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+Aug 23 15:51:34 kernel: NET: Registered PF_INET protocol family
+Aug 23 15:51:34 kernel: IP idents hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+Aug 23 15:51:34 kernel: tcp_listen_portaddr_hash hash table entries: 8192 (order: 5, 131072 bytes, linear)
+Aug 23 15:51:34 kernel: Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+Aug 23 15:51:34 kernel: TCP established hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+Aug 23 15:51:34 kernel: TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+Aug 23 15:51:34 kernel: TCP: Hash tables configured (established 131072 bind 65536)
+Aug 23 15:51:34 kernel: MPTCP token hash table entries: 16384 (order: 6, 393216 bytes, linear)
+Aug 23 15:51:34 kernel: UDP hash table entries: 8192 (order: 7, 524288 bytes, linear)
+Aug 23 15:51:34 kernel: UDP-Lite hash table entries: 8192 (order: 7, 524288 bytes, linear)
+Aug 23 15:51:34 kernel: NET: Registered PF_UNIX/PF_LOCAL protocol family
+Aug 23 15:51:34 kernel: NET: Registered PF_XDP protocol family
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: bridge window [io  0x1000-0x0fff] to [bus 01] add_size 1000
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000 add_align 100000
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: bridge window [mem 0x4a0200000-0x4a03fffff 64bit pref]: assigned
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: bridge window [io  0x2000-0x2fff]: assigned
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: PCI bridge to [bus 01]
+Aug 23 15:51:34 kernel: pci 0000:00:02.1:   bridge window [io  0x2000-0x2fff]
+Aug 23 15:51:34 kernel: pci 0000:00:02.1:   bridge window [mem 0x80b00000-0x80bfffff]
+Aug 23 15:51:34 kernel: pci 0000:00:02.1:   bridge window [mem 0x4a0200000-0x4a03fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: PCI bridge to [bus 02]
+Aug 23 15:51:34 kernel: pci 0000:00:02.2:   bridge window [mem 0x4c0900000-0x4c0afffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: PCI bridge to [bus 03]
+Aug 23 15:51:34 kernel: pci 0000:00:02.4:   bridge window [mem 0x80a00000-0x80afffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: PCI bridge to [bus 04]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [io  0x1000-0x1fff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [mem 0x80000000-0x806fffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.1:   bridge window [mem 0x4b0000000-0x4c07fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: PCI bridge to [bus 05]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2:   bridge window [mem 0x80900000-0x809fffff]
+Aug 23 15:51:34 kernel: pci 0000:00:08.2:   bridge window [mem 0x4c0800000-0x4c08fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: PCI bridge to [bus 06]
+Aug 23 15:51:34 kernel: pci 0000:00:08.3:   bridge window [mem 0x80700000-0x808fffff]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 4 [mem 0x000a0000-0x000effff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 5 [mem 0x80000000-0xdfffffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 6 [mem 0xf0000000-0xfdbfffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 7 [mem 0x4a0200000-0x7f3fffffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 8 [io  0x0000-0x0cf7 window]
+Aug 23 15:51:34 kernel: pci_bus 0000:00: resource 9 [io  0x0d00-0xffff window]
+Aug 23 15:51:34 kernel: pci_bus 0000:01: resource 0 [io  0x2000-0x2fff]
+Aug 23 15:51:34 kernel: pci_bus 0000:01: resource 1 [mem 0x80b00000-0x80bfffff]
+Aug 23 15:51:34 kernel: pci_bus 0000:01: resource 2 [mem 0x4a0200000-0x4a03fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci_bus 0000:02: resource 2 [mem 0x4c0900000-0x4c0afffff 64bit pref]
+Aug 23 15:51:34 kernel: pci_bus 0000:03: resource 1 [mem 0x80a00000-0x80afffff]
+Aug 23 15:51:34 kernel: pci_bus 0000:04: resource 0 [io  0x1000-0x1fff]
+Aug 23 15:51:34 kernel: pci_bus 0000:04: resource 1 [mem 0x80000000-0x806fffff]
+Aug 23 15:51:34 kernel: pci_bus 0000:04: resource 2 [mem 0x4b0000000-0x4c07fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci_bus 0000:05: resource 1 [mem 0x80900000-0x809fffff]
+Aug 23 15:51:34 kernel: pci_bus 0000:05: resource 2 [mem 0x4c0800000-0x4c08fffff 64bit pref]
+Aug 23 15:51:34 kernel: pci_bus 0000:06: resource 1 [mem 0x80700000-0x808fffff]
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: D0 power state depends on 0000:04:00.0
+Aug 23 15:51:34 kernel: PCI: CLS 32 bytes, default 64
+Aug 23 15:51:34 kernel: pci 0000:00:00.2: AMD-Vi: IOMMU performance counters supported
+Aug 23 15:51:34 kernel: Trying to unpack rootfs image as initramfs...
+Aug 23 15:51:34 kernel: pci 0000:00:00.0: Adding to iommu group 0
+Aug 23 15:51:34 kernel: pci 0000:00:01.0: Adding to iommu group 1
+Aug 23 15:51:34 kernel: pci 0000:00:02.0: Adding to iommu group 2
+Aug 23 15:51:34 kernel: pci 0000:00:02.1: Adding to iommu group 3
+Aug 23 15:51:34 kernel: pci 0000:00:02.2: Adding to iommu group 4
+Aug 23 15:51:34 kernel: pci 0000:00:02.4: Adding to iommu group 5
+Aug 23 15:51:34 kernel: pci 0000:00:03.0: Adding to iommu group 6
+Aug 23 15:51:34 kernel: pci 0000:00:04.0: Adding to iommu group 7
+Aug 23 15:51:34 kernel: pci 0000:00:08.0: Adding to iommu group 8
+Aug 23 15:51:34 kernel: pci 0000:00:08.1: Adding to iommu group 9
+Aug 23 15:51:34 kernel: pci 0000:00:08.2: Adding to iommu group 10
+Aug 23 15:51:34 kernel: pci 0000:00:08.3: Adding to iommu group 11
+Aug 23 15:51:34 kernel: pci 0000:00:14.0: Adding to iommu group 12
+Aug 23 15:51:34 kernel: pci 0000:00:14.3: Adding to iommu group 12
+Aug 23 15:51:34 kernel: pci 0000:00:18.0: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.1: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.2: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.3: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.4: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.5: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.6: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:00:18.7: Adding to iommu group 13
+Aug 23 15:51:34 kernel: pci 0000:01:00.0: Adding to iommu group 14
+Aug 23 15:51:34 kernel: pci 0000:02:00.0: Adding to iommu group 15
+Aug 23 15:51:34 kernel: pci 0000:03:00.0: Adding to iommu group 16
+Aug 23 15:51:34 kernel: pci 0000:04:00.0: Adding to iommu group 17
+Aug 23 15:51:34 kernel: pci 0000:04:00.1: Adding to iommu group 18
+Aug 23 15:51:34 kernel: pci 0000:04:00.2: Adding to iommu group 19
+Aug 23 15:51:34 kernel: pci 0000:04:00.3: Adding to iommu group 20
+Aug 23 15:51:34 kernel: pci 0000:04:00.4: Adding to iommu group 21
+Aug 23 15:51:34 kernel: pci 0000:04:00.5: Adding to iommu group 22
+Aug 23 15:51:34 kernel: pci 0000:04:00.6: Adding to iommu group 23
+Aug 23 15:51:34 kernel: pci 0000:04:00.7: Adding to iommu group 24
+Aug 23 15:51:34 kernel: pci 0000:05:00.0: Adding to iommu group 25
+Aug 23 15:51:34 kernel: pci 0000:05:00.1: Adding to iommu group 26
+Aug 23 15:51:34 kernel: pci 0000:06:00.0: Adding to iommu group 27
+Aug 23 15:51:34 kernel: pci 0000:06:00.3: Adding to iommu group 28
+Aug 23 15:51:34 kernel: pci 0000:06:00.4: Adding to iommu group 29
+Aug 23 15:51:34 kernel: AMD-Vi: Extended features (0x246577efa2054ada, 0x0): PPR NX GT IA GA PC
+Aug 23 15:51:34 kernel: AMD-Vi: Interrupt remapping enabled
+Aug 23 15:51:34 kernel: PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+Aug 23 15:51:34 kernel: software IO TLB: mapped [mem 0x000000006cdb7000-0x0000000070db7000] (64MB)
+Aug 23 15:51:34 kernel: LVT offset 0 assigned for vector 0x400
+Aug 23 15:51:34 kernel: perf: AMD IBS detected (0x00000bff)
+Aug 23 15:51:34 kernel: amd_uncore: 4 amd_df counters detected
+Aug 23 15:51:34 kernel: amd_uncore: 6 amd_l3 counters detected
+Aug 23 15:51:34 kernel: amd_uncore: 4 amd_umc_0 counters detected
+Aug 23 15:51:34 kernel: amd_uncore: 4 amd_umc_1 counters detected
+Aug 23 15:51:34 kernel: amd_uncore: 4 amd_umc_2 counters detected
+Aug 23 15:51:34 kernel: amd_uncore: 4 amd_umc_3 counters detected
+Aug 23 15:51:34 kernel: perf/amd_iommu: Detected AMD IOMMU #0 (2 banks, 4 counters/bank).
+Aug 23 15:51:34 kernel: Initialise system trusted keyrings
+Aug 23 15:51:34 kernel: Key type blacklist registered
+Aug 23 15:51:34 kernel: workingset: timestamp_bits=36 max_order=22 bucket_order=0
+Aug 23 15:51:34 kernel: integrity: Platform Keyring initialized
+Aug 23 15:51:34 kernel: integrity: Machine keyring initialized
+Aug 23 15:51:34 kernel: Freeing initrd memory: 89284K
+Aug 23 15:51:34 kernel: NET: Registered PF_ALG protocol family
+Aug 23 15:51:34 kernel: xor: automatically using best checksumming function   avx       
+Aug 23 15:51:34 kernel: Key type asymmetric registered
+Aug 23 15:51:34 kernel: Asymmetric key parser 'x509' registered
+Aug 23 15:51:34 kernel: Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+Aug 23 15:51:34 kernel: io scheduler mq-deadline registered
+Aug 23 15:51:34 kernel: io scheduler kyber registered
+Aug 23 15:51:34 kernel: io scheduler bfq registered
+Aug 23 15:51:34 kernel: atomic64_test: passed for x86-64 platform with CX8 and with SSE
+Aug 23 15:51:34 kernel: pcieport 0000:00:02.1: PME: Signaling with IRQ 34
+Aug 23 15:51:34 kernel: pcieport 0000:00:02.1: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+Aug 23 15:51:34 kernel: pcieport 0000:00:02.2: PME: Signaling with IRQ 35
+Aug 23 15:51:34 kernel: pcieport 0000:00:02.4: PME: Signaling with IRQ 36
+Aug 23 15:51:34 kernel: pcieport 0000:00:08.1: PME: Signaling with IRQ 37
+Aug 23 15:51:34 kernel: pcieport 0000:00:08.2: PME: Signaling with IRQ 38
+Aug 23 15:51:34 kernel: pcieport 0000:00:08.3: PME: Signaling with IRQ 39
+Aug 23 15:51:34 kernel: ACPI: AC: AC Adapter [ACAD] (on-line)
+Aug 23 15:51:34 kernel: input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+Aug 23 15:51:34 kernel: ACPI: button: Power Button [PWRB]
+Aug 23 15:51:34 kernel: input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/input/input1
+Aug 23 15:51:34 kernel: ACPI: button: Lid Switch [LID0]
+Aug 23 15:51:34 kernel: Monitor-Mwait will be used to enter C-1 state
+Aug 23 15:51:34 kernel: Estimated ratio of average max frequency by base frequency (times 1024): 1199
+Aug 23 15:51:34 kernel: thermal LNXTHERM:00: registered as thermal_zone0
+Aug 23 15:51:34 kernel: ACPI: thermal: Thermal Zone [TZ01] (66 C)
+Aug 23 15:51:34 kernel: Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+Aug 23 15:51:34 kernel: Non-volatile memory driver v1.3
+Aug 23 15:51:34 kernel: Linux agpgart interface v0.103
+Aug 23 15:51:34 kernel: ACPI: bus type drm_connector registered
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: new USB bus registered, assigned bus number 1
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: hcc params 0x0128ffc5 hci version 0x120 quirks 0x0000000200000010
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: new USB bus registered, assigned bus number 2
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.3: Host supports USB 3.1 Enhanced SuperSpeed
+Aug 23 15:51:34 kernel: usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb1: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb1: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb1: SerialNumber: 0000:04:00.3
+Aug 23 15:51:34 kernel: hub 1-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 1-0:1.0: 5 ports detected
+Aug 23 15:51:34 kernel: usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+Aug 23 15:51:34 kernel: usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb2: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb2: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb2: SerialNumber: 0000:04:00.3
+Aug 23 15:51:34 kernel: hub 2-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 2-0:1.0: 2 ports detected
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: new USB bus registered, assigned bus number 3
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: hcc params 0x0110ffc5 hci version 0x120 quirks 0x0000000200000010
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: new USB bus registered, assigned bus number 4
+Aug 23 15:51:34 kernel: xhci_hcd 0000:04:00.4: Host supports USB 3.1 Enhanced SuperSpeed
+Aug 23 15:51:34 kernel: usb usb3: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb3: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb3: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb3: SerialNumber: 0000:04:00.4
+Aug 23 15:51:34 kernel: hub 3-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 3-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: usb usb4: We don't know the algorithms for LPM for this host, disabling LPM.
+Aug 23 15:51:34 kernel: usb usb4: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb4: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb4: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb4: SerialNumber: 0000:04:00.4
+Aug 23 15:51:34 kernel: hub 4-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 4-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: new USB bus registered, assigned bus number 5
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: hcc params 0x0110ffc5 hci version 0x120 quirks 0x0000000200000010
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: new USB bus registered, assigned bus number 6
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.3: Host supports USB 3.1 Enhanced SuperSpeed
+Aug 23 15:51:34 kernel: usb usb5: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb5: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb5: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb5: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb5: SerialNumber: 0000:06:00.3
+Aug 23 15:51:34 kernel: hub 5-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 5-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: usb usb6: We don't know the algorithms for LPM for this host, disabling LPM.
+Aug 23 15:51:34 kernel: usb usb6: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb6: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb6: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb6: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb6: SerialNumber: 0000:06:00.3
+Aug 23 15:51:34 kernel: hub 6-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 6-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: new USB bus registered, assigned bus number 7
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: hcc params 0x0110ffc5 hci version 0x120 quirks 0x0000000200000010
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: xHCI Host Controller
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: new USB bus registered, assigned bus number 8
+Aug 23 15:51:34 kernel: xhci_hcd 0000:06:00.4: Host supports USB 3.1 Enhanced SuperSpeed
+Aug 23 15:51:34 kernel: usb usb7: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb7: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb7: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb7: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb7: SerialNumber: 0000:06:00.4
+Aug 23 15:51:34 kernel: hub 7-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 7-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: usb usb8: We don't know the algorithms for LPM for this host, disabling LPM.
+Aug 23 15:51:34 kernel: usb usb8: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.15
+Aug 23 15:51:34 kernel: usb usb8: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Aug 23 15:51:34 kernel: usb usb8: Product: xHCI Host Controller
+Aug 23 15:51:34 kernel: usb usb8: Manufacturer: Linux 6.15.10-200.fc42.x86_64 xhci-hcd
+Aug 23 15:51:34 kernel: usb usb8: SerialNumber: 0000:06:00.4
+Aug 23 15:51:34 kernel: hub 8-0:1.0: USB hub found
+Aug 23 15:51:34 kernel: hub 8-0:1.0: 1 port detected
+Aug 23 15:51:34 kernel: usbcore: registered new interface driver usbserial_generic
+Aug 23 15:51:34 kernel: usbserial: USB Serial support registered for generic
+Aug 23 15:51:34 kernel: i8042: PNP: PS/2 Controller [PNP0303:KBC0] at 0x60,0x64 irq 1
+Aug 23 15:51:34 kernel: i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
+Aug 23 15:51:34 kernel: serio: i8042 KBD port at 0x60,0x64 irq 1
+Aug 23 15:51:34 kernel: mousedev: PS/2 mouse device common for all mice
+Aug 23 15:51:34 kernel: rtc_cmos 00:01: RTC can wake from S4
+Aug 23 15:51:34 kernel: rtc_cmos 00:01: registered as rtc0
+Aug 23 15:51:34 kernel: rtc_cmos 00:01: setting system clock to 2025-08-23T21:51:34 UTC (1755985894)
+Aug 23 15:51:34 kernel: rtc_cmos 00:01: alarms up to one month, y3k, 114 bytes nvram
+Aug 23 15:51:34 kernel: device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+Aug 23 15:51:34 kernel: device-mapper: uevent: version 1.0.3
+Aug 23 15:51:34 kernel: device-mapper: ioctl: 4.49.0-ioctl (2025-01-17) initialised: dm-devel@lists.linux.dev
+Aug 23 15:51:34 kernel: simple-framebuffer simple-framebuffer.0: [drm] Registered 1 planes with drm panic
+Aug 23 15:51:34 kernel: [drm] Initialized simpledrm 1.0.0 for simple-framebuffer.0 on minor 0
+Aug 23 15:51:34 kernel: input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input2
+Aug 23 15:51:34 kernel: fbcon: Deferring console take-over
+Aug 23 15:51:34 kernel: simple-framebuffer simple-framebuffer.0: [drm] fb0: simpledrmdrmfb frame buffer device
+Aug 23 15:51:34 kernel: ccp 0000:04:00.2: enabling device (0000 -> 0002)
+Aug 23 15:51:34 kernel: ccp 0000:04:00.2: tee enabled
+Aug 23 15:51:34 kernel: ccp 0000:04:00.2: psp enabled
+Aug 23 15:51:34 kernel: hid: raw HID events driver (C) Jiri Kosina
+Aug 23 15:51:34 kernel: usbcore: registered new interface driver usbhid
+Aug 23 15:51:34 kernel: usbhid: USB HID core driver
+Aug 23 15:51:34 kernel: drop_monitor: Initializing network drop monitor service
+Aug 23 15:51:34 kernel: Initializing XFRM netlink socket
+Aug 23 15:51:34 kernel: NET: Registered PF_INET6 protocol family
+Aug 23 15:51:34 kernel: Segment Routing with IPv6
+Aug 23 15:51:34 kernel: RPL Segment Routing with IPv6
+Aug 23 15:51:34 kernel: In-situ OAM (IOAM) with IPv6
+Aug 23 15:51:34 kernel: mip6: Mobile IPv6
+Aug 23 15:51:34 kernel: NET: Registered PF_PACKET protocol family
+Aug 23 15:51:34 kernel: microcode: Current revision: 0x0a70520a
+Aug 23 15:51:34 kernel: resctrl: L3 allocation detected
+Aug 23 15:51:34 kernel: resctrl: MB allocation detected
+Aug 23 15:51:34 kernel: resctrl: SMBA allocation detected
+Aug 23 15:51:34 kernel: resctrl: L3 monitoring detected
+Aug 23 15:51:34 kernel: IPI shorthand broadcast: enabled
+Aug 23 15:51:34 kernel: registered taskstats version 1
+Aug 23 15:51:34 kernel: Loading compiled-in X.509 certificates
+Aug 23 15:51:34 kernel: Loaded X.509 cert 'Fedora kernel signing key: 89895ff6fff83da01a8df553cc9b8bc375874494'
+Aug 23 15:51:34 kernel: Loaded X.509 cert 'Fedora IMA CA: a8a00c31663f853f9c6ff2564872e378af026b28'
+Aug 23 15:51:34 kernel: Demotion targets for Node 0: null
+Aug 23 15:51:34 kernel: page_owner is disabled
+Aug 23 15:51:34 kernel: Key type .fscrypt registered
+Aug 23 15:51:34 kernel: Key type fscrypt-provisioning registered
+Aug 23 15:51:34 kernel: Btrfs loaded, zoned=yes, fsverity=yes
+Aug 23 15:51:34 kernel: Key type big_key registered
+Aug 23 15:51:34 kernel: Key type trusted registered
+Aug 23 15:51:34 kernel: ACPI: battery: Slot [BAT0] (battery present)
+Aug 23 15:51:34 kernel: Key type encrypted registered
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Lenovo Ltd.: ThinkPad Product CA 2012: 838b1f54c1550463f45f98700640f11069265949'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Microsoft Windows Production PCA 2011: a92902398e16c49778cd90f99e4f9ae17c55af53'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Microsoft Corporation UEFI CA 2011: 13adbf4309bd82709c8cd54f316ed522988a1bd4'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Microsoft Corporation: Windows UEFI CA 2023: aefc5fbbbe055d8f8daa585473499417ab5a5272'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Microsoft UEFI CA 2023: 81aa6b3244c935bce0d6628af39827421e32497d'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:db
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Microsoft Option ROM UEFI CA 2023: 514fbf937fa46fb57bf07af8bed84b3b864b1711'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:MokListRT (MOKvar table)
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:MokListRT (MOKvar table)
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'Red Hat, Inc.: fedoraca: b280c7ae6b884e0f4d2a0d8724c25eaf6c65c326'
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:MokListRT (MOKvar table)
+Aug 23 15:51:34 kernel: integrity: Loading X.509 certificate: UEFI:MokListRT (MOKvar table)
+Aug 23 15:51:34 kernel: integrity: Loaded X.509 cert 'grub: d939395cda059c19a699c85f3856d023be259007'
+Aug 23 15:51:34 kernel: Loading compiled-in module X.509 certificates
+Aug 23 15:51:34 kernel: Loaded X.509 cert 'Fedora kernel signing key: 89895ff6fff83da01a8df553cc9b8bc375874494'
+Aug 23 15:51:34 kernel: ima: Allocated hash algorithm: sha256
+Aug 23 15:51:34 kernel: evm: Initialising EVM extended attributes:
+Aug 23 15:51:34 kernel: evm: security.selinux
+Aug 23 15:51:34 kernel: evm: security.SMACK64 (disabled)
+Aug 23 15:51:34 kernel: evm: security.SMACK64EXEC (disabled)
+Aug 23 15:51:34 kernel: evm: security.SMACK64TRANSMUTE (disabled)
+Aug 23 15:51:34 kernel: evm: security.SMACK64MMAP (disabled)
+Aug 23 15:51:34 kernel: evm: security.apparmor (disabled)
+Aug 23 15:51:34 kernel: evm: security.ima
+Aug 23 15:51:34 kernel: evm: security.capability
+Aug 23 15:51:34 kernel: evm: HMAC attrs: 0x1
+Aug 23 15:51:34 kernel: audit: type=1807 audit(1755985894.601:2): action=measure func=KEXEC_KERNEL_CHECK res=1
+Aug 23 15:51:34 kernel: audit: type=1807 audit(1755985894.601:3): action=appraise func=POLICY_CHECK appraise_type=imasig res=1
+Aug 23 15:51:34 kernel: audit: type=1807 audit(1755985894.601:4): action=measure func=MODULE_CHECK res=1
+Aug 23 15:51:34 kernel: alg: No test for 842 (842-scomp)
+Aug 23 15:51:34 kernel: PM:   Magic number: 5:310:905
+Aug 23 15:51:34 kernel: RAS: Correctable Errors collector initialized.
+Aug 23 15:51:34 kernel: Lockdown: swapper/0: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 15:51:34 kernel: Unstable clock detected, switching default tracing clock to "global"
+                        If you want to keep using the local clock, then add:
+                          "trace_clock=local"
+                        on the kernel command line
+Aug 23 15:51:34 kernel: clk: Disabling unused clocks
+Aug 23 15:51:34 kernel: PM: genpd: Disabling unused power domains
+Aug 23 15:51:34 kernel: Freeing unused decrypted memory: 2028K
+Aug 23 15:51:34 kernel: Freeing unused kernel image (initmem) memory: 5060K
+Aug 23 15:51:34 kernel: Write protecting the kernel read-only data: 40960k
+Aug 23 15:51:34 kernel: Freeing unused kernel image (text/rodata gap) memory: 848K
+Aug 23 15:51:34 kernel: Freeing unused kernel image (rodata/data gap) memory: 780K
+Aug 23 15:51:34 kernel: x86/mm: Checked W+X mappings: passed, no W+X pages found.
+Aug 23 15:51:34 kernel: Run /init as init process
+Aug 23 15:51:34 kernel:   with arguments:
+Aug 23 15:51:34 kernel:     /init
+Aug 23 15:51:34 kernel:     rhgb
+Aug 23 15:51:34 kernel:   with environment:
+Aug 23 15:51:34 kernel:     HOME=/
+Aug 23 15:51:34 kernel:     TERM=linux
+Aug 23 15:51:34 kernel:     BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.15.10-200.fc42.x86_64
+Aug 23 15:51:34 systemd[1]: Successfully made /usr/ read-only.
+Aug 23 15:51:34 systemd[1]: systemd 257.7-1.fc42 running in system mode (+PAM +AUDIT +SELINUX -APPARMOR +IMA +IPE +SMACK +SECCOMP -GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN -IPTC +KMOD +LIBCRYPTSETUP +LIBCRYPTSETUP_PLUGINS +LIBFDISK +PCRE2 +PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD +BPF_FRAMEWORK +BTF +XKBCOMMON +UTMP +SYSVINIT +LIBARCHIVE)
+Aug 23 15:51:34 systemd[1]: Detected architecture x86-64.
+Aug 23 15:51:34 systemd[1]: Running in initrd.
+Aug 23 15:51:34 systemd[1]: No hostname configured, using default hostname.
+Aug 23 15:51:34 systemd[1]: Hostname set to <fedora>.
+Aug 23 15:51:34 kernel: usb 3-1: new high-speed USB device number 2 using xhci_hcd
+Aug 23 15:51:34 kernel: usb 1-4: new full-speed USB device number 2 using xhci_hcd
+Aug 23 15:51:34 systemd[1]: bpf-restrict-fs: LSM BPF program attached
+Aug 23 15:51:34 systemd[1]: Queued start job for default target initrd.target.
+Aug 23 15:51:34 systemd[1]: Expecting device dev-mapper-fedora\x2droot.device - /dev/mapper/fedora-root...
+Aug 23 15:51:34 systemd[1]: Reached target initrd-usr-fs.target - Initrd /usr File System.
+Aug 23 15:51:34 systemd[1]: Reached target slices.target - Slice Units.
+Aug 23 15:51:34 systemd[1]: Reached target swap.target - Swaps.
+Aug 23 15:51:34 systemd[1]: Reached target timers.target - Timer Units.
+Aug 23 15:51:34 systemd[1]: Listening on dbus.socket - D-Bus System Message Bus Socket.
+Aug 23 15:51:34 systemd[1]: Listening on iscsid.socket - Open-iSCSI iscsid Socket.
+Aug 23 15:51:34 systemd[1]: Listening on iscsiuio.socket - Open-iSCSI iscsiuio Socket.
+Aug 23 15:51:34 systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+Aug 23 15:51:34 systemd[1]: Listening on systemd-journald.socket - Journal Sockets.
+Aug 23 15:51:34 systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+Aug 23 15:51:34 systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+Aug 23 15:51:34 systemd[1]: Reached target sockets.target - Socket Units.
+Aug 23 15:51:34 systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+Aug 23 15:51:34 systemd[1]: memstrack.service - Memstrack Anylazing Service was skipped because no trigger condition checks were met.
+Aug 23 15:51:34 systemd[1]: Starting systemd-journald.service - Journal Service...
+Aug 23 15:51:34 systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+Aug 23 15:51:34 systemd[1]: systemd-pcrphase-initrd.service - TPM PCR Barrier (initrd) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+Aug 23 15:51:34 systemd[1]: Starting systemd-vconsole-setup.service - Virtual Console Setup...
+Aug 23 15:51:34 systemd[1]: Finished kmod-static-nodes.service - Create List of Static Device Nodes.
+Aug 23 15:51:34 systemd[1]: Starting systemd-tmpfiles-setup-dev-early.service - Create Static Device Nodes in /dev gracefully...
+Aug 23 15:51:34 systemd-journald[430]: Collecting audit messages is disabled.
+Aug 23 15:51:34 kernel: usb 3-1: New USB device found, idVendor=5986, idProduct=1198, bcdDevice=59.14
+Aug 23 15:51:34 kernel: usb 3-1: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+Aug 23 15:51:34 kernel: usb 3-1: Product: Integrated Camera
+Aug 23 15:51:34 kernel: usb 3-1: Manufacturer:  
+Aug 23 15:51:34 kernel: usb 3-1: SerialNumber: 0001
+Aug 23 15:51:34 kernel: i2c_dev: i2c /dev entries driver
+Aug 23 15:51:34 systemd[1]: Finished systemd-tmpfiles-setup-dev-early.service - Create Static Device Nodes in /dev gracefully.
+Aug 23 15:51:34 systemd[1]: Starting systemd-sysusers.service - Create System Users...
+Aug 23 15:51:34 systemd[1]: Finished systemd-sysusers.service - Create System Users.
+Aug 23 15:51:34 systemd[1]: Starting systemd-tmpfiles-setup-dev.service - Create Static Device Nodes in /dev...
+Aug 23 15:51:34 kernel: fuse: init (API version 7.43)
+Aug 23 15:51:34 systemd[1]: Finished systemd-modules-load.service - Load Kernel Modules.
+Aug 23 15:51:34 systemd[1]: Starting systemd-sysctl.service - Apply Kernel Variables...
+Aug 23 15:51:34 systemd[1]: Finished systemd-vconsole-setup.service - Virtual Console Setup.
+Aug 23 15:51:34 systemd[1]: Starting dracut-cmdline-ask.service - dracut ask for additional cmdline parameters...
+Aug 23 15:51:34 systemd[1]: Finished systemd-sysctl.service - Apply Kernel Variables.
+Aug 23 15:51:34 kernel: usb 1-4: New USB device found, idVendor=27c6, idProduct=650a, bcdDevice= 1.00
+Aug 23 15:51:34 kernel: usb 1-4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+Aug 23 15:51:34 kernel: usb 1-4: Product: Goodix USB2.0 MISC
+Aug 23 15:51:34 kernel: usb 1-4: Manufacturer: Goodix Technology Co., Ltd.
+Aug 23 15:51:34 kernel: usb 1-4: SerialNumber: UID6BDF800C_XXXX_MOC_B0
+Aug 23 15:51:34 systemd[1]: Finished systemd-tmpfiles-setup-dev.service - Create Static Device Nodes in /dev.
+Aug 23 15:51:34 systemd[1]: Reached target local-fs-pre.target - Preparation for Local File Systems.
+Aug 23 15:51:34 systemd[1]: Reached target local-fs.target - Local File Systems.
+Aug 23 15:51:34 systemd[1]: Finished dracut-cmdline-ask.service - dracut ask for additional cmdline parameters.
+Aug 23 15:51:34 systemd[1]: Starting dracut-cmdline.service - dracut cmdline hook...
+Aug 23 15:51:34 systemd[1]: Started systemd-journald.service - Journal Service.
+Aug 23 15:51:34 kernel: Loading iSCSI transport class v2.0-870.
+Aug 23 15:51:35 kernel: usb 1-5: new high-speed USB device number 3 using xhci_hcd
+Aug 23 15:51:35 kernel: iscsi: registered transport (tcp)
+Aug 23 15:51:35 kernel: usb 1-5: New USB device found, idVendor=0489, idProduct=e0cd, bcdDevice= 1.00
+Aug 23 15:51:35 kernel: usb 1-5: New USB device strings: Mfr=5, Product=6, SerialNumber=7
+Aug 23 15:51:35 kernel: usb 1-5: Product: Wireless_Device
+Aug 23 15:51:35 kernel: usb 1-5: Manufacturer: MediaTek Inc.
+Aug 23 15:51:35 kernel: usb 1-5: SerialNumber: 000000000
+Aug 23 15:51:35 kernel: RPC: Registered named UNIX socket transport module.
+Aug 23 15:51:35 kernel: RPC: Registered udp transport module.
+Aug 23 15:51:35 kernel: RPC: Registered tcp transport module.
+Aug 23 15:51:35 kernel: RPC: Registered tcp-with-tls transport module.
+Aug 23 15:51:35 kernel: RPC: Registered tcp NFSv4.1 backchannel transport module.
+Aug 23 15:51:35 kernel: pcie_mp2_amd 0000:04:00.7: enabling device (0000 -> 0002)
+Aug 23 15:51:35 kernel: sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
+Aug 23 15:51:35 kernel: sp5100-tco sp5100-tco: Using 0xfeb00000 for watchdog MMIO address
+Aug 23 15:51:35 kernel: sp5100-tco sp5100-tco: initialized. heartbeat=60 sec (nowayout=0)
+Aug 23 15:51:35 kernel: Key type psk registered
+Aug 23 15:51:35 kernel: ACPI: video: Video Device [VGA] (multi-head: yes  rom: no  post: no)
+Aug 23 15:51:35 kernel: input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:17/LNXVIDEO:00/input/input3
+Aug 23 15:51:35 kernel: input: ELAN06FA:00 04F3:327E Mouse as /devices/platform/AMDI0010:00/i2c-0/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input4
+Aug 23 15:51:35 kernel: input: ELAN06FA:00 04F3:327E Touchpad as /devices/platform/AMDI0010:00/i2c-0/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input6
+Aug 23 15:51:35 kernel: hid-generic 0018:04F3:327E.0001: input,hidraw0: I2C HID v1.00 Mouse [ELAN06FA:00 04F3:327E] on i2c-ELAN06FA:00
+Aug 23 15:51:35 kernel: input: WACF2200:00 056A:53C0 Touchscreen as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input7
+Aug 23 15:51:35 kernel: input: WACF2200:00 056A:53C0 as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input8
+Aug 23 15:51:35 kernel: input: WACF2200:00 056A:53C0 Stylus as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input9
+Aug 23 15:51:35 kernel: input: WACF2200:00 056A:53C0 as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input10
+Aug 23 15:51:35 kernel: input: WACF2200:00 056A:53C0 Mouse as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input11
+Aug 23 15:51:35 kernel: hid-generic 0018:056A:53C0.0002: input,hidraw1: I2C HID v1.00 Mouse [WACF2200:00 056A:53C0] on i2c-WACF2200:00
+Aug 23 15:51:35 kernel: amdxdna 0000:05:00.1: enabling device (0000 -> 0002)
+Aug 23 15:51:35 kernel: sdhci: Secure Digital Host Controller Interface driver
+Aug 23 15:51:35 kernel: sdhci: Copyright(c) Pierre Ossman
+Aug 23 15:51:35 kernel: nvme 0000:03:00.0: platform quirk: setting simple suspend
+Aug 23 15:51:35 kernel: nvme nvme0: pci function 0000:03:00.0
+Aug 23 15:51:35 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 23 15:51:35 kernel: nvme nvme0: allocated 64 MiB host memory buffer (1 segment).
+Aug 23 15:51:35 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 23 15:51:35 kernel:  nvme0n1: p1 p2 p3 p4 p5 p6 p7
+Aug 23 15:51:35 kernel: [drm] Initialized amdxdna_accel_driver 0.0.0 for 0000:05:00.1 on minor 0
+Aug 23 15:51:35 kernel: sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9750] (rev 1)
+Aug 23 15:51:35 kernel: sdhci-pci 0000:01:00.0: enabling device (0000 -> 0002)
+Aug 23 15:51:35 kernel: input: ELAN06FA:00 04F3:327E Mouse as /devices/platform/AMDI0010:00/i2c-0/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input12
+Aug 23 15:51:35 kernel: input: ELAN06FA:00 04F3:327E Touchpad as /devices/platform/AMDI0010:00/i2c-0/i2c-ELAN06FA:00/0018:04F3:327E.0001/input/input14
+Aug 23 15:51:35 kernel: mmc0: SDHCI controller on PCI [0000:01:00.0] using ADMA
+Aug 23 15:51:35 kernel: hid-multitouch 0018:04F3:327E.0001: input,hidraw0: I2C HID v1.00 Mouse [ELAN06FA:00 04F3:327E] on i2c-ELAN06FA:00
+Aug 23 15:51:35 kernel: wacom 0018:056A:53C0.0002: hidraw1: I2C HID v1.00 Mouse [WACF2200:00 056A:53C0] on i2c-WACF2200:00
+Aug 23 15:51:35 kernel: input: Wacom HID 53C0 Pen as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input15
+Aug 23 15:51:35 kernel: input: Wacom HID 53C0 Finger as /devices/platform/AMDI0010:02/i2c-1/i2c-WACF2200:00/0018:056A:53C0.0002/input/input16
+Aug 23 15:51:37 kernel: [drm] amdgpu kernel modesetting enabled.
+Aug 23 15:51:37 kernel: amdgpu: Virtual CRAT table created for CPU
+Aug 23 15:51:37 kernel: amdgpu: Topology: Add CPU node
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: enabling device (0006 -> 0007)
+Aug 23 15:51:37 kernel: [drm] initializing kernel modesetting (IP DISCOVERY 0x1002:0x1900 0x17AA:0x3815 0xCC).
+Aug 23 15:51:37 kernel: [drm] register mmio base: 0x80600000
+Aug 23 15:51:37 kernel: [drm] register mmio size: 524288
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 0 <soc21_common>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 1 <gmc_v11_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 2 <ih_v6_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 3 <psp>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 4 <smu>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 5 <dm>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 6 <gfx_v11_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 7 <sdma_v6_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 8 <vcn_v4_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 9 <jpeg_v4_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: detected ip block number 10 <mes_v11_0>
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: Fetched VBIOS from VFCT
+Aug 23 15:51:37 kernel: amdgpu: ATOM BIOS: 113-PHXGENERIC-001
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: vgaarb: deactivate vga console
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: Trusted Memory Zone (TMZ) feature enabled
+Aug 23 15:51:37 kernel: [drm] vm size is 262144 GB, 4 levels, block size is 9-bit, fragment size is 9-bit
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: VRAM: 2048M 0x0000008000000000 - 0x000000807FFFFFFF (2048M used)
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: GART: 512M 0x00007FFF00000000 - 0x00007FFF1FFFFFFF
+Aug 23 15:51:37 kernel: [drm] Detected VRAM RAM=2048M, BAR=2048M
+Aug 23 15:51:37 kernel: [drm] RAM width 128bits LPDDR5
+Aug 23 15:51:37 kernel: [drm] amdgpu: 2048M of VRAM memory ready
+Aug 23 15:51:37 kernel: [drm] amdgpu: 6861M of GTT memory ready.
+Aug 23 15:51:37 kernel: [drm] GART: num cpu pages 131072, num gpu pages 131072
+Aug 23 15:51:37 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 23 15:51:37 kernel: [drm] Loading DMUB firmware via PSP: version=0x08005100
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: Found VCN firmware Version ENC: 1.24 DEC: 9 VEP: 0 Revision: 11
+Aug 23 15:51:37 kernel: amdgpu 0000:04:00.0: amdgpu: reserve 0x4000000 from 0x8078000000 for PSP TMR
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: RAS: optional ras ta ucode is not available
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: RAP: optional rap ta ucode is not available
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: SECUREDISPLAY: securedisplay ta ucode is not available
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is initialized successfully!
+Aug 23 15:51:38 kernel: [drm] Display Core v3.2.325 initialized on DCN 3.1.4
+Aug 23 15:51:38 kernel: [drm] DP-HDMI FRL PCON supported
+Aug 23 15:51:38 kernel: [drm] DMUB hardware initialized: version=0x08005100
+Aug 23 15:51:38 kernel: [drm] PSR support 0, DC PSR ver -1, sink PSR ver 0 DPCD caps 0x0 su_y_granularity 0
+Aug 23 15:51:38 kernel: kfd kfd: amdgpu: Allocated 3969056 bytes on gart
+Aug 23 15:51:38 kernel: kfd kfd: amdgpu: Total number of KFD nodes to be created: 1
+Aug 23 15:51:38 kernel: amdgpu: Virtual CRAT table created for GPU
+Aug 23 15:51:38 kernel: amdgpu: Topology: Add dGPU node [0x1900:0x1002]
+Aug 23 15:51:38 kernel: kfd kfd: amdgpu: added device 1002:1900
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: SE 1, SH per SE 2, CU per SH 6, active_cu_number 12
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 23 15:51:38 kernel: [drm] ring gfx_32768.1.1 was added
+Aug 23 15:51:38 kernel: [drm] ring compute_32768.2.2 was added
+Aug 23 15:51:38 kernel: [drm] ring sdma_32768.3.3 was added
+Aug 23 15:51:38 kernel: [drm] ring gfx_32768.1.1 ib test pass
+Aug 23 15:51:38 kernel: [drm] ring compute_32768.2.2 ib test pass
+Aug 23 15:51:38 kernel: [drm] ring sdma_32768.3.3 ib test pass
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: Runtime PM not available
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: amdgpu: [drm] Using custom brightness curve
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: [drm] Registered 4 planes with drm panic
+Aug 23 15:51:38 kernel: [drm] Initialized amdgpu 3.63.0 for 0000:04:00.0 on minor 1
+Aug 23 15:51:38 kernel: fbcon: amdgpudrmfb (fb0) is primary device
+Aug 23 15:51:38 kernel: fbcon: Deferring console take-over
+Aug 23 15:51:38 kernel: amdgpu 0000:04:00.0: [drm] fb0: amdgpudrmfb frame buffer device
+Aug 23 15:51:38 kernel: [drm] pre_validate_dsc:1627 MST_DSC dsc precompute is not needed
+Aug 23 15:51:38 kernel: EXT4-fs (dm-0): orphan cleanup on readonly fs
+Aug 23 15:51:38 kernel: EXT4-fs (dm-0): mounted filesystem d3f10cc6-4cc9-4edb-aa93-4698ccbec375 ro with ordered data mode. Quota mode: none.
+Aug 23 21:51:39 systemd-journald[430]: Received SIGTERM from PID 1 (systemd).
+Aug 23 21:51:39 kernel: audit: type=1404 audit(1755985899.039:5): enforcing=1 old_enforcing=0 auid=4294967295 ses=4294967295 enabled=1 old-enabled=1 lsm=selinux res=1
+Aug 23 21:51:39 kernel: SELinux:  Permission firmware_load in class system not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission kexec_image_load in class system not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission kexec_initramfs_load in class system not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission policy_load in class system not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission x509_certificate_load in class system not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission nlmsg in class netlink_route_socket not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission nlmsg in class netlink_tcpdiag_socket not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission nlmsg in class netlink_xfrm_socket not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission nlmsg in class netlink_audit_socket not defined in policy.
+Aug 23 21:51:39 kernel: SELinux:  Permission allowed in class io_uring not defined in policy.
+Aug 23 21:51:39 kernel: SELinux: the above unknown classes and permissions will be allowed
+Aug 23 21:51:39 kernel: SELinux:  policy capability network_peer_controls=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability open_perms=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability extended_socket_class=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability always_check_network=0
+Aug 23 21:51:39 kernel: SELinux:  policy capability cgroup_seclabel=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability nnp_nosuid_transition=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability genfs_seclabel_symlinks=1
+Aug 23 21:51:39 kernel: SELinux:  policy capability ioctl_skip_cloexec=0
+Aug 23 21:51:39 kernel: SELinux:  policy capability userspace_initial_context=0
+Aug 23 21:51:39 kernel: SELinux:  policy capability netlink_xperm=0
+Aug 23 21:51:39 kernel: SELinux:  policy capability netif_wildcard=0
+Aug 23 21:51:39 kernel: audit: type=1403 audit(1755985899.144:6): auid=4294967295 ses=4294967295 lsm=selinux res=1
+Aug 23 21:51:39 systemd[1]: Successfully loaded SELinux policy in 106.286ms.
+Aug 23 21:51:39 systemd[1]: RTC configured in localtime, applying delta of -360 minutes to system time.
+Aug 23 21:51:39 systemd[1]: Relabeled /dev/, /dev/shm/, /run/ in 10.289ms.
+Aug 23 21:51:39 systemd[1]: systemd 257.7-1.fc42 running in system mode (+PAM +AUDIT +SELINUX -APPARMOR +IMA +IPE +SMACK +SECCOMP -GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN -IPTC +KMOD +LIBCRYPTSETUP +LIBCRYPTSETUP_PLUGINS +LIBFDISK +PCRE2 +PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD +BPF_FRAMEWORK +BTF +XKBCOMMON +UTMP +SYSVINIT +LIBARCHIVE)
+Aug 23 21:51:39 systemd[1]: Detected architecture x86-64.
+Aug 23 21:51:39 systemd[1]: bpf-restrict-fs: LSM BPF program attached
+Aug 23 21:51:39 kernel: zram: Added device: zram0
+Aug 23 21:51:39 systemd[1]: initrd-switch-root.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Stopped initrd-switch-root.service - Switch Root.
+Aug 23 21:51:39 systemd[1]: systemd-journald.service: Scheduled restart job, restart counter is at 1.
+Aug 23 21:51:39 systemd[1]: Created slice machine.slice - Virtual Machine and Container Slice.
+Aug 23 21:51:39 systemd[1]: Created slice system-getty.slice - Slice /system/getty.
+Aug 23 21:51:39 systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+Aug 23 21:51:39 systemd[1]: Created slice system-systemd\x2dzram\x2dsetup.slice - Slice /system/systemd-zram-setup.
+Aug 23 21:51:39 systemd[1]: Created slice user.slice - User and Session Slice.
+Aug 23 21:51:39 systemd[1]: systemd-ask-password-console.path - Dispatch Password Requests to Console Directory Watch was skipped because of an unmet condition check (ConditionPathExists=!/run/plymouth/pid).
+Aug 23 21:51:39 systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+Aug 23 21:51:39 systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+Aug 23 21:51:39 systemd[1]: Expecting device dev-disk-by\x2duuid-3C42\x2dBE44.device - /dev/disk/by-uuid/3C42-BE44...
+Aug 23 21:51:39 systemd[1]: Expecting device dev-disk-by\x2duuid-4991f872\x2d1688\x2d4a90\x2d82d1\x2d3fcdb85516f1.device - /dev/disk/by-uuid/4991f872-1688-4a90-82d1-3fcdb85516f1...
+Aug 23 21:51:39 systemd[1]: Expecting device dev-disk-by\x2duuid-aeb7a803\x2d13a0\x2d4e8a\x2d8d1d\x2d246d3e92fe90.device - /dev/disk/by-uuid/aeb7a803-13a0-4e8a-8d1d-246d3e92fe90...
+Aug 23 21:51:39 systemd[1]: Expecting device dev-zram0.device - /dev/zram0...
+Aug 23 21:51:39 systemd[1]: Reached target cryptsetup.target - Local Encrypted Volumes.
+Aug 23 21:51:39 systemd[1]: Reached target getty.target - Login Prompts.
+Aug 23 21:51:39 systemd[1]: Stopped target initrd-switch-root.target - Switch Root.
+Aug 23 21:51:39 systemd[1]: Stopped target initrd-fs.target - Initrd File Systems.
+Aug 23 21:51:39 systemd[1]: Stopped target initrd-root-fs.target - Initrd Root File System.
+Aug 23 21:51:39 systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+Aug 23 21:51:39 systemd[1]: Reached target rpc_pipefs.target.
+Aug 23 21:51:39 systemd[1]: Reached target slices.target - Slice Units.
+Aug 23 21:51:39 systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+Aug 23 21:51:39 systemd[1]: Listening on dm-event.socket - Device-mapper event daemon FIFOs.
+Aug 23 21:51:39 systemd[1]: Listening on lvm2-lvmpolld.socket - LVM2 poll daemon socket.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-coredump.socket - Process Core Dump Socket.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-creds.socket - Credential Encryption/Decryption.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-journald-audit.socket - Journal Audit Socket.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-oomd.socket - Userspace Out-Of-Memory (OOM) Killer Socket.
+Aug 23 21:51:39 systemd[1]: systemd-pcrextend.socket - TPM PCR Measurements was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+Aug 23 21:51:39 systemd[1]: systemd-pcrlock.socket - Make TPM PCR Policy was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+Aug 23 21:51:39 systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+Aug 23 21:51:39 systemd[1]: Listening on systemd-userdbd.socket - User Database Manager Socket.
+Aug 23 21:51:39 systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+Aug 23 21:51:39 systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+Aug 23 21:51:39 systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+Aug 23 21:51:39 systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+Aug 23 21:51:39 systemd[1]: auth-rpcgss-module.service - Kernel Module supporting RPCSEC_GSS was skipped because of an unmet condition check (ConditionPathExists=/etc/krb5.keytab).
+Aug 23 21:51:39 systemd[1]: fips-crypto-policy-overlay.service - Bind-mount FIPS crypto-policy in FIPS mode was skipped because of an unmet condition check (ConditionKernelCommandLine=fips=1).
+Aug 23 21:51:39 systemd[1]: iscsi-starter.service was skipped because of an unmet condition check (ConditionDirectoryNotEmpty=/var/lib/iscsi/nodes).
+Aug 23 21:51:39 systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+Aug 23 21:51:39 systemd[1]: Starting lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+Aug 23 21:51:39 systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+Aug 23 21:51:39 systemd[1]: plymouth-switch-root.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Stopped plymouth-switch-root.service - Plymouth switch root service.
+Aug 23 21:51:39 systemd[1]: systemd-hibernate-clear.service - Clear Stale Hibernate Storage Info was skipped because of an unmet condition check (ConditionPathExists=/sys/firmware/efi/efivars/HibernateLocation-8cf2644b-4b0b-428f-9387-6d876050dc67).
+Aug 23 21:51:39 systemd[1]: Starting systemd-journald.service - Journal Service...
+Aug 23 21:51:39 systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+Aug 23 21:51:39 systemd[1]: systemd-pcrmachine.service - TPM PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+Aug 23 21:51:39 systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+Aug 23 21:51:39 systemd[1]: systemd-tpm2-setup-early.service - Early TPM SRK Setup was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+Aug 23 21:51:39 systemd[1]: Starting systemd-udev-load-credentials.service - Load udev Rules from Credentials...
+Aug 23 21:51:39 systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+Aug 23 21:51:39 systemd[1]: Mounted dev-hugepages.mount - Huge Pages File System.
+Aug 23 21:51:39 systemd[1]: Mounted dev-mqueue.mount - POSIX Message Queue File System.
+Aug 23 21:51:39 systemd[1]: Mounted sys-kernel-debug.mount - Kernel Debug File System.
+Aug 23 21:51:39 systemd[1]: Mounted sys-kernel-tracing.mount - Kernel Trace File System.
+Aug 23 21:51:39 systemd[1]: Finished kmod-static-nodes.service - Create List of Static Device Nodes.
+Aug 23 21:51:39 systemd[1]: modprobe@configfs.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@configfs.service - Load Kernel Module configfs.
+Aug 23 21:51:39 systemd[1]: modprobe@dm_mod.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@dm_mod.service - Load Kernel Module dm_mod.
+Aug 23 21:51:39 systemd[1]: modprobe@drm.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@drm.service - Load Kernel Module drm.
+Aug 23 21:51:39 systemd[1]: modprobe@efi_pstore.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@efi_pstore.service - Load Kernel Module efi_pstore.
+Aug 23 21:51:39 systemd[1]: modprobe@fuse.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@fuse.service - Load Kernel Module fuse.
+Aug 23 21:51:39 kernel: loop: module loaded
+Aug 23 21:51:39 systemd[1]: Finished systemd-modules-load.service - Load Kernel Modules.
+Aug 23 21:51:39 systemd[1]: modprobe@loop.service: Deactivated successfully.
+Aug 23 21:51:39 systemd[1]: Finished modprobe@loop.service - Load Kernel Module loop.
+Aug 23 21:51:39 systemd[1]: Mounting sys-fs-fuse-connections.mount - FUSE Control File System...
+Aug 23 21:51:39 systemd[1]: systemd-repart.service - Repartition Root Disk was skipped because no trigger condition checks were met.
+Aug 23 21:51:39 systemd[1]: Starting systemd-sysctl.service - Apply Kernel Variables...
+Aug 23 21:51:39 systemd-journald[1111]: Collecting audit messages is enabled.
+Aug 23 21:51:39 systemd[1]: Starting systemd-tmpfiles-setup-dev-early.service - Create Static Device Nodes in /dev gracefully...
+Aug 23 21:51:39 systemd[1]: Finished systemd-udev-load-credentials.service - Load udev Rules from Credentials.
+Aug 23 21:51:39 kernel: audit: type=1130 audit(1756007499.659:7): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-udev-load-credentials comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Aug 23 21:51:39 systemd[1]: Mounted sys-fs-fuse-connections.mount - FUSE Control File System.
+Aug 23 21:51:39 systemd[1]: Started systemd-journald.service - Journal Service.
+Aug 23 21:51:39 kernel: audit: type=1130 audit(1756007499.662:8): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-journald comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Aug 23 21:51:39 kernel: audit: type=1130 audit(1756007499.667:9): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-sysctl comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Aug 23 21:51:39 kernel: EXT4-fs (dm-0): re-mounted d3f10cc6-4cc9-4edb-aa93-4698ccbec375 r/w.
+Aug 23 21:51:39 kernel: audit: type=1130 audit(1756007499.670:10): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=systemd-remount-fs comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Aug 23 21:51:39 kernel: audit: type=1334 audit(1756007499.675:11): prog-id=54 op=LOAD
+Aug 23 21:51:39 kernel: audit: type=1334 audit(1756007499.675:12): prog-id=55 op=LOAD
+Aug 23 21:51:39 kernel: audit: type=1334 audit(1756007499.675:13): prog-id=56 op=LOAD
+Aug 23 21:51:39 systemd-journald[1111]: Received client request to flush runtime journal.
+Aug 23 21:51:39 kernel: audit: type=1130 audit(1756007499.687:14): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=lvm2-monitor comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Aug 23 21:51:39 systemd-journald[1111]: /var/log/journal/37a6cc897ed746028e426ab528fa8512/system.journal: Realtime clock jumped backwards relative to last journal entry, rotating.
+Aug 23 21:51:39 systemd-journald[1111]: Rotating system journal.
+Aug 23 21:51:39 kernel: zram0: detected capacity change from 0 to 16777216
+Aug 23 21:51:39 kernel: lenovo_wmi_hotkey_utilities CE6C0974-0407-4F50-88BA-4FC3B6559AD8: probe with driver lenovo_wmi_hotkey_utilities failed with error -5
+Aug 23 21:51:39 kernel: piix4_smbus 0000:00:14.0: SMBus Host Controller at 0xb00, revision 0
+Aug 23 21:51:39 kernel: piix4_smbus 0000:00:14.0: Using register 0x02 for SMBus port selection
+Aug 23 21:51:39 kernel: piix4_smbus 0000:00:14.0: Auxiliary SMBus Host Controller at 0xb20
+Aug 23 21:51:39 kernel: i2c i2c-21: Successfully instantiated SPD at 0x50
+Aug 23 21:51:39 kernel: i2c i2c-21: Successfully instantiated SPD at 0x51
+Aug 23 21:51:39 kernel: i2c i2c-21: Successfully instantiated SPD at 0x52
+Aug 23 21:51:39 kernel: i2c i2c-21: Successfully instantiated SPD at 0x53
+Aug 23 21:51:39 kernel: Adding 8388604k swap on /dev/zram0.  Priority:100 extents:1 across:8388604k SSDsc
+Aug 23 21:51:39 kernel: input: PC Speaker as /devices/platform/pcspkr/input/input18
+Aug 23 21:51:39 kernel: RAPL PMU: API unit is 2^-32 Joules, 2 fixed counters, 163840 ms ovfl timer
+Aug 23 21:51:39 kernel: RAPL PMU: hw unit of domain package 2^-16 Joules
+Aug 23 21:51:39 kernel: RAPL PMU: hw unit of domain core 2^-16 Joules
+Aug 23 21:51:40 kernel: input: Ideapad extra buttons as /devices/pci0000:00/0000:00:14.3/PNP0C09:00/VPC2004:00/input/input19
+Aug 23 21:51:40 kernel: mc: Linux media interface: v0.10
+Aug 23 21:51:40 kernel: Bluetooth: Core ver 2.22
+Aug 23 21:51:40 kernel: NET: Registered PF_BLUETOOTH protocol family
+Aug 23 21:51:40 kernel: Bluetooth: HCI device and connection manager initialized
+Aug 23 21:51:40 kernel: Bluetooth: HCI socket layer initialized
+Aug 23 21:51:40 kernel: Bluetooth: L2CAP socket layer initialized
+Aug 23 21:51:40 kernel: Bluetooth: SCO socket layer initialized
+Aug 23 21:51:40 kernel: cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Aug 23 21:51:40 kernel: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+Aug 23 21:51:40 kernel: Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+Aug 23 21:51:40 kernel: input: Lenovo Yoga Tablet Mode Control switch as /devices/platform/PNP0C14:02/wmi_bus/wmi_bus-PNP0C14:02/06129D99-6083-4164-81AD-F092F9D773A6/input/input20
+Aug 23 21:51:40 kernel: videodev: Linux video capture interface: v2.00
+Aug 23 21:51:40 kernel: usbcore: registered new interface driver btusb
+Aug 23 21:51:40 kernel: Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20250625154126
+Aug 23 21:51:40 kernel: kvm_amd: TSC scaling supported
+Aug 23 21:51:40 kernel: kvm_amd: Nested Virtualization enabled
+Aug 23 21:51:40 kernel: kvm_amd: Nested Paging enabled
+Aug 23 21:51:40 kernel: kvm_amd: LBR virtualization supported
+Aug 23 21:51:40 kernel: kvm_amd: Virtual GIF supported
+Aug 23 21:51:40 kernel: kvm_amd: Virtual NMI enabled
+Aug 23 21:51:40 kernel: usb 3-1: Found UVC 1.50 device Integrated Camera (5986:1198)
+Aug 23 21:51:40 kernel: usbcore: registered new interface driver uvcvideo
+Aug 23 21:51:40 kernel: MCE: In-kernel MCE decoding enabled.
+Aug 23 21:51:40 kernel: snd_hda_intel 0000:04:00.1: enabling device (0000 -> 0002)
+Aug 23 21:51:40 kernel: snd_hda_intel 0000:04:00.1: Handle vga_switcheroo audio client
+Aug 23 21:51:40 kernel: snd_hda_intel 0000:04:00.6: enabling device (0000 -> 0002)
+Aug 23 21:51:40 kernel: mt7921e 0000:02:00.0: enabling device (0000 -> 0002)
+Aug 23 21:51:40 kernel: snd_hda_intel 0000:04:00.1: bound 0000:04:00.0 (ops amdgpu_dm_audio_component_bind_ops [amdgpu])
+Aug 23 21:51:40 kernel: input: HD-Audio Generic HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input21
+Aug 23 21:51:40 kernel: input: HD-Audio Generic HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:08.1/0000:04:00.1/sound/card0/input22
+Aug 23 21:51:40 kernel: mt7921e 0000:02:00.0: ASIC revision: 79610010
+Aug 23 21:51:40 kernel: amd_atl: AMD Address Translation Library initialized
+Aug 23 21:51:40 kernel: intel_rapl_common: Found RAPL domain package
+Aug 23 21:51:40 kernel: intel_rapl_common: Found RAPL domain core
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0: ALC257: picked fixup  for PCI SSID 17aa:0000
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0: autoconfig for ALC257: line_outs=1 (0x14/0x0/0x0/0x0/0x0) type:speaker
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0:    hp_outs=1 (0x21/0x0/0x0/0x0/0x0)
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0:    mono: mono_out=0x0
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0:    inputs:
+Aug 23 21:51:40 kernel: snd_hda_codec_realtek hdaudioC1D0:      Mic=0x19
+Aug 23 21:51:40 kernel: Bluetooth: hci0: Device setup in 169247 usecs
+Aug 23 21:51:40 kernel: Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+Aug 23 21:51:40 kernel: input: HD-Audio Generic Mic as /devices/pci0000:00/0000:00:08.1/0000:04:00.6/sound/card1/input23
+Aug 23 21:51:40 kernel: input: HD-Audio Generic Headphone as /devices/pci0000:00/0000:00:08.1/0000:04:00.6/sound/card1/input24
+Aug 23 21:51:40 kernel: mt7921e 0000:02:00.0: HW/SW Version: 0x8a108a10, Build Time: 20250625153620a
+Aug 23 21:51:40 kernel: snd_pci_ps 0000:04:00.5: enabling device (0000 -> 0002)
+Aug 23 21:51:40 kernel: Bluetooth: hci0: AOSP extensions version v1.00
+Aug 23 21:51:40 kernel: Bluetooth: hci0: AOSP quality report is supported
+Aug 23 21:51:40 kernel: mt7921e 0000:02:00.0: WM Firmware Version: ____010000, Build Time: 20250625153703
+Aug 23 21:51:40 kernel: EXT4-fs (nvme0n1p2): mounted filesystem 4991f872-1688-4a90-82d1-3fcdb85516f1 r/w with ordered data mode. Quota mode: none.
+Aug 23 21:51:40 kernel: EXT4-fs (dm-1): mounted filesystem aeb7a803-13a0-4e8a-8d1d-246d3e92fe90 r/w with ordered data mode. Quota mode: none.
+Aug 23 21:51:40 kernel: hid-generic 0020:1022:0001.0003: hidraw2: SENSOR HUB HID v0.00 Device [hid-amdsfh 1022:0001] on pcie_mp2_amd
+Aug 23 21:51:40 kernel: hid-sensor-hub 0020:1022:0001.0003: hidraw2: SENSOR HUB HID v0.00 Device [hid-amdsfh 1022:0001] on pcie_mp2_amd
+Aug 23 21:51:40 kernel: nvme nvme0: using unchecked data buffer
+Aug 23 21:51:40 kernel: input: keyd virtual keyboard as /devices/virtual/input/input25
+Aug 23 21:51:40 kernel: Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+Aug 23 21:51:40 kernel: Bluetooth: BNEP filters: protocol multicast
+Aug 23 21:51:40 kernel: Bluetooth: BNEP socket layer initialized
+Aug 23 21:51:40 kernel: Bluetooth: MGMT ver 1.23
+Aug 23 21:51:41 kernel: input: keyd virtual pointer as /devices/virtual/input/input26
+Aug 23 21:51:41 kernel: NET: Registered PF_QIPCRTR protocol family
+Aug 23 21:51:41 kernel: mt7921e 0000:02:00.0 wlp2s0: renamed from wlan0
+Aug 23 21:51:44 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 23 21:51:44 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 23 21:51:44 kernel: wlp2s0: authenticated
+Aug 23 21:51:44 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 23 21:51:44 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=19)
+Aug 23 21:51:44 kernel: wlp2s0: associated
+Aug 23 21:51:45 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 23 21:51:47 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:47 kernel: rfkill: input handler disabled
+Aug 23 21:51:48 kernel: Bluetooth: RFCOMM TTY layer initialized
+Aug 23 21:51:48 kernel: Bluetooth: RFCOMM socket layer initialized
+Aug 23 21:51:48 kernel: Bluetooth: RFCOMM ver 1.11
+Aug 23 21:51:48 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 23 21:51:50 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 23 21:51:53 kernel: rfkill: input handler enabled
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 21:51:55 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:01:58 kernel: lockdown_is_locked_down: 5 callbacks suppressed
+Aug 23 22:01:58 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:01:58 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:01:58 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:01:58 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:01:58 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:06:59 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:06:59 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 23 22:06:59 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 23 22:06:59 kernel: PM: suspend entry (s2idle)
+Aug 23 22:06:59 kernel: Filesystems sync: 0.010 seconds
+Aug 24 09:31:46 kernel: Freezing user space processes
+Aug 24 09:31:46 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 09:31:46 kernel: OOM killer disabled.
+Aug 24 09:31:46 kernel: Freezing remaining freezable tasks
+Aug 24 09:31:46 kernel: Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+Aug 24 09:31:46 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 09:31:46 kernel: PM: suspend devices took 0.105 seconds
+Aug 24 09:31:46 kernel: ACPI: EC: interrupt blocked
+Aug 24 09:31:46 kernel: hrtimer: interrupt took 3263946 ns
+Aug 24 09:31:46 kernel: ACPI: EC: interrupt unblocked
+Aug 24 09:31:46 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 09:31:46 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 09:31:46 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 09:31:46 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 09:31:46 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 09:31:46 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 09:31:46 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 09:31:46 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 09:31:46 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 09:31:46 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 09:31:46 kernel: PM: resume devices took 0.179 seconds
+Aug 24 09:31:46 kernel: OOM killer enabled.
+Aug 24 09:31:46 kernel: Restarting tasks ... done.
+Aug 24 09:31:46 kernel: random: crng reseeded on system resumption
+Aug 24 09:31:46 kernel: PM: suspend exit
+Aug 24 09:31:48 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 09:31:48 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 09:31:49 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 09:31:49 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 09:31:49 kernel: wlp2s0: authenticated
+Aug 24 09:31:49 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 09:31:49 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=20)
+Aug 24 09:31:49 kernel: wlp2s0: associated
+Aug 24 09:31:49 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 09:32:42 kernel: ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 09:46:58 kernel: SELinux:  Context unconfined_u:object_r:snappy_home_t:s0 is not valid (left unmapped).
+Aug 24 09:55:09 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 09:55:09 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 09:55:09 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 09:55:09 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 09:55:09 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:02:50 kernel: wlp2s0: disconnect from AP da:b3:70:bd:12:85 for new auth to 80:2a:a8:92:6c:b1
+Aug 24 10:02:50 kernel: wlp2s0: authenticate with 80:2a:a8:92:6c:b1 (local address=66:00:df:05:4d:dc)
+Aug 24 10:02:50 kernel: wlp2s0: send auth to 80:2a:a8:92:6c:b1 (try 1/3)
+Aug 24 10:02:50 kernel: wlp2s0: authenticated
+Aug 24 10:02:50 kernel: wlp2s0: associate with 80:2a:a8:92:6c:b1 (try 1/3)
+Aug 24 10:02:50 kernel: wlp2s0: RX ReassocResp from 80:2a:a8:92:6c:b1 (capab=0x1511 status=0 aid=3)
+Aug 24 10:02:50 kernel: wlp2s0: associated
+Aug 24 10:02:50 kernel: wlp2s0: Limiting TX power to 30 (30 - 0) dBm as advertised by 80:2a:a8:92:6c:b1
+Aug 24 10:03:01 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 10:03:01 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 10:05:40 kernel: wlp2s0: disconnect from AP 80:2a:a8:92:6c:b1 for new auth to da:b3:70:bd:12:85
+Aug 24 10:05:40 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 10:05:40 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 10:05:40 kernel: wlp2s0: authenticated
+Aug 24 10:05:40 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 10:05:40 kernel: wlp2s0: RX ReassocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=20)
+Aug 24 10:05:40 kernel: wlp2s0: associated
+Aug 24 10:05:40 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 10:35:53 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:35:53 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:35:53 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:35:53 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:35:53 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 10:40:21 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 10:40:30 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 10:40:31 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 11:34:10 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 11:34:10 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 11:39:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:39:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:39:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:39:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:39:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:49:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:49:29 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 11:49:29 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 24 11:49:29 kernel: PM: suspend entry (s2idle)
+Aug 24 11:49:30 kernel: Filesystems sync: 0.043 seconds
+Aug 24 11:49:30 kernel: Freezing user space processes
+Aug 24 14:17:10 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 14:17:10 kernel: OOM killer disabled.
+Aug 24 14:17:10 kernel: Freezing remaining freezable tasks
+Aug 24 14:17:10 kernel: Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+Aug 24 14:17:10 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 14:17:10 kernel: PM: suspend devices took 0.112 seconds
+Aug 24 14:17:10 kernel: ACPI: EC: interrupt blocked
+Aug 24 14:17:10 kernel: perf: interrupt took too long (6890 > 2500), lowering kernel.perf_event_max_sample_rate to 29000
+Aug 24 14:17:10 kernel: ACPI: EC: interrupt unblocked
+Aug 24 14:17:10 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 14:17:10 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 14:17:10 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 14:17:10 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 14:17:10 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 14:17:10 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 14:17:10 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 14:17:10 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 14:17:10 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 14:17:10 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 14:17:10 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 14:17:10 kernel: PM: resume devices took 0.160 seconds
+Aug 24 14:17:10 kernel: OOM killer enabled.
+Aug 24 14:17:10 kernel: Restarting tasks ... done.
+Aug 24 14:17:10 kernel: random: crng reseeded on system resumption
+Aug 24 14:17:10 kernel: PM: suspend exit
+Aug 24 14:17:10 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 14:17:11 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 14:17:13 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 14:17:13 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 14:17:13 kernel: wlp2s0: authenticated
+Aug 24 14:17:13 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 14:17:13 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=19)
+Aug 24 14:17:13 kernel: wlp2s0: associated
+Aug 24 14:17:13 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 14:37:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:37:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:37:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:37:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:37:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:47:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:47:28 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 14:47:28 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 24 14:47:28 kernel: PM: suspend entry (s2idle)
+Aug 24 14:47:28 kernel: Filesystems sync: 0.047 seconds
+Aug 24 17:33:29 kernel: Freezing user space processes
+Aug 24 17:33:29 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 17:33:29 kernel: OOM killer disabled.
+Aug 24 17:33:29 kernel: Freezing remaining freezable tasks
+Aug 24 17:33:29 kernel: Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+Aug 24 17:33:29 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 17:33:29 kernel: PM: suspend devices took 0.124 seconds
+Aug 24 17:33:29 kernel: ACPI: EC: interrupt blocked
+Aug 24 17:33:29 kernel: ACPI: EC: interrupt unblocked
+Aug 24 17:33:29 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 17:33:29 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 17:33:29 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 17:33:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 17:33:29 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 17:33:29 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 17:33:29 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 17:33:29 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 17:33:29 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 17:33:29 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 17:33:29 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 17:33:29 kernel: PM: resume devices took 0.168 seconds
+Aug 24 17:33:29 kernel: OOM killer enabled.
+Aug 24 17:33:29 kernel: Restarting tasks ... done.
+Aug 24 17:33:29 kernel: random: crng reseeded on system resumption
+Aug 24 17:33:29 kernel: PM: suspend exit
+Aug 24 17:33:32 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 17:33:32 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 17:33:32 kernel: wlp2s0: authenticated
+Aug 24 17:33:32 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 17:33:32 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=19)
+Aug 24 17:33:32 kernel: wlp2s0: associated
+Aug 24 17:33:32 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 17:33:37 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 17:33:37 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 18:25:49 kernel: PM: suspend entry (s2idle)
+Aug 24 18:25:49 kernel: Filesystems sync: 0.044 seconds
+Aug 24 20:58:52 kernel: Freezing user space processes
+Aug 24 20:58:52 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 20:58:52 kernel: OOM killer disabled.
+Aug 24 20:58:52 kernel: Freezing remaining freezable tasks
+Aug 24 20:58:52 kernel: Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+Aug 24 20:58:52 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 20:58:52 kernel: queueing ieee80211 work while going to suspend
+Aug 24 20:58:52 kernel: PM: suspend devices took 0.123 seconds
+Aug 24 20:58:52 kernel: ACPI: EC: interrupt blocked
+Aug 24 20:58:52 kernel: ACPI: EC: interrupt unblocked
+Aug 24 20:58:52 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 20:58:52 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 20:58:52 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 20:58:52 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 20:58:52 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 20:58:52 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 20:58:52 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 20:58:52 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 20:58:52 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 20:58:52 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 20:58:52 kernel: PM: resume devices took 0.177 seconds
+Aug 24 20:58:52 kernel: OOM killer enabled.
+Aug 24 20:58:52 kernel: Restarting tasks ... done.
+Aug 24 20:58:52 kernel: random: crng reseeded on system resumption
+Aug 24 20:58:52 kernel: PM: suspend exit
+Aug 24 20:58:52 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 20:58:54 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 20:58:54 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 20:58:54 kernel: PM: suspend entry (s2idle)
+Aug 24 20:58:55 kernel: Filesystems sync: 0.439 seconds
+Aug 24 20:58:55 kernel: Freezing user space processes
+Aug 24 21:10:00 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 21:10:00 kernel: OOM killer disabled.
+Aug 24 21:10:00 kernel: Freezing remaining freezable tasks
+Aug 24 21:10:00 kernel: Freezing remaining freezable tasks completed (elapsed 0.001 seconds)
+Aug 24 21:10:00 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 21:10:00 kernel: queueing ieee80211 work while going to suspend
+Aug 24 21:10:00 kernel: PM: suspend devices took 0.378 seconds
+Aug 24 21:10:00 kernel: ACPI: EC: interrupt blocked
+Aug 24 21:10:00 kernel: ACPI: EC: interrupt unblocked
+Aug 24 21:10:00 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 21:10:00 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 21:10:00 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 21:10:00 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 21:10:00 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 21:10:00 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 21:10:00 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 21:10:00 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 21:10:00 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 21:10:00 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 21:10:00 kernel: PM: resume devices took 0.279 seconds
+Aug 24 21:10:00 kernel: OOM killer enabled.
+Aug 24 21:10:00 kernel: Restarting tasks ... done.
+Aug 24 21:10:00 kernel: random: crng reseeded on system resumption
+Aug 24 21:10:00 kernel: PM: suspend exit
+Aug 24 21:10:01 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 21:10:03 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 21:10:03 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 21:10:03 kernel: wlp2s0: authenticated
+Aug 24 21:10:03 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 21:10:03 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=19)
+Aug 24 21:10:03 kernel: wlp2s0: associated
+Aug 24 21:10:03 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 21:10:08 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 21:10:08 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 22:02:18 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:02:18 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:02:18 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:02:18 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:02:18 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:03:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:03:48 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:03:48 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 24 22:03:48 kernel: PM: suspend entry (s2idle)
+Aug 24 22:03:48 kernel: Filesystems sync: 0.052 seconds
+Aug 24 22:18:29 kernel: Freezing user space processes
+Aug 24 22:18:29 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 24 22:18:29 kernel: OOM killer disabled.
+Aug 24 22:18:29 kernel: Freezing remaining freezable tasks
+Aug 24 22:18:29 kernel: Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+Aug 24 22:18:29 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 24 22:18:29 kernel: PM: suspend devices took 0.134 seconds
+Aug 24 22:18:29 kernel: ACPI: EC: interrupt blocked
+Aug 24 22:18:29 kernel: INFO: NMI handler (perf_event_nmi_handler) took too long to run: 3.808 msecs
+Aug 24 22:18:29 kernel: perf: interrupt took too long (30367 > 8612), lowering kernel.perf_event_max_sample_rate to 6000
+Aug 24 22:18:29 kernel: INFO: NMI handler (perf_event_nmi_handler) took too long to run: 4.288 msecs
+Aug 24 22:18:29 kernel: ACPI: EC: interrupt unblocked
+Aug 24 22:18:29 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 24 22:18:29 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 24 22:18:29 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 24 22:18:29 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 24 22:18:29 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 24 22:18:29 kernel: [drm] ring compute_32800.2.2 was added
+Aug 24 22:18:29 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 24 22:18:29 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 24 22:18:29 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 24 22:18:29 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 24 22:18:29 kernel: PM: resume devices took 0.170 seconds
+Aug 24 22:18:29 kernel: OOM killer enabled.
+Aug 24 22:18:29 kernel: Restarting tasks ... done.
+Aug 24 22:18:29 kernel: random: crng reseeded on system resumption
+Aug 24 22:18:29 kernel: PM: suspend exit
+Aug 24 22:18:29 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 24 22:18:32 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 24 22:18:32 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 24 22:18:32 kernel: wlp2s0: authenticated
+Aug 24 22:18:32 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 24 22:18:32 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=19)
+Aug 24 22:18:32 kernel: wlp2s0: associated
+Aug 24 22:18:32 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 24 22:18:34 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 22:18:35 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 24 22:20:01 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:01 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 24 22:20:02 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 24 22:20:02 kernel: PM: suspend entry (s2idle)
+Aug 24 22:20:02 kernel: Filesystems sync: 0.014 seconds
+Aug 25 16:42:57 kernel: Freezing user space processes
+Aug 25 16:42:57 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 25 16:42:57 kernel: OOM killer disabled.
+Aug 25 16:42:57 kernel: Freezing remaining freezable tasks
+Aug 25 16:42:57 kernel: Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+Aug 25 16:42:57 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 25 16:42:57 kernel: queueing ieee80211 work while going to suspend
+Aug 25 16:42:57 kernel: PM: suspend devices took 0.140 seconds
+Aug 25 16:42:57 kernel: ACPI: EC: interrupt blocked
+Aug 25 16:42:57 kernel: ACPI: EC: interrupt unblocked
+Aug 25 16:42:57 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 25 16:42:57 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 25 16:42:57 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 25 16:42:57 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 25 16:42:57 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 25 16:42:57 kernel: [drm] ring compute_32800.2.2 was added
+Aug 25 16:42:57 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 25 16:42:57 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 25 16:42:57 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 25 16:42:57 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 25 16:42:57 kernel: PM: resume devices took 0.168 seconds
+Aug 25 16:42:57 kernel: OOM killer enabled.
+Aug 25 16:42:57 kernel: Restarting tasks ... done.
+Aug 25 16:42:57 kernel: random: crng reseeded on system resumption
+Aug 25 16:42:57 kernel: PM: suspend exit
+Aug 25 16:42:57 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 25 16:42:58 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 25 16:42:58 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 25 16:43:00 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 25 16:43:00 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 25 16:43:00 kernel: wlp2s0: authenticated
+Aug 25 16:43:00 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 25 16:43:00 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=17)
+Aug 25 16:43:00 kernel: wlp2s0: associated
+Aug 25 16:43:00 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
+Aug 25 17:22:15 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:22:15 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:22:15 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:22:15 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:22:15 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:29:38 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:29:38 kernel: Lockdown: systemd-logind: hibernation is restricted; see man kernel_lockdown.7
+Aug 25 17:29:38 kernel: wlp2s0: deauthenticating from da:b3:70:bd:12:85 by local choice (Reason: 3=DEAUTH_LEAVING)
+Aug 25 17:29:38 kernel: PM: suspend entry (s2idle)
+Aug 25 17:29:38 kernel: Filesystems sync: 0.040 seconds
+Aug 25 18:01:24 kernel: Freezing user space processes
+Aug 25 18:01:24 kernel: Freezing user space processes completed (elapsed 0.001 seconds)
+Aug 25 18:01:24 kernel: OOM killer disabled.
+Aug 25 18:01:24 kernel: Freezing remaining freezable tasks
+Aug 25 18:01:24 kernel: Freezing remaining freezable tasks completed (elapsed 0.000 seconds)
+Aug 25 18:01:24 kernel: printk: Suspending console(s) (use no_console_suspend to debug)
+Aug 25 18:01:24 kernel: PM: suspend devices took 0.110 seconds
+Aug 25 18:01:24 kernel: ACPI: EC: interrupt blocked
+Aug 25 18:01:24 kernel: ACPI: EC: interrupt unblocked
+Aug 25 18:01:24 kernel: [drm] PCIE GART of 512M enabled (table at 0x0000008000900000).
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resuming...
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: SMU is resumed successfully!
+Aug 25 18:01:24 kernel: nvme nvme0: D3 entry latency set to 10 seconds
+Aug 25 18:01:24 kernel: nvme nvme0: 16/0/0 default/read/poll queues
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng 0 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng 1 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng 4 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng 6 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng 7 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng 8 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng 9 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng 10 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng 11 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring sdma0 uses VM inv eng 12 on hub 0
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring vcn_unified_0 uses VM inv eng 0 on hub 8
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring jpeg_dec uses VM inv eng 1 on hub 8
+Aug 25 18:01:24 kernel: amdgpu 0000:04:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv eng 13 on hub 0
+Aug 25 18:01:24 kernel: [drm] ring gfx_32800.1.1 was added
+Aug 25 18:01:24 kernel: [drm] ring compute_32800.2.2 was added
+Aug 25 18:01:24 kernel: [drm] ring sdma_32800.3.3 was added
+Aug 25 18:01:24 kernel: [drm] ring gfx_32800.1.1 ib test pass
+Aug 25 18:01:24 kernel: [drm] ring compute_32800.2.2 ib test pass
+Aug 25 18:01:24 kernel: [drm] ring sdma_32800.3.3 ib test pass
+Aug 25 18:01:24 kernel: PM: resume devices took 0.169 seconds
+Aug 25 18:01:24 kernel: OOM killer enabled.
+Aug 25 18:01:24 kernel: Restarting tasks ... done.
+Aug 25 18:01:24 kernel: random: crng reseeded on system resumption
+Aug 25 18:01:24 kernel: PM: suspend exit
+Aug 25 18:01:24 kernel: ucsi_acpi USBC000:00: GET_CONNECTOR_STATUS failed (-5)
+Aug 25 18:01:25 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 25 18:01:26 kernel: usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+Aug 25 18:01:27 kernel: wlp2s0: authenticate with da:b3:70:bd:12:85 (local address=66:00:df:05:4d:dc)
+Aug 25 18:01:27 kernel: wlp2s0: send auth to da:b3:70:bd:12:85 (try 1/3)
+Aug 25 18:01:27 kernel: wlp2s0: authenticated
+Aug 25 18:01:27 kernel: wlp2s0: associate with da:b3:70:bd:12:85 (try 1/3)
+Aug 25 18:01:27 kernel: wlp2s0: RX AssocResp from da:b3:70:bd:12:85 (capab=0x1111 status=0 aid=17)
+Aug 25 18:01:27 kernel: wlp2s0: associated
+Aug 25 18:01:27 kernel: wlp2s0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:b3:70:bd:12:85
