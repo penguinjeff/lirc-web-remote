@@ -40,8 +40,10 @@ function select(item)
   newselectproperties['select']=JSON.parse(data);
   newselectproperties['onchange']=onchange;
   newselectproperties['noneoptions']=noneOptions;
+//  newselectproperties['holddiv']=true;
   var newselect=createElement(newselectproperties);
   parent.appendChild(newselect);
+//  select(parent.lastChild);
  }
  if(onchange)
  {setTimeout(onchange,0);
@@ -67,7 +69,7 @@ function createElement(items)
  for(var x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}
  }
- var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label']));
+ var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv']));
  if(onchange==''){keytags.add('onchange');}
  switch(type)
  {case 'multiple':
@@ -183,23 +185,24 @@ function createElement(items)
   else
   {item.setAttribute(keys[x],items[keys[x]])
  }}
- if(items['label'])
- {if(typeof(items['label'])=='string' && items['label']!=''){name=items['label'];}
-  var container=document.createElement('div');
-  var label=document.createElement('label');
-  label.textContent = name;
-  label.setAttribute('onclick', "relativeFor('pll')");
-  container.appendChild(label);
-  container.appendChild(item);
-  if(hassubs){select(item);}
-  return container;
- }
- if(hassubs)
- {var container=document.createElement('div');
-  container.appendChild(item);
-  select(item);
-  return container;
- }
+ if(!items['holddiv'])
+ {if(items['label'])
+  {if(typeof(items['label'])=='string' && items['label']!=''){name=items['label'];}
+   var container=document.createElement('div');
+   var label=document.createElement('label');
+   label.textContent = name;
+   label.setAttribute('onclick', "relativeFor('pll')");
+   container.appendChild(label);
+   container.appendChild(item);
+   if(hassubs){select(item);}
+   return container;
+  }
+  if(hassubs)
+  {var container=document.createElement('div');
+   container.appendChild(item);
+   select(item);
+   return container;
+ }}
  return item;
 }
 
