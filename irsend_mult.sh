@@ -1,8 +1,8 @@
 #!/bin/bash
 # Written by: Jeff Sadowski
 # this program simply runs irsend and outputs a JSON with any errors
-# If you give it the list argument like the first example
-# it will return a JSON with the remotes with thier understood irsignals
+# If you give it no arguments like the first example
+# it will update $PWD/remotes/remotes.json
 # defined in your lirc files
 #                                              name of the remote listed in irsend list EX: samsungTVremote
 #                                              |           the ircode that would you want sent from that remote EX: key_power
@@ -57,6 +57,20 @@ echo ${time_start} > ${time_start_file}
 #}
 #watch_startfile &
 #pid=$!
+
+function list
+{
+ location=$(dirname $0)
+ remote_buttons() {
+ while read remote; do
+  buttons=$(irsend list "${remote}" ''|awk '{print $2}'|sed 's/^/"/' | sed 's/$/",/'|sed -z 's/\n//g')
+  printf '"%s":[%s],' "${remote}" "${buttons::-4}" 
+ done <<< "$(irsend list '' ''||printf '';)"
+ }
+ all_buttons=$(remote_buttons)
+ printf '{"remotes":{%s}}' "${all_buttons::-1}" > ${location}/remotes/remotes.js
+}
+
 
 function urlencode()
 {
@@ -116,7 +130,7 @@ function subprocess()
 
 function process()
 {
-# echo "irsend \"send_once\" \"$1\" \"$2\""
+ # echo "irsend \"send_once\" \"$1\" \"$2\""
  local both=$(subprocess $1 $2)
  [ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
 }
@@ -139,6 +153,7 @@ json=$(extract json)
 check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
 
 if [ "$check" = "" ];then
+if [ "$(printf '%s' "${json}" | jq -Mc '.ircodes[]')" = "" ];then list; fi
 while read row; do
  if [ "$(cat ${time_start_file})" != "${time_start}" ];then
   broke="true";
