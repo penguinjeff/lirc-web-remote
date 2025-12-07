@@ -10,7 +10,7 @@ const Edit=
   box=document.getElementById('choose');
   box.innerHTML='';
   box.appendChild(createElement(
-  {'options':this.modes,
+  {'select':this.modes,
    'value':0,
    'onchange':'Edit.update(this)',
    'id':'EditSeclect'

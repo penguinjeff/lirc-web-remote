@@ -35,7 +35,7 @@ var Macros=
     {temp.push(data['macros'][x]['name'])
     }
     document.getElementById('macrolist').appendChild(createElement(
-    {'options':temp,
+    {'select':temp,
      'onchange':'Macros.edit(this.value)',
      'value':item
     }));
@@ -84,7 +84,7 @@ var Macros=
   {alert('remote_index is empty')
   }
   remote_handle=createElement(
-  {'options':data['remote_index'],
+  {'select':data['remote_index'],
    'name':'remote',
    'id':'remote-'+sub_item,
    'onchange':'Macros.update('+item+',this,event)',
@@ -333,7 +333,7 @@ if(handle.getAttribute('name')=='remote')
  }
  ircode_parent.innerHTML=''
  ircode_parent.appendChild(createElement(
- {'options':data['remotes'][data['remote_index'][handle.value]],
+ {'select':data['remotes'][data['remote_index'][handle.value]],
   'name':'ircode',
   'id':'ircode-'+sub_item,
   'onchange':'Macros.update('+item+',this,event)',

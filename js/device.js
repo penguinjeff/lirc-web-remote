@@ -12,7 +12,7 @@ var Devices=
   into=document.getElementById('choose');
   into.innerHTML='';
   into.appendChild(createElement(
-  {'options':Object.keys(data['remotes']),
+  {'select':Object.keys(data['remotes']),
    'onchange':'Devices.select(this)',
    'namevalues':true
   }));

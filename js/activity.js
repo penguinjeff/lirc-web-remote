@@ -16,7 +16,7 @@ var Activities=
   {temp.push(data['activities'][x]['name'])
   }
   into.appendChild(createElement(
-  {'options':temp,
+  {'select':temp,
    'onchange':'activities.select(this)',
    'namevalues':true
   }));
