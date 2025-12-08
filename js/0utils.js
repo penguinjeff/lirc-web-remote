@@ -62,7 +62,7 @@ function createElement(items)
  var type='unknown';
  var hassubs=false;
  if(items['name']){name=items['name']}
- if(items[onchange]){onchange=items[onchange];}
+ if(items['onchange']){onchange=items[onchange];}
  var item;
  var types=['multiple','select','tag','radio'];
  var ItemsKeys=new Set(Object.keys(items));
@@ -85,7 +85,7 @@ function createElement(items)
     {object['onchange']=items['onchange'];
     }
     item.appendChild(createElement(object));
-   }  
+   }
   break;
   case 'radio':
    var name='radio'+radioinc;
