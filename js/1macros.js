@@ -221,14 +221,14 @@ var Macros=
  {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
-  json='{"id":'+Math.round(+new Date()/1000)+',"ircodes":'+JSON.stringify(list)+'}'
-  fetch('irsend_mult.php',{
+  json='{"ircodes":'+JSON.stringify(list)+'}'
+  fetch('irsend_mult.php?'+'id='+id,{
 	method: 'POST',
 	headers: {
 		'Accept':'application/json',
-		'Content-Type':'application/json'
+		'Content-Type':'application/x-www-form-urlencoded'
 	},
-	body:'json='+json+'&id='+id,
+	body:'json='+json,
         signal: AbortSignal.timeout(5000)
   });
   return;

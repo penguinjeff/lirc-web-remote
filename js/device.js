@@ -43,6 +43,7 @@ var Devices=
    this.held=false;
    this.holdtimer=setTimeout(function(){ Devices.hold(remote,button); }, 700);
    navigator.vibrate(700);
+   console.log("remote:"+remote+" button:"+button);
    Macros.execute([[remote,button,0,1]])
  }},
 
