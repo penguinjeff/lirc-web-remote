@@ -58,22 +58,23 @@ function select(item)
 var radioinc=0;
 function createElement(uitems)
 {const items=uitems;
- let {onchange='',name='',type='unknown',class:oclass}=items;
+ let {onchange='',name='',type='unknown',class:oclass,noneoptions=false}=items;
  let hassubs=false;
  let item;
  let types=['multiple','select','tag','radio'];
  let ItemsKeys=new Set(Object.keys(items));
+ let keys=[];
  for(let x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}
  }
- var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv','class']));
+ let keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv','class']));
  if(onchange==''){keytags.add('onchange');}
  switch(type)
  {case 'multiple':
-   var keys=Object.keys(items['multiple']);
+   keys=Object.keys(items['multiple']);
    item=document.createElement('div');
-   for(var x=0;x<keys.length;x++)
-   {var object=JSON.parse(JSON.stringify(items['multiple'][keys[x]]));
+   for(let x=0;x<keys.length;x++)
+   {let object=JSON.parse(JSON.stringify(items['multiple'][keys[x]]));
     if(items['labels'])
     {if(!object['label'])
      {object['label']=keys[x];
@@ -89,13 +90,13 @@ function createElement(uitems)
    {name='radio'+(radioinc++);
    }
    item=document.createElement('div');
-   for(var x=0;x<items['radio'].length;x++)
-   {var option=document.createElement('div');
-    var optionval=document.createElement('input');
+   for(let x=0;x<items['radio'].length;x++)
+   {let option=document.createElement('div');
+    let optionval=document.createElement('input');
     optionval.setAttribute('type', 'radio');
     optionval.setAttribute('name', name);
     optionval.setAttribute('value',items['radio'][x]);
-    var optionlabel=document.createElement('label');
+    let optionlabel=document.createElement('label');
     optionlabel.setAttribute('onclick', "relativeFor('pf')");
     optionlabel.setAttribute('name', items['radio']);
     optionlabel.textContent = items['radio'][x];
@@ -106,18 +107,14 @@ function createElement(uitems)
   break;
   case 'select':
    item=document.createElement('select');
-   var noneOptions=false;
-   if(items['noneoptions'])
-   {if(items['noneoptions']==true||items['noneoptions']=='true')
-    {noneOptions=true;
-   }}
-   if(noneOptions)
-   {var option=document.createElement('option');
+   if(noneoptions=='true'){noneoptions=true;}
+   if(noneoptions)
+   {let option=document.createElement('option');
     option.text="None"
     option.value='';
     item.appendChild(option);
    }
-   var keys=[];
+   keys=[];
    if(Array.isArray(items['select'])){keys=items['select'];}
    else
    {var subkeys=Object.keys(items['select']);
@@ -135,7 +132,7 @@ function createElement(uitems)
      hassubs=true;
      option.setAttribute('data',JSON.stringify(keys[x][optionshow]));
      option.setAttribute('onchange',onchange);
-     option.setAttribute('noneoptions',noneOptions);
+     option.setAttribute('noneoptions',noneoptions);
     }
     if(items['indexvalues']){option.value=x;}
     else{option.value=optionshow;}
@@ -164,8 +161,8 @@ function createElement(uitems)
   {oclass=name;
  }}
  if(oclass!=''){item.setAttribute('class',oclass);}
- var keys=Object.keys(items);
- for(var x=0;x<keys.length;x++)
+ keys=Object.keys(items);
+ for(let x=0;x<keys.length;x++)
  {if(keytags.has(keys[x])){continue;}
   if(keys[x]=='innerHTML')
   {item.innerHTML=items[keys[x]];
@@ -179,8 +176,8 @@ function createElement(uitems)
  if(!items['holddiv'])
  {if(items['label'])
   {if(typeof(items['label'])=='string' && items['label']!=''){name=items['label'];}
-   var container=document.createElement('div');
-   var label=document.createElement('label');
+   let container=document.createElement('div');
+   let label=document.createElement('label');
    label.textContent = name;
    label.setAttribute('onclick', "relativeFor('pll')");
    container.appendChild(label);
@@ -189,7 +186,7 @@ function createElement(uitems)
    return container;
   }
   if(hassubs)
-  {var container=document.createElement('div');
+  {let container=document.createElement('div');
    container.appendChild(item);
    select(item);
    return container;
@@ -205,10 +202,9 @@ function relativeFor(relation)
  // f first
  // l last
  
- var item=event.target;
- var relativeitem=item;
- var x=0;
- for(x=0;x<relation.length;x++)
+ let item=event.target;
+ let relativeitem=item;
+ for(let x=0;x<relation.length;x++)
  {switch(relation[x])
   {case 'b': relativeitem=relativeitem.previousElementSibling;	break;
    case 'n': relativeitem=relativeitem.nextElementSibling;		break;
