@@ -158,15 +158,10 @@ function createElement(uitems)
  keys=Object.keys(items);
  for(let x=0;x<keys.length;x++)
  {if(keytags.has(keys[x])){continue;}
-  if(keys[x]=='innerHTML')
-  {item.innerHTML=items[keys[x]];
-  }
-  else if(keys[x]=='value')
-  {item.value=items[keys[x]];
-  }
-  else
-  {item.setAttribute(keys[x],items[keys[x]])
- }}
+  if(keys[x]=='innerHTML'){item.innerHTML=items[keys[x]];}
+  else if(keys[x]=='value'){item.value=items[keys[x]];}
+  else{item.setAttribute(keys[x],items[keys[x]])}
+ }
  if(!items['holddiv'])
  {if(items['label'])
   {if(typeof(items['label'])=='string' && items['label']!=''){name=items['label'];}
