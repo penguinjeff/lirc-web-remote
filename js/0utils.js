@@ -1,53 +1,49 @@
 //function to create an object from a list where that list item becomes a key with its index being the value
 //useful for converting the name to an index
 function reverse_index(list)
-{var myobject={};
+{let myobject={};
  list.forEach((value, index) => myobject[value] = index);
  return myobject;
 }
 
 function index(list)
-{var myobject={};
+{let myobject={};
  list.forEach((value, index) => myobject[index] = value);
  return myobject;
 }
 
 
 function finddepth(item)
-{var ref=item.parentNode;
- var max=ref.childNodes.length;
+{let ref=item.parentNode;
+ let max=ref.childNodes.length;
  ref=ref.firstChild;
- var x=1;
+ let x=1;
  while(ref!=item&&x<max){x++;ref=ref.nextElementSibling;}
  return x;
 }
 
 function select(item)
-{
- if(!item){item=event.target;}
- var parent=item.parentNode;
- var selected=item.options[item.selectedIndex];
- var data=selected.getAttribute('data');
- var onchange=selected.getAttribute('onchange');
- var noneOptions=selected.getAttribute('noneoptions');
- var depth=finddepth(item);
+{if(!item){item=event.target;}
+ let parent=item.parentNode;
+ let selected=item.options[item.selectedIndex];
+ let data=selected.getAttribute('data');
+ let onchange=selected.getAttribute('onchange');
+ let noneOptions=selected.getAttribute('noneoptions');
+ let depth=finddepth(item);
  while(parent.childNodes.length>depth)
  {parent.removeChild(parent.lastChild);
  }
  if(selected.value!='')
- {
- var newselectproperties={};
+ {let newselectproperties={};
   newselectproperties['select']=JSON.parse(data);
   newselectproperties['onchange']=onchange;
   newselectproperties['noneoptions']=noneOptions;
 //  newselectproperties['holddiv']=true;
-  var newselect=createElement(newselectproperties);
+  let newselect=createElement(newselectproperties);
   parent.appendChild(newselect);
 //  select(parent.lastChild);
  }
- if(onchange)
- {setTimeout(onchange,0);
- }
+ if(onchange){setTimeout(onchange,0);}
 }
 
 
@@ -86,9 +82,7 @@ function createElement(uitems)
    }
   break;
   case 'radio':
-   if(name=='')
-   {name='radio'+(radioinc++);
-   }
+   if(name==''){name='radio'+(radioinc++);}
    item=document.createElement('div');
    for(let x=0;x<items['radio'].length;x++)
    {let option=document.createElement('div');
@@ -190,16 +184,16 @@ function relativeFor(relation)
  // p parent
  // f first
  // l last
- 
+
  let item=event.target;
  let relativeitem=item;
  for(let x=0;x<relation.length;x++)
  {switch(relation[x])
   {case 'b': relativeitem=relativeitem.previousElementSibling;	break;
-   case 'n': relativeitem=relativeitem.nextElementSibling;		break;
-   case 'p': relativeitem=relativeitem.parentElement;			break;
-   case 'f': relativeitem=relativeitem.firstChild;				break;
-   case 'l': relativeitem=relativeitem.lastChild;				break;
+   case 'n': relativeitem=relativeitem.nextElementSibling;	break;
+   case 'p': relativeitem=relativeitem.parentElement;		break;
+   case 'f': relativeitem=relativeitem.firstChild;		break;
+   case 'l': relativeitem=relativeitem.lastChild;		break;
  }}
  console.log("TagName:"+relativeitem.tagName);
  console.log("name:"+relativeitem.getAttribute('name'));
