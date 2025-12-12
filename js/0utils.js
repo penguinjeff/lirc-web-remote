@@ -163,7 +163,7 @@ function createElement(uitems)
   else
   {oclass=name;
  }}
- item.setAttribute('class',oclass);
+ if(oclass!=''){item.setAttribute('class',oclass);}
  var keys=Object.keys(items);
  for(var x=0;x<keys.length;x++)
  {if(keytags.has(keys[x])){continue;}
