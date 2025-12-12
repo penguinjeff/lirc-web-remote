@@ -58,7 +58,7 @@ function select(item)
 var radioinc=0;
 function createElement(uitems)
 {const items=uitems;
- let {onchange='',name='',type='unknown'}=items;
+ let {onchange='',name='',type='unknown',class:oclass}=items;
  let hassubs=false;
  let item;
  let types=['multiple','select','tag','radio'];
@@ -66,7 +66,7 @@ function createElement(uitems)
  for(let x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}
  }
- var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv']));
+ var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv','class']));
  if(onchange==''){keytags.add('onchange');}
  switch(type)
  {case 'multiple':
@@ -156,14 +156,14 @@ function createElement(uitems)
    return document.createElement('div');
   break;
  }
- if(items['name'])
- {
-  if(items['class'])
-  {items['class']+=' '+items['name'];
+ if(name!='')
+ {if(oclass)
+  {oclass+=' '+name;
   }
   else
-  {items['class']=items['name'];
+  {oclass=name;
  }}
+ item.setAttribute('class',oclass);
  var keys=Object.keys(items);
  for(var x=0;x<keys.length;x++)
  {if(keytags.has(keys[x])){continue;}
