@@ -78,8 +78,8 @@ function createElement(uitems)
     {if(!object['label'])
      {object['label']=keys[x];
     }}
-    if(items['onchange'])
-    {object['onchange']=items['onchange'];
+    if(onchange!='')
+    {object['onchange']=onchange;
     }
     item.appendChild(createElement(object));
    }
