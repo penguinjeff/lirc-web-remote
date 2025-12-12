@@ -60,7 +60,7 @@ function createElement(uitems)
 {const items=uitems;
  let {onchange='',name='',type='unknown'}=items;
  let hassubs=false;
- var item;
+ let item;
  let types=['multiple','select','tag','radio'];
  let ItemsKeys=new Set(Object.keys(items));
  for(let x=0;x<types.length;x++)
@@ -71,7 +71,7 @@ function createElement(uitems)
  switch(type)
  {case 'multiple':
    var keys=Object.keys(items['multiple']);
-   var item=document.createElement('div');
+   item=document.createElement('div');
    for(var x=0;x<keys.length;x++)
    {var object=JSON.parse(JSON.stringify(items['multiple'][keys[x]]));
     if(items['labels'])
