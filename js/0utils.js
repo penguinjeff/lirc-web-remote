@@ -58,7 +58,7 @@ function select(item)
 var radioinc=0;
 function createElement(uitems)
 {const items=uitems;
- var {onchange='',name='',type='unknown'}=items;
+ let {onchange='',name='',type='unknown'}=items;
  let hassubs=false;
  var item;
  let types=['multiple','select','tag','radio'];
@@ -133,8 +133,6 @@ function createElement(uitems)
     else
     {optionshow=Object.keys(keys[x])[0];
      hassubs=true;
-     var onchange='';
-     if(items['onchange']){onchange=items['onchange'];}
      option.setAttribute('data',JSON.stringify(keys[x][optionshow]));
      option.setAttribute('onchange',onchange);
      option.setAttribute('noneoptions',noneOptions);
