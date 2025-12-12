@@ -56,17 +56,14 @@ function select(item)
 //I add name to classname 
 
 var radioinc=0;
-function createElement(items)
-{var onchange='';
- var name='';
- var type='unknown';
- var hassubs=false;
- if(items['name']){name=items['name']}
- if(items['onchange']){onchange=items[onchange];}
+function createElement(uitems)
+{const items=uitems;
+ var {onchange='',name='',type='unknown'}=items;
+ let hassubs=false;
  var item;
- var types=['multiple','select','tag','radio'];
- var ItemsKeys=new Set(Object.keys(items));
- for(var x=0;x<types.length;x++)
+ let types=['multiple','select','tag','radio'];
+ let ItemsKeys=new Set(Object.keys(items));
+ for(let x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}
  }
  var keytags=new Set(types.concat(['noneoptions','namevalues','labels','label','holddiv']));
@@ -88,12 +85,8 @@ function createElement(items)
    }
   break;
   case 'radio':
-   var name='radio'+radioinc;
-   if(items['name'])
-   {name=items['name'];
-   }
-   else
-   {radioinc++;
+   if(name=='')
+   {name='radio'+(radioinc++);
    }
    item=document.createElement('div');
    for(var x=0;x<items['radio'].length;x++)
