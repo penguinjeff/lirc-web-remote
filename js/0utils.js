@@ -51,7 +51,7 @@ function select(item)
 //since I am using class names because html do no provide searchbyname on subelements
 //I add name to classname 
 
-var radioinc=0;
+let radioinc=0;
 function createElement(uitems)
 {const items=uitems;
  let {onchange='',name='',type='unknown',class:oclass,noneoptions=false}=items;
@@ -111,22 +111,22 @@ function createElement(uitems)
    keys=[];
    if(Array.isArray(items['select'])){keys=items['select'];}
    else
-   {var subkeys=Object.keys(items['select']);
-    for(var x=0;x<subkeys.length;x++)
-    {var object={};
+   {let subkeys=Object.keys(items['select']);
+    for(let x=0;x<subkeys.length;x++)
+    {let object={};
      object[subkeys[x]]=items['select'][subkeys[x]];
      keys.push(object);
    }}
-   for(var x=0;x<keys.length;x++)
-   {var option=document.createElement('option');
-    var optionshow='';
+   for(let x=0;x<keys.length;x++)
+   {let option=document.createElement('option');
+    let optionshow='';
     if(typeof(keys[x])=='string'){optionshow=keys[x]}
     else
     {optionshow=Object.keys(keys[x])[0];
      hassubs=true;
      option.setAttribute('data',JSON.stringify(keys[x][optionshow]));
      option.setAttribute('onchange',onchange);
-     option.setAttribute('noneoptions',noneoptions);
+     if(noneoptions){option.setAttribute('noneoptions',noneoptions);}
     }
     if(items['indexvalues']){option.value=x;}
     else{option.value=optionshow;}
