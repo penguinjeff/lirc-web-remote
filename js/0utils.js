@@ -153,13 +153,7 @@ function createElement(uitems)
    return document.createElement('div');
   break;
  }
- if(name!='')
- {if(oclass)
-  {oclass+=' '+name;
-  }
-  else
-  {oclass=name;
- }}
+ if(name!=''){if(oclass){oclass+=' '+name;}else{oclass=name;}}
  if(oclass!=''){item.setAttribute('class',oclass);}
  keys=Object.keys(items);
  for(let x=0;x<keys.length;x++)
