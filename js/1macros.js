@@ -222,7 +222,7 @@ var Macros=
   var id = Math.round(+new Date()/1000);
   var reallist=[];
   json='{"ircodes":'+JSON.stringify(list)+'}'
-  fetch('irsend_mult.php?'+'id='+id,{
+  fetch(relativepath+'irsend_mult.php?'+'id='+id,{
 	method: 'POST',
 	headers: {
 		'Accept':'application/json',
@@ -250,10 +250,10 @@ remote_refresh()
   data['remote_index']=[];
   data['remote_reverse_index']=reverse_index(data['remote_index']);
 
-  fetch('irsend_list.php?id='+id)
+  fetch(relativepath+'irsend_list.php?id='+id)
   .then(function () {})
 
-  fetch('remotes/remotes.js?id='+id)
+  fetch(relativepath+'remotes/remotes.js?id='+id)
   .then(function (a) {
 	return a.json(); // call the json method on the response to get JSON
   })

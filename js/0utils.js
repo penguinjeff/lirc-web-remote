@@ -58,7 +58,7 @@ function createElement(uitems)
  let hassubs=false;
  let item;
  let types=['multiple','select','tag','radio'];
- let ItemsKeys=new Set(Object.keys(items));
+ const ItemsKeys=new Set(Object.keys(items));
  let keys=[];
  for(let x=0;x<types.length;x++)
  {if(ItemsKeys.has(types[x])){type=types[x];}

@@ -1,7 +1,5 @@
 <?php
 $scale=1;
-$relativepath='/'.strtok($_SERVER['REQUEST_URI'], '/');
-$base=substr(__DIR__,0,strpos(__DIR__,$relativepath)+strlen($relativepath));
 if(isset($_REQUEST['scale']))
 {$scale=$_REQUEST['scale'];
 }
@@ -23,8 +21,6 @@ function timestamp(){return Math.floor(Date.now()/1000);}
 
 function changemode()
 {
- console.log('<?php print $relativepath; ?>');
- console.log('<?php print $base; ?>');
  document.getElementById("Display").innerHTML='';
  if(document.getElementById("mode").value==="Edit")
  {Edit.display();
@@ -39,18 +35,18 @@ function changemode()
  {Devices.remotes();
  }
 }
-var relativepath='<?php print $relativepath.'/'; ?>'
+var relativepath='../'
 window.addEventListener('load',function(){changemode();})
 </script>
 <?php
-$javascript_files=scandir($base.'/js/');
+$javascript_files=scandir('../js/');
 $time=time();
 foreach($javascript_files as $js)
 {if($js!='.'&&$js!='..')
- {print '<script class="code" src="'.$relativepath.'/js/'.$js.'?timestamp='.$time.'"></script>'."\n";
+ {print '<script class="code" src="../js/'.$js.'?timestamp='.$time.'"></script>'."\n";
 }}
 ?>
-<link rel="stylesheet" href="<?php print $relativepath; ?>/css/remote_css.php?scale=<?php echo $scale; ?>&timestamp=<?php echo time()?>">
+<link rel="stylesheet" href="../css/remote_css.php?scale=<?php echo $scale; ?>&timestamp=<?php echo time()?>">
 </head>
 <body style="width:100%;height:100%">
 <div class="container-1">

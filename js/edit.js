@@ -70,7 +70,7 @@ const Edit=
    headers: { 'Content-Type': 'application/json'},
    body: JSON.stringify(savedata)
   });
-  fetch(request)
+  fetch(relativepath+request)
    .then(response => {
      if (!response.ok) {
        throw new Error("Network response was not ok");
@@ -94,7 +94,7 @@ const Edit=
 
 function Edit_init()
 {var id = Math.round(+new Date()/1000);
- fetch('load.php?version='+version)
+ fetch(relativepath+'load.php?version='+version)
  .then(response =>
  {if (!response.ok) 
   {throw new Error("Network response was not ok");
