@@ -17,6 +17,14 @@ if(isset($argv[1]))
 <meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script>
+console.log(window.location.href);
+const url = new URL(window.location.href);
+const category = url.searchParams.get('category');
+const subcategory = url.searchParams.get('subcategory');
+console.log('Category:'+category);
+console.log('Subcategory:'+subcategory);
+
+
 var mode='remote';
 var data={};
 function timestamp(){return Math.floor(Date.now()/1000);}
