@@ -8,26 +8,64 @@ var preinit=true;
 var prev=0;
 var devices_loaded=false;
 var activities_loaded=false;
-function nav(init='')
-{const navigator=document.getElementById("navigator");
+
+var count=0;
+
+function nav(init=-1,skip=0)
+{
+ count++;
+ console.log("skip:"+skip);
+ console.log("count:"+count);
+ let navigator=document.getElementById("navigator");
+ let item='';
  if(preinit)
  {
+  console.log("initialize navigator");
   preinit=false;
- }
- else if(init)
- {
-  navigator.selectedIndex=init;
-  navigator.dispatchEvent(new Event('change'));
- }
- else if(navigator.value=='refresh')
- {navigator.selectedIndex=prev;
-  navigator.dispatchEvent(new Event('change'));
+  return;
  }
  else
- {prev=navigator.selectedIndex;
-  alert(navigator.value);
+ {
+  if(init!=-1)
+  {
+   console.log('init:'+init)
+   if(init==0)
+   {if(activities_list.length===1 && activities_list[0]=='None')
+    {
+     navigator.selectedIndex=1;
+     console.log('Run again with new value')
+     const changeEvent = new Event('change');
+     navigator.dispatchEvent(changeEvent);
+     return;
+    }
+   }
+  }
+  else if(navigator.value==='refresh')
+  {navigator.selectedIndex=prev;
+   console.log('Run again with prev value')
+   const changeEvent = new Event('change');
+   navigator.dispatchEvent(changeEvent);
+   return;
+  }
+  else
+  {prev=navigator.selectedIndex;
+  }
  }
-}
+ navigator=document.getElementById("navigator");
+ if(event)
+ {item=event.target;
+ }
+ else
+ {item=navigator.nextElementSibling;
+ }
+ if(skip!=1)
+ {
+  console.log("skip:"+skip);
+  console.log("menu");
+  console.log(navigator.value);
+  console.log("submenu");
+  console.log(item.value);
+}}
 
 var activities_list=['None'];
 var devices_list=['None'];
@@ -38,32 +76,29 @@ function refresh()
 {
  devices_loaded=false;
  activities_loaded=false;
- preinit=true;
  var rev=Date.now();
 
  fetch('remotes/remotes.js?rev='+rev)
   .then(response => response.json()) // Parses the response body as JSON
   .then(data => {
-    console.log(data); // Work with your JSON data (now a JavaScript object);
     devices_loaded=true;
     if(data['remotes']){remotes=data['remotes'];}
     create_navigator();
   })
   .catch(error => {
-    console.error('Error fetching JSON:', error); // Handle any errors
+    console.log('Error fetching JSON:', error); // Handle any errors
     devices_loaded=true;
     create_navigator();
   });
  fetch('activities/activities.js?rev='+rev)
   .then(response => response.json()) // Parses the response body as JSON
   .then(data => {
-    console.log(data); // Work with your JSON data (now a JavaScript object)
     activities_loaded=true;
     if(data['activites']){remotes=data['activities'];}
     create_navigator();
   })
   .catch(error => {
-    console.error('Error fetching JSON:', error); // Handle any errors
+    console.log('Error fetching JSON:', error); // Handle any errors
     activities_loaded=true;
     create_navigator();
   });
@@ -75,21 +110,27 @@ function update_lists()
  if(devices_list.length===0){devices_list=['None'];}
  activities_list=Object.keys(activities);
  if(activities_list.length===0){activities_list=['None'];}
- console.log(devices_list);
- console.log(activities_list);
+// console.log(devices_list);
+// console.log(activities_list);
 } 
 
 function create_navigator()
 {
+ preinit=true;
  if(!devices_loaded||!activities_loaded){return}
  update_lists();
- var navigator=document.getElementById("navigator");
- var edits=['Activites','Macros','Modules','Displays'];
- var navigate={'select':{'Activities':activities_list,'Devices':devices_list,'Edit':edits,'refresh':true},id:'navigator',onchange:'nav()'};
- var elem=createElement(navigate);
+ let navigator=document.getElementById("navigator");
+ let edits=['Activites','Macros','Modules','Displays'];
+ let navigate={'select':{'Activities':activities_list,'Devices':devices_list,'Edit':edits,'refresh':true},id:'navigator',onchange:'nav()'};
+ let elem=createElement(navigate);
  if(navigator){navigator.remove};
  navigator_location.appendChild(elem);
- nav(prev);
+ console.log('prev:'+prev);
+ //initialize
+ nav(prev,1);
+ console.log("WTF\n");
+ //if Activites is empty set it to Devices
+ nav(prev,1);
 }
 
 var navigator_location=createElement({'tag':'div'});
