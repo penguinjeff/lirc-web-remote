@@ -23,7 +23,9 @@ function finddepth(item)
 }
 
 function select(item)
-{if(!item){item=event.target;}
+{
+ if(!item){item=event.target;}
+ let custom_onchange=item.getAttribute('custom_onchange');
  let parent=item.parentNode;
  let selected=item.options[item.selectedIndex];
  let data=selected.getAttribute('data');
@@ -43,7 +45,11 @@ function select(item)
   parent.appendChild(newselect);
 //  select(parent.lastChild);
  }
- if(onchange){setTimeout(onchange,0);}
+ console.log('custom_onchange:'+custom_onchange);
+ if(custom_onchange)
+ {
+  setTimeout(custom_onchange, 0);
+ }
 }
 
 
@@ -117,6 +123,7 @@ function createElement(uitems)
      object[subkeys[x]]=items['select'][subkeys[x]];
      keys.push(object);
    }}
+   item.setAttribute('custom_onchange',onchange);
    for(let x=0;x<keys.length;x++)
    {let option=document.createElement('option');
     let optionshow='';

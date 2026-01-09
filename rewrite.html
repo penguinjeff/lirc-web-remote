@@ -2,70 +2,47 @@
 <html>
 <head>
     <meta charset="UTF-8">
-<script src="js/0utils.js?0"></script>
+<script src="js/0utils.js?1"></script>
 	<script>
-var preinit=true;
-var prev=0;
+var prev=-1;
+var prevsub=-1
 var devices_loaded=false;
 var activities_loaded=false;
-
+const protocol = window.location.protocol;
+console.log(protocol);
 var count=0;
+var menu='';
+var submenu='';
 
-function nav(init=-1,skip=0)
+const url = new URL(window.location.href);
+menu = url.searchParams.get('menu');
+submenu = url.searchParams.get('submenu');
+console.log('menu:'+menu);
+console.log('submenu:'+submenu);
+
+function nav()
 {
- count++;
- console.log("skip:"+skip);
  console.log("count:"+count);
- let navigator=document.getElementById("navigator");
- let item='';
- if(preinit)
+ count++;
+ const navigator=document.getElementById("navigator");
+ if(navigator.value=='refresh')
  {
-  console.log("initialize navigator");
-  preinit=false;
+  navigator.selectedIndex=prev;
+  console.log('Run again with prev value')
+  navigator.dispatchEvent(new Event('change'));
+  const item=navigator.nextElementSibling;
+  item.selectedIndex=prevsub;
+  item.dispatchEvent(new Event('change'));
   return;
  }
- else
- {
-  if(init!=-1)
-  {
-   console.log('init:'+init)
-   if(init==0)
-   {if(activities_list.length===1 && activities_list[0]=='None')
-    {
-     navigator.selectedIndex=1;
-     console.log('Run again with new value')
-     const changeEvent = new Event('change');
-     navigator.dispatchEvent(changeEvent);
-     return;
-    }
-   }
-  }
-  else if(navigator.value==='refresh')
-  {navigator.selectedIndex=prev;
-   console.log('Run again with prev value')
-   const changeEvent = new Event('change');
-   navigator.dispatchEvent(changeEvent);
-   return;
-  }
-  else
-  {prev=navigator.selectedIndex;
-  }
- }
- navigator=document.getElementById("navigator");
- if(event)
- {item=event.target;
- }
- else
- {item=navigator.nextElementSibling;
- }
- if(skip!=1)
- {
-  console.log("skip:"+skip);
-  console.log("menu");
-  console.log(navigator.value);
-  console.log("submenu");
-  console.log(item.value);
-}}
+ const item=navigator.nextElementSibling;
+ console.log("menu");
+ console.log(navigator.value);
+ prev=navigator.selectedIndex
+ console.log("submenu");
+ console.log(item.value);
+ prevsub=item.selectedIndex;
+}
 
 var activities_list=['None'];
 var devices_list=['None'];
@@ -78,30 +55,39 @@ function refresh()
  activities_loaded=false;
  var rev=Date.now();
 
- fetch('remotes/remotes.js?rev='+rev)
-  .then(response => response.json()) // Parses the response body as JSON
-  .then(data => {
-    devices_loaded=true;
-    if(data['remotes']){remotes=data['remotes'];}
-    create_navigator();
-  })
-  .catch(error => {
-    console.log('Error fetching JSON:', error); // Handle any errors
-    devices_loaded=true;
-    create_navigator();
-  });
- fetch('activities/activities.js?rev='+rev)
-  .then(response => response.json()) // Parses the response body as JSON
-  .then(data => {
-    activities_loaded=true;
-    if(data['activites']){remotes=data['activities'];}
-    create_navigator();
-  })
-  .catch(error => {
-    console.log('Error fetching JSON:', error); // Handle any errors
-    activities_loaded=true;
-    create_navigator();
-  });
+ if(protocol=='file:')
+ {
+  devices_loaded=true;
+  activities_loaded=true;
+  create_navigator();
+ }
+ else
+ {
+  fetch('remotes/remotes.js?rev='+rev)
+   .then(response => response.json()) // Parses the response body as JSON
+   .then(data => {
+     devices_loaded=true;
+     if(data['remotes']){remotes=data['remotes'];}
+     create_navigator();
+   })
+   .catch(error => {
+     console.log('Error fetching JSON:', error); // Handle any errors
+     devices_loaded=true;
+     create_navigator();
+   });
+  fetch('activities/activities.js?rev='+rev)
+   .then(response => response.json()) // Parses the response body as JSON
+   .then(data => {
+     activities_loaded=true;
+     if(data['activites']){remotes=data['activities'];}
+     create_navigator();
+   })
+   .catch(error => {
+     console.log('Error fetching JSON:', error); // Handle any errors
+     activities_loaded=true;
+     create_navigator();
+   });
+  }
 }
 
 function update_lists()
@@ -116,21 +102,26 @@ function update_lists()
 
 function create_navigator()
 {
- preinit=true;
  if(!devices_loaded||!activities_loaded){return}
  update_lists();
  let navigator=document.getElementById("navigator");
  let edits=['Activites','Macros','Modules','Displays'];
- let navigate={'select':{'Activities':activities_list,'Devices':devices_list,'Edit':edits,'refresh':true},id:'navigator',onchange:'nav()'};
+ let navigate={'select':{'Activities':activities_list,'Devices':devices_list,'Edit':edits,'refresh':['None']},id:'navigator',onchange:'nav()'};
  let elem=createElement(navigate);
  if(navigator){navigator.remove};
  navigator_location.appendChild(elem);
  console.log('prev:'+prev);
- //initialize
- nav(prev,1);
- console.log("WTF\n");
- //if Activites is empty set it to Devices
- nav(prev,1);
+ navigator=document.getElementById("navigator");
+ if(menu!=null)
+ {navigator.selectedIndex=Array.from(navigator.options).map(option => option.value).indexOf(menu);
+  navigator.dispatchEvent(new Event('change'));
+ }
+ if(submenu!=null)
+ {
+  const item=navigator.nextElementSibling;
+  item.selectedIndex=Array.from(item.options).map(option => option.value).indexOf(submenu);
+ }
+ nav();
 }
 
 var navigator_location=createElement({'tag':'div'});

@@ -19,10 +19,12 @@ if(isset($argv[1]))
 <script>
 console.log(window.location.href);
 const url = new URL(window.location.href);
-const category = url.searchParams.get('category');
-const subcategory = url.searchParams.get('subcategory');
-console.log('Category:'+category);
-console.log('Subcategory:'+subcategory);
+const menu = url.searchParams.get('menu');
+const submenu = url.searchParams.get('submenu');
+const subsubmenu = url.searchParams.get('subsubmenu');
+console.log('Menu:'+menu);
+console.log('Submenu:'+submenu);
+console.log('Subsubmenu:'+subsubmenu);
 
 
 var mode='remote';
