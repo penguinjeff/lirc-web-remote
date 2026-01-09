@@ -1,0 +1,6 @@
+#my .htaccess file
+#rename to .htaccess
+order deny,allow
+Deny from all
+Allow from 192.168.0
+Allow from 127.0.0.1
