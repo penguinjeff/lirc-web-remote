@@ -2,20 +2,19 @@
 <html>
 <head>
 <script src="js/0utils.js"></script>
-<script id="remotes" src="remotes/remotes.js"></script>
+<script id="remotes"></script>
 <script>
 var remotes={};
 
 function refresh()
 {
- remotes=get_remotes()
- console.log('remotes:');
- console.log(remotes);
-
  var remotes=document.getElementById("remotes");
  remotes.remove;
 
- document.head.appendChild(createElement({'tag':'script','src':'remotes/remotes.js?ts'+Date.now()}));
+ document.head.appendChild(createElement({'tag':'script','src':'remotes/get_remotes.js?ts'+Date.now()}));
+ remotes=get_remotes();
+ console.log('remotes:');
+ console.log(remotes);
 }
 
 window.addEventListener('load', function () {

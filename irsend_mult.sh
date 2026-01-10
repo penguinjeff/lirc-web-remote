@@ -69,6 +69,7 @@ function list
  }
  all_buttons=$(remote_buttons)
  printf '{"remotes":{%s}}' "${all_buttons::-1}" > ${location}/remotes/remotes.js
+ printf 'function get_remotes(){ return {%s};}' "${all_buttons::-1}" > ${location}/remotes/get_remotes.js
 }
 
 
