@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-<script src="js/0utils.js?1"></script>
+<script src="js/0utils.js"></script>
 	<script>
 var prev=-1;
 var prevsub=-1
@@ -17,6 +17,7 @@ var submenu='';
 const url = new URL(window.location.href);
 menu = url.searchParams.get('menu');
 submenu = url.searchParams.get('submenu');
+ts = url.searchParams.get('ts');
 console.log('menu:'+menu);
 console.log('submenu:'+submenu);
 

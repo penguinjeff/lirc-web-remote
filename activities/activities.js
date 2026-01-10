@@ -1,1 +1,1 @@
-{}
+get_activities(){return {};}

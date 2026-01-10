@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/0utils.js"></script>
+<script id="remotes" src="remotes/remotes.js"></script>
+<script>
+var remotes={};
+
+function refresh()
+{
+ remotes=get_remotes()
+ console.log('remotes:');
+ console.log(remotes);
+
+ var remotes=document.getElementById("remotes");
+ remotes.remove;
+
+ document.head.appendChild(createElement({'tag':'script','src':'remotes/remotes.js?ts'+Date.now()}));
+}
+
+window.addEventListener('load', function () {
+ refresh()
+})
+
+</script>
+</head>
+<body>
+<input type="button" onclick="refresh()">
+</body>
+</html>
+
