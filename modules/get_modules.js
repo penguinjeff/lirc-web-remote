@@ -1,7 +1,6 @@
 function get_modules()
 {
-return
-{
+return {
  "numbers":
  {
   "buttons":

@@ -6,7 +6,7 @@
 	<script>
 var prev=-1;
 var prevsub=-1
-var devices_loaded=false;
+var remotes_loaded=false;
 var activities_loaded=false;
 const protocol = window.location.protocol;
 console.log(protocol);
@@ -46,19 +46,19 @@ function nav()
 }
 
 var activities_list=['None'];
-var devices_list=['None'];
-var remotes={};
+var remotes_list=['None'];
 var activities={};
+var remotes={};
 
 function refresh()
 {
- devices_loaded=false;
+ remotes_loaded=false;
  activities_loaded=false;
  var rev=Date.now();
 
  if(protocol=='file:')
  {
-  devices_loaded=true;
+  remotes_loaded=true;
   activities_loaded=true;
   create_navigator();
  }
@@ -67,13 +67,13 @@ function refresh()
   fetch('remotes/remotes.js?rev='+rev)
    .then(response => response.json()) // Parses the response body as JSON
    .then(data => {
-     devices_loaded=true;
+     remotes_loaded=true;
      if(data['remotes']){remotes=data['remotes'];}
      create_navigator();
    })
    .catch(error => {
      console.log('Error fetching JSON:', error); // Handle any errors
-     devices_loaded=true;
+     remotes_loaded=true;
      create_navigator();
    });
   fetch('activities/activities.js?rev='+rev)
@@ -93,21 +93,21 @@ function refresh()
 
 function update_lists()
 {
- devices_list=Object.keys(remotes);
- if(devices_list.length===0){devices_list=['None'];}
+ remotes_list=Object.keys(remotes);
+ if(remotes_list.length===0){remotes_list=['None'];}
  activities_list=Object.keys(activities);
  if(activities_list.length===0){activities_list=['None'];}
-// console.log(devices_list);
+// console.log(remotes_list);
 // console.log(activities_list);
 } 
 
 function create_navigator()
 {
- if(!devices_loaded||!activities_loaded){return}
+ if(!remotes_loaded||!activities_loaded){return}
  update_lists();
  let navigator=document.getElementById("navigator");
  let edits=['Activites','Macros','Modules','Displays'];
- let navigate={'select':{'Activities':activities_list,'Devices':devices_list,'Edit':edits,'refresh':['None']},id:'navigator',onchange:'nav()'};
+ let navigate={'select':{'Activities':activities_list,'Remotes':remotes_list,'Edit':edits,'refresh':['None']},id:'navigator',onchange:'nav()'};
  let elem=createElement(navigate);
  if(navigator){navigator.remove};
  navigator_location.appendChild(elem);

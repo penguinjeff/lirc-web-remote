@@ -6,11 +6,13 @@
 <script id="displays" src="displays/get_displays.js"></script>
 <script id="activities" src="activities/get_activities.js"></script>
 <script id="macros" src="macros/get_macros.js"></script>
+<script id="modules" src="modules/get_modules.js"></script>
 <script>
 var remotes={};
 var displays={};
 var activites={};
 var macros={};
+var modules={};
 
 function refresh()
 {
@@ -18,6 +20,7 @@ function refresh()
  displays=refresh_item('displays');
  activites=refresh_item('activities');
  macros=refresh_item('macros');
+ modules=refresh_item('modules');
 }
 
 function refresh_item(tag)
