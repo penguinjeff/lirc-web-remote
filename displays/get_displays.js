@@ -1,7 +1,6 @@
 function get_displays()
 {
-return
-{
+return {
 "default":
  {'modules':
   [

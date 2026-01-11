@@ -2,23 +2,38 @@
 <html>
 <head>
 <script src="js/0utils.js"></script>
-<script id="remotes"></script>
+<script id="remotes" src="remotes/get_remotes.js?ts=1"></script>
+<script id="displays" src="displays/get_displays.js?ts=2"></script>
+<script id="activities" src="activities/get_activities.js?ts=1"></script>
+<script id="macros" src="macros/get_macros.js?ts=2"></script>
 <script>
 var remotes={};
+var displays={};
+var activites={};
+var macros={};
 
 function refresh()
 {
- var remotes=document.getElementById("remotes");
- remotes.remove;
+ remotes=refresh_item('remotes');
+ displays=refresh_item('displays');
+ activites=refresh_item('activities');
+ macros=refresh_item('macros');
+}
 
- document.head.appendChild(createElement({'tag':'script','src':'remotes/get_remotes.js?ts'+Date.now()}));
- remotes=get_remotes();
- console.log('remotes:');
- console.log(remotes);
+function refresh_item(tag)
+{
+ console.log(tag+':');
+ var item=document.getElementById(tag);
+ item.remove;
+
+ document.head.appendChild(createElement({'tag':'script','src':tag+'/get_'+tag+'.js?ts'+Date.now()}));
+ var items=window['get_'+tag]();
+ console.log(items);
+ return items;
 }
 
 window.addEventListener('load', function () {
- refresh()
+ refresh();
 })
 
 </script>
