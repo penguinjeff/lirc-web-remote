@@ -2,10 +2,10 @@
 <html>
 <head>
 <script src="js/0utils.js"></script>
-<script id="remotes" src="remotes/get_remotes.js?ts=1"></script>
-<script id="displays" src="displays/get_displays.js?ts=2"></script>
-<script id="activities" src="activities/get_activities.js?ts=1"></script>
-<script id="macros" src="macros/get_macros.js?ts=2"></script>
+<script id="remotes" src="remotes/get_remotes.js"></script>
+<script id="displays" src="displays/get_displays.js"></script>
+<script id="activities" src="activities/get_activities.js"></script>
+<script id="macros" src="macros/get_macros.js"></script>
 <script>
 var remotes={};
 var displays={};
@@ -39,7 +39,7 @@ window.addEventListener('load', function () {
 </script>
 </head>
 <body>
-<input type="button" onclick="refresh()">
+<input type="button" onclick="refresh()" value="refresh">
 </body>
 </html>
 
