@@ -1,0 +1,3 @@
+<a href="link/to/your/download/file" download>Download link</a>
+<a href="link/to/your/download/file" download="filename">Download link</a>
+   

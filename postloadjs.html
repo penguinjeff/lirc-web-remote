@@ -2,17 +2,18 @@
 <html>
 <head>
 <script src="js/0utils.js"></script>
-<script id="remotes" src="remotes/get_remotes.js"></script>
-<script id="displays" src="displays/get_displays.js"></script>
-<script id="activities" src="activities/get_activities.js"></script>
-<script id="macros" src="macros/get_macros.js"></script>
-<script id="modules" src="modules/get_modules.js"></script>
+<script id="remotes" src="data/get_remotes.js"></script>
+<script id="displays" src="data/get_displays.js"></script>
+<script id="activities" src="data/get_activities.js"></script>
+<script id="macros" src="data/get_macros.js"></script>
+<script id="modules" src="data/get_modules.js"></script>
 <script>
 var remotes={};
 var displays={};
 var activites={};
 var macros={};
 var modules={};
+
 
 function refresh()
 {
@@ -23,13 +24,41 @@ function refresh()
  modules=refresh_item('modules');
 }
 
+function download(filename, data, mimeType = 'text/plain') {
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // Clean up the object URL
+}
+
+function item_save(item)
+{
+ var text='function get_'+item+'(){return '+JSON.stringify(window[item])+';}';
+ console.log(text);
+ download('get_'+item+'.js',text);
+}
+
+function save()
+{
+ item_save('remotes');
+ item_save('displays');
+ item_save('activities');
+ item_save('macros');
+ item_save('modules');
+}
+
 function refresh_item(tag)
 {
  console.log(tag+':');
  var item=document.getElementById(tag);
  item.remove;
 
- document.head.appendChild(createElement({'tag':'script','src':tag+'/get_'+tag+'.js?ts'+Date.now()}));
+ document.head.appendChild(createElement({'tag':'script','src':'data/get_'+tag+'.js?ts'+Date.now()}));
  var items=window['get_'+tag]();
  console.log(items);
  return items;
@@ -39,10 +68,12 @@ window.addEventListener('load', function () {
  refresh();
 })
 
+
+
 </script>
 </head>
 <body>
 <input type="button" onclick="refresh()" value="refresh">
+<input id="save" type="button" onclick="save()" value="save">
 </body>
 </html>
-
