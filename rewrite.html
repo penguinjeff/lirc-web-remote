@@ -3,14 +3,74 @@
 <head>
     <meta charset="UTF-8">
 <script src="js/0utils.js"></script>
-	<script>
+<script id="remotes" src="data/get_remotes.js"></script>
+<script id="displays" src="data/get_displays.js"></script>
+<script id="default_display" src="data/get_default_display.js"></script>
+<script id="activities" src="data/get_activities.js"></script>
+<script id="macros" src="data/get_macros.js"></script>
+<script id="modules" src="data/get_modules.js"></script>
+<script id="default_modules" src="data/get_default_modules.js"></script>
+<script src="js/save_load_refresh.js"></script>
+<script>
+var remotes={};
+var default_display=get_default_display();
+var displays={};
+var activites={};
+var macros={};
+var modules={};
+var default_modules=get_default_modules;
+
+function edit(item)
+{
+ console.log('edit');
+ console.log(item);
+}
+
+function activity_display(activity)
+{
+ const {remotes,display}=activity;
+ console.log('display');
+ console.log(remotes);
+ console.log(display);
+}
+
+function display(item,subitem)
+{
+ console.log("item");
+ console.log(item);
+ if(subitem=='None'){return}
+ console.log("subitem");
+ console.log(subitem);
+ let activity={};
+ switch(item)
+ {case 'Remotes':
+  activity={remotes:[subitem],display:default_display};
+  break;
+  case 'Activities':
+  activitiy=activities[subitem];
+  break;
+  case 'Edit':
+   edit(subitem);
+   return;
+  break;
+  default:
+  console.log(item+' not known');
+ } 
+ activity_display(activity);
+}
+
+
+
+var remotes_list=['None'];
+var displays_list=['None'];
+var activities_list=['None'];
+var macros_list=['None'];
+var modules_list=['None'];
+
 var prev=-1;
 var prevsub=-1
-var remotes_loaded=false;
-var activities_loaded=false;
 const protocol = window.location.protocol;
-console.log(protocol);
-var count=0;
+//console.log(protocol);
 var menu='';
 var submenu='';
 
@@ -21,107 +81,83 @@ ts = url.searchParams.get('ts');
 console.log('menu:'+menu);
 console.log('submenu:'+submenu);
 
+function setoption(selectbox,requested_option_name)
+{let index=Array.from(selectbox.options).map(option => option.value).indexOf(requested_option_name);
+ if(index===-1){return;}
+ selectbox.selectedIndex=index;
+ selectbox.dispatchEvent(new Event('change'));
+}
+
+var count=0;
+var preinit=true;
+var menu_set=false;
+var submenu_set=false;
 function nav()
 {
- console.log("count:"+count);
- count++;
+ console.log("count:"+(count++));
+ if(preinit){preinit=false;console.log("Preinit");return;}
  const navigator=document.getElementById("navigator");
- if(navigator.value=='refresh')
+ if(!menu_set)
  {
-  navigator.selectedIndex=prev;
-  console.log('Run again with prev value')
-  navigator.dispatchEvent(new Event('change'));
-  const item=navigator.nextElementSibling;
-  item.selectedIndex=prevsub;
-  item.dispatchEvent(new Event('change'));
+//  console.log("initializing menu");
+  menu_set=true;
+  if(menu){setoption(navigator,menu);}
+  else
+  {
+   if(Object.keys(activities).length === 0){setoption(navigator,'Remotes');}
+   else{setoption(navigator,'Activities');}
+  }
   return;
  }
  const item=navigator.nextElementSibling;
- console.log("menu");
- console.log(navigator.value);
- prev=navigator.selectedIndex
- console.log("submenu");
- console.log(item.value);
- prevsub=item.selectedIndex;
+ if(!submenu_set)
+ {
+//  console.log("initializing submenu");
+  submenu_set=true;
+  if(submenu){setoption(navigator.nextElementSibling,submenu);}
+  else{setoption(navigator.nextElementSibling,Array.from(item.options).map(option => option.value)[0]);}
+  return;
+ }
+ if(navigator.value=='refresh')
+ {
+//  console.log("refresh");
+  menu_set=false;
+  submenu_set=false;
+  menu=prev;
+  submenu=prevsub;
+  setoption(navigator,menu);
+  return;
+ }
+ prev=navigator.value
+ prevsub=item.value;
+ display(prev,prevsub);
 }
 
-var activities_list=['None'];
-var remotes_list=['None'];
-var activities={};
-var remotes={};
 
 function refresh()
 {
- remotes_loaded=false;
- activities_loaded=false;
- var rev=Date.now();
-
- if(protocol=='file:')
- {
-  remotes_loaded=true;
-  activities_loaded=true;
-  create_navigator();
- }
- else
- {
-  fetch('remotes/remotes.js?rev='+rev)
-   .then(response => response.json()) // Parses the response body as JSON
-   .then(data => {
-     remotes_loaded=true;
-     if(data['remotes']){remotes=data['remotes'];}
-     create_navigator();
-   })
-   .catch(error => {
-     console.log('Error fetching JSON:', error); // Handle any errors
-     remotes_loaded=true;
-     create_navigator();
-   });
-  fetch('activities/activities.js?rev='+rev)
-   .then(response => response.json()) // Parses the response body as JSON
-   .then(data => {
-     activities_loaded=true;
-     if(data['activites']){remotes=data['activities'];}
-     create_navigator();
-   })
-   .catch(error => {
-     console.log('Error fetching JSON:', error); // Handle any errors
-     activities_loaded=true;
-     create_navigator();
-   });
-  }
+ load();
+ refresh_list('remotes');
+ refresh_list('displays');
+ refresh_list('activities');
+ refresh_list('macros');
+ refresh_list('modules');
+ create_navigator();
 }
 
-function update_lists()
-{
- remotes_list=Object.keys(remotes);
- if(remotes_list.length===0){remotes_list=['None'];}
- activities_list=Object.keys(activities);
- if(activities_list.length===0){activities_list=['None'];}
-// console.log(remotes_list);
-// console.log(activities_list);
-} 
+function refresh_list(item)
+{window[item+'_list']=Object.keys(window[item]);
+if(window[item+'_list'].length===0){window[item+'_list']=['None'];}
+}
 
 function create_navigator()
 {
- if(!remotes_loaded||!activities_loaded){return}
- update_lists();
  let navigator=document.getElementById("navigator");
+ if(navigator){navigator.remove};
  let edits=['Activites','Macros','Modules','Displays'];
  let navigate={'select':{'Activities':activities_list,'Remotes':remotes_list,'Edit':edits,'refresh':['None']},id:'navigator',onchange:'nav()'};
  let elem=createElement(navigate);
- if(navigator){navigator.remove};
  navigator_location.appendChild(elem);
- console.log('prev:'+prev);
- navigator=document.getElementById("navigator");
- if(menu!=null)
- {navigator.selectedIndex=Array.from(navigator.options).map(option => option.value).indexOf(menu);
-  navigator.dispatchEvent(new Event('change'));
- }
- if(submenu!=null)
- {
-  const item=navigator.nextElementSibling;
-  item.selectedIndex=Array.from(item.options).map(option => option.value).indexOf(submenu);
- }
  nav();
 }
 

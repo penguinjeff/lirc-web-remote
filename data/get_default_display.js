@@ -1,0 +1,12 @@
+function get_default_display()
+{
+	return	{
+	"modules":[[["remotename",0]],
+	           [["power",0]],[["catchall",0]],
+			   [["common",0]],
+			   [["colors",0]],
+			   [["volume",0],["directions",0],["channels",0]],
+			   [["navigatorpads",0],["navigator",0],["navigatorpads",0]],
+			   [["numberpads"],["numbers",0],["numberpads"]]]
+			};
+}
