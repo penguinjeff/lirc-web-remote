@@ -32,18 +32,19 @@ function activity_display(activity)
  var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
  const {remotes,display}=activity;
  console.log('display');
-// console.log(default_modules_list);
-// console.log(remotes);
+ // console.log(default_modules_list);
+ // console.log(remotes);
  
  for(let x=0;x<remotes.length;x++)
  {
-//  console.log('adding remote '+x);
+  // console.log('adding remote '+x);
   activity_modules['remotes'].push({"default_modules":[],"modules":[]});
  }
  let module_rows=display['modules'];
+ let module_counter={}
  for(let x=0;x<module_rows.length;x++)
  {
-//  console.log(module_rows[x].length);
+  // console.log(module_rows[x].length);
   let module_row_location=createElement({'tag':'div'});
   for(let y=0;y<module_rows[x].length;y++)
   {
@@ -58,26 +59,34 @@ function activity_display(activity)
    else
    {
     module=module_rows[x][y][0];
+    if(!module_counter[module]){module_counter[module]=1;}else{module_counter[module]++;}
     if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==='number') && module_rows[x][y][1] < remotes.length)
     {
      location='remotes',location_index=module_rows[x][y][1];
      if(module_rows[x][y].length>2){module_options=module_rows[x][y][2];}
     }
- //   console.log(location+':'+location_index+':'+module);
+    // console.log(location+':'+location_index+':'+module);
     module_index=default_modules_list.indexOf(module);
     if(!(module_index===-1)){activity_modules[location][location_index]['default_modules'].push([module,module_options]);}
     module_index=modules_list.indexOf(module);
     if(!(module_index===-1)){activity_modules[location][location_index]['modules'].push([module,module_options]);}
    }
-   let module_location=createElement({'tag':'div','name':module+':'+location+':'+location_index});
-   //add module_location to row
+   let module_location=createElement({'tag':'div','id':module+':'+module_counter[module]+':'+location+':'+location_index);
+   // add module_location to row
    module_row_location.appendChild(module_location);
   }
   // add row to remote_location
   remote_location.appendChild(module_row_location);
  }
+ console.log(module_counter);
  console.log(activity_modules);
+ populate_modules(activity_modules)
 }
+
+function populate_modules(activity_modules)
+{
+}
+
 
 function display(item,subitem)
 {
@@ -89,17 +98,25 @@ function display(item,subitem)
  let activity={};
  switch(item)
  {case 'Remotes':
-  activity={remotes:[subitem],display:default_display};
+  {
+   activity={remotes:[subitem],display:default_display};
+  }
   break;
   case 'Activities':
-  activitiy=activities[subitem];
+  {
+   activitiy=activities[subitem];
+  }
   break;
   case 'Edit':
+  {
    edit(subitem);
    return;
+  }
   break;
   default:
-  console.log(item+' not known');
+  {
+   console.log(item+' not known');
+  }
  } 
  activity_display(activity);
 }
@@ -147,7 +164,7 @@ function nav()
  const navigator=document.getElementById("navigator");
  if(!menu_set)
  {
-//  console.log("initializing menu");
+  // console.log("initializing menu");
   menu_set=true;
   if(menu){setoption(navigator,menu);}
   else
@@ -160,7 +177,7 @@ function nav()
  const item=navigator.nextElementSibling;
  if(!submenu_set)
  {
-//  console.log("initializing submenu");
+  // console.log("initializing submenu");
   submenu_set=true;
   if(submenu){setoption(navigator.nextElementSibling,submenu);}
   else{setoption(navigator.nextElementSibling,Array.from(item.options).map(option => option.value)[0]);}
@@ -168,7 +185,7 @@ function nav()
  }
  if(navigator.value=='refresh')
  {
-//  console.log("refresh");
+  // console.log("refresh");
   menu_set=false;
   submenu_set=false;
   menu=prev;
