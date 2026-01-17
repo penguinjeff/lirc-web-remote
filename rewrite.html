@@ -18,7 +18,7 @@ var displays={};
 var activites={};
 var macros={};
 var modules={};
-var default_modules=get_default_modules;
+var default_modules=get_default_modules();
 
 function edit(item)
 {
@@ -28,10 +28,56 @@ function edit(item)
 
 function activity_display(activity)
 {
+ let remote_location=document.getElementById("remote_location");
+ var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
  const {remotes,display}=activity;
  console.log('display');
- console.log(remotes);
- console.log(display);
+// console.log(default_modules_list);
+// console.log(remotes);
+ 
+ for(let x=0;x<remotes.length;x++)
+ {
+//  console.log('adding remote '+x);
+  activity_modules['remotes'].push({"default_modules":[],"modules":[]});
+ }
+ let module_rows=display['modules'];
+ for(let x=0;x<module_rows.length;x++)
+ {
+//  console.log(module_rows[x].length);
+  var module_row_location=createElement({'tag':'div'});
+  let module='';
+  let location="other";
+  let location_index=0;
+  for(let y=0;y<module_rows[x].length;y++)
+  {
+   let module_index=-1
+   location="other";
+   location_index=0;
+   module='';
+   if(module_rows[x][y].length<1)
+   {module='None';
+   }
+   else
+   {
+    module=module_rows[x][y][0];
+    if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==='number') && module_rows[x][y][1] < remotes.length)
+    {
+     location='remotes',location_index=module_rows[x][y][1];
+    }
+ //   console.log(location+':'+location_index+':'+module);
+    module_index=default_modules_list.indexOf(module);
+    if(!(module_index===-1)){activity_modules[location][location_index]['default_modules'].push(module);}
+    module_index=modules_list.indexOf(module);
+    if(!(module_index===-1)){activity_modules[location][location_index]['modules'].push(module);}
+   }
+   let module_location=createElement({'tag':'div','name':module+':'+location+':'+location_index});
+   //add module_location to row
+   module_row_location.appendChild(module_location);
+  }
+  // add row to remote_location
+  remote_location.appendChild(module_row_location);
+ }
+ console.log(activity_modules);
 }
 
 function display(item,subitem)
@@ -66,6 +112,7 @@ var displays_list=['None'];
 var activities_list=['None'];
 var macros_list=['None'];
 var modules_list=['None'];
+var default_modules_list=['None'];
 
 var prev=-1;
 var prevsub=-1
@@ -94,6 +141,8 @@ var menu_set=false;
 var submenu_set=false;
 function nav()
 {
+ let remote_kocation=document.getElementById("remote_location");
+ remote_location.innerHTML=''; 
  console.log("count:"+(count++));
  if(preinit){preinit=false;console.log("Preinit");return;}
  const navigator=document.getElementById("navigator");
@@ -142,6 +191,7 @@ function refresh()
  refresh_list('activities');
  refresh_list('macros');
  refresh_list('modules');
+ refresh_list('default_modules');
  create_navigator();
 }
 
@@ -152,6 +202,7 @@ if(window[item+'_list'].length===0){window[item+'_list']=['None'];}
 
 function create_navigator()
 {
+ let navigator_location=document.getElementById("navigator_location");
  let navigator=document.getElementById("navigator");
  if(navigator){navigator.remove};
  let edits=['Activites','Macros','Modules','Displays'];
@@ -161,10 +212,12 @@ function create_navigator()
  nav();
 }
 
-var navigator_location=createElement({'tag':'div'});
+var navigator_location=createElement({'tag':'div','id':'navigator_location'});
+var remote_location=createElement({'tag':'div','id':'remote_location'});
 window.addEventListener('load', function () {
  var bodyElement = document.body;
  bodyElement.appendChild(navigator_location);
+ bodyElement.appendChild(remote_location);
  refresh()
 })
 

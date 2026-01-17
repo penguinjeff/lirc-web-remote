@@ -101,6 +101,18 @@ function get_default_modules()
 			"needed":[],
 			"skip":true
 		},
+		"numberpads":
+		{
+			"buttons":[],
+			"needed":[],
+			"skip":true
+		},
+		"navigatorpads":
+		{
+			"buttons":[],
+			"needed":[],
+			"skip":true
+		},
 		"catchall":
 		{
 			"buttons":"REST",
