@@ -44,16 +44,14 @@ function activity_display(activity)
  for(let x=0;x<module_rows.length;x++)
  {
 //  console.log(module_rows[x].length);
-  var module_row_location=createElement({'tag':'div'});
-  let module='';
-  let location="other";
-  let location_index=0;
+  let module_row_location=createElement({'tag':'div'});
   for(let y=0;y<module_rows[x].length;y++)
   {
    let module_index=-1
-   location="other";
-   location_index=0;
-   module='';
+   let location="other";
+   let location_index=0;
+   let module='';
+   let module_options={};
    if(module_rows[x][y].length<1)
    {module='None';
    }
@@ -63,12 +61,13 @@ function activity_display(activity)
     if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==='number') && module_rows[x][y][1] < remotes.length)
     {
      location='remotes',location_index=module_rows[x][y][1];
+     if(module_rows[x][y].length>2){module_options=module_rows[x][y][2];}
     }
  //   console.log(location+':'+location_index+':'+module);
     module_index=default_modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]['default_modules'].push(module);}
+    if(!(module_index===-1)){activity_modules[location][location_index]['default_modules'].push([module,module_options]);}
     module_index=modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]['modules'].push(module);}
+    if(!(module_index===-1)){activity_modules[location][location_index]['modules'].push([module,module_options]);}
    }
    let module_location=createElement({'tag':'div','name':module+':'+location+':'+location_index});
    //add module_location to row
