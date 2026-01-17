@@ -22,7 +22,7 @@ var default_modules=get_default_modules();
 
 function edit(item)
 {
- console.log('edit');
+ console.log("edit");
  console.log(item);
 }
 
@@ -30,84 +30,111 @@ function activity_display(activity)
 {
  let remote_location=document.getElementById("remote_location");
  var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
- const {remotes,display}=activity;
- console.log('display');
+ const {remotes:activity_remotes,display}=activity;
+ // console.log("display");
  // console.log(default_modules_list);
- // console.log(remotes);
  
- for(let x=0;x<remotes.length;x++)
+ for(let x=0;x<activity_remotes.length;x++)
  {
-  // console.log('adding remote '+x);
-  activity_modules['remotes'].push({"default_modules":[],"modules":[]});
+  // console.log("adding remote "+x);
+  activity_modules["remotes"].push({"default_modules":[],"modules":[]});
  }
- let module_rows=display['modules'];
+ let module_rows=display["modules"];
  let module_counter={}
  for(let x=0;x<module_rows.length;x++)
  {
   // console.log(module_rows[x].length);
-  let module_row_location=createElement({'tag':'div'});
+  let module_row_location=createElement({"tag":"div"});
   for(let y=0;y<module_rows[x].length;y++)
   {
    let module_index=-1
    let location="other";
    let location_index=0;
-   let module='';
+   let module="";
    let module_options={};
    if(module_rows[x][y].length<1)
-   {module='None';
+   {module="None";
    }
    else
    {
     module=module_rows[x][y][0];
     if(!module_counter[module]){module_counter[module]=1;}else{module_counter[module]++;}
-    if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==='number') && module_rows[x][y][1] < remotes.length)
+    if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==="number") && module_rows[x][y][1] < activity_remotes.length)
     {
-     location='remotes',location_index=module_rows[x][y][1];
+     location="remotes";
+     location_index=module_rows[x][y][1];
      if(module_rows[x][y].length>2){module_options=module_rows[x][y][2];}
     }
-    // console.log(location+':'+location_index+':'+module);
+    // console.log(location+":"+location_index+":"+module);
     module_index=default_modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]['default_modules'].push([module,module_options]);}
+    if(!(module_index===-1)){activity_modules[location][location_index]["default_modules"].push([module,module_options]);}
     module_index=modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]['modules'].push([module,module_options]);}
+    if(!(module_index===-1)){activity_modules[location][location_index]["modules"].push([module,module_options]);}
    }
-   let module_location=createElement({'tag':'div','id':module+':'+module_counter[module]+':'+location+':'+location_index);
+   let module_location=createElement({"tag":"div","id":module+":"+module_counter[module]+":"+location+":"+location_index});
    // add module_location to row
    module_row_location.appendChild(module_location);
   }
   // add row to remote_location
   remote_location.appendChild(module_row_location);
  }
- console.log(module_counter);
- console.log(activity_modules);
- populate_modules(activity_modules)
+ // console.log(module_counter);
+ populate_modules(activity_remotes,activity_modules);
 }
 
-function populate_modules(activity_modules)
+function populate_modules(activity_remotes,activity_modules)
 {
+ console.log(activity_modules);
+ for(let x=0;x<activity_remotes.length;x++)
+ {let remote_buttons=remotes[activity_remotes[x]];
+  let remote_button_usage={};
+  let catchall_instances=[];
+  // console.log(remote_buttons)
+  for(let y=0;y<remote_buttons.length;y++)
+  {remote_button_usage[remote_buttons[y]]=0;
+  }
+  console.log(remote_button_usage)
+  let remote_custom_modules=activity_modules["remotes"][x]["modules"];
+  for(let y=0;y<remote_custom_modules.length;y++)
+  {
+   let module=remote_custom_modules[y][0];
+   
+  }
+  let remote_default_modules=activity_modules["remotes"][x]["default_modules"];
+  for(let y=0;y<remote_default_modules.length;y++)
+  {
+   let module=remote_default_modules[y][0];
+   if(module==="catchall"){catchall_instances.push(y);continue;}
+
+  }
+  for(let y=0;y<catchall_instances.length;y++)
+  {let module_options=activity_modules["remotes"][x]["default_modules"][catchall_instances[y]];
+
+  }
+ }
 }
 
 
 function display(item,subitem)
 {
- console.log("item");
- console.log(item);
- if(subitem=='None'){return}
- console.log("subitem");
+ // console.log("item");
+ // console.log(item);
+ if(subitem=="None"){return}
+ // console.log("subitem");
  console.log(subitem);
  let activity={};
  switch(item)
- {case 'Remotes':
+ {case "Remotes":
   {
    activity={remotes:[subitem],display:default_display};
   }
   break;
-  case 'Activities':
+  case "Activities":
   {
    activitiy=activities[subitem];
   }
   break;
-  case 'Edit':
+  case "Edit":
   {
    edit(subitem);
    return;
@@ -115,52 +142,57 @@ function display(item,subitem)
   break;
   default:
   {
-   console.log(item+' not known');
+   console.log(item+" not known");
   }
  } 
  activity_display(activity);
 }
 
 
-
-var remotes_list=['None'];
-var displays_list=['None'];
-var activities_list=['None'];
-var macros_list=['None'];
-var modules_list=['None'];
-var default_modules_list=['None'];
+var remotes_list=["None"];
+var displays_list=["None"];
+var activities_list=["None"];
+var macros_list=["None"];
+var modules_list=["None"];
+var default_modules_list=["None"];
 
 var prev=-1;
 var prevsub=-1
 const protocol = window.location.protocol;
 //console.log(protocol);
-var menu='';
-var submenu='';
+var menu="";
+var submenu="";
 
 const url = new URL(window.location.href);
-menu = url.searchParams.get('menu');
-submenu = url.searchParams.get('submenu');
-ts = url.searchParams.get('ts');
-console.log('menu:'+menu);
-console.log('submenu:'+submenu);
+menu = url.searchParams.get("menu");
+submenu = url.searchParams.get("submenu");
+ts = url.searchParams.get("ts");
+// console.log("menu:"+menu);
+// console.log("submenu:"+submenu);
 
 function setoption(selectbox,requested_option_name)
-{let index=Array.from(selectbox.options).map(option => option.value).indexOf(requested_option_name);
+{
+ let index=Array.from(selectbox.options).map(option => option.value).indexOf(requested_option_name);
  if(index===-1){return;}
  selectbox.selectedIndex=index;
- selectbox.dispatchEvent(new Event('change'));
+ selectbox.dispatchEvent(new Event("change"));
 }
 
-var count=0;
+// var count=0;
 var preinit=true;
 var menu_set=false;
 var submenu_set=false;
 function nav()
 {
  let remote_kocation=document.getElementById("remote_location");
- remote_location.innerHTML=''; 
- console.log("count:"+(count++));
- if(preinit){preinit=false;console.log("Preinit");return;}
+ remote_location.innerHTML=""; 
+ // console.log("count:"+(count++));
+ if(preinit)
+ {
+  preinit=false;
+  // console.log("Preinit");
+  return;
+ }
  const navigator=document.getElementById("navigator");
  if(!menu_set)
  {
@@ -169,8 +201,8 @@ function nav()
   if(menu){setoption(navigator,menu);}
   else
   {
-   if(Object.keys(activities).length === 0){setoption(navigator,'Remotes');}
-   else{setoption(navigator,'Activities');}
+   if(Object.keys(activities).length === 0){setoption(navigator,"Remotes");}
+   else{setoption(navigator,"Activities");}
   }
   return;
  }
@@ -183,7 +215,7 @@ function nav()
   else{setoption(navigator.nextElementSibling,Array.from(item.options).map(option => option.value)[0]);}
   return;
  }
- if(navigator.value=='refresh')
+ if(navigator.value=="refresh")
  {
   // console.log("refresh");
   menu_set=false;
@@ -202,18 +234,18 @@ function nav()
 function refresh()
 {
  load();
- refresh_list('remotes');
- refresh_list('displays');
- refresh_list('activities');
- refresh_list('macros');
- refresh_list('modules');
- refresh_list('default_modules');
+ refresh_list("remotes");
+ refresh_list("displays");
+ refresh_list("activities");
+ refresh_list("macros");
+ refresh_list("modules");
+ refresh_list("default_modules");
  create_navigator();
 }
 
 function refresh_list(item)
-{window[item+'_list']=Object.keys(window[item]);
-if(window[item+'_list'].length===0){window[item+'_list']=['None'];}
+{window[item+"_list"]=Object.keys(window[item]);
+if(window[item+"_list"].length===0){window[item+"_list"]=["None"];}
 }
 
 function create_navigator()
@@ -221,23 +253,23 @@ function create_navigator()
  let navigator_location=document.getElementById("navigator_location");
  let navigator=document.getElementById("navigator");
  if(navigator){navigator.remove};
- let edits=['Activites','Macros','Modules','Displays'];
- let navigate={'select':{'Activities':activities_list,'Remotes':remotes_list,'Edit':edits,'refresh':['None']},id:'navigator',onchange:'nav()'};
+ let edits=["Activites","Macros","Modules","Displays"];
+ let navigate={"select":{"Activities":activities_list,"Remotes":remotes_list,"Edit":edits,"refresh":["None"]},id:"navigator",onchange:"nav()"};
  let elem=createElement(navigate);
  navigator_location.appendChild(elem);
  nav();
 }
 
-var navigator_location=createElement({'tag':'div','id':'navigator_location'});
-var remote_location=createElement({'tag':'div','id':'remote_location'});
-window.addEventListener('load', function () {
+var navigator_location=createElement({"tag":"div","id":"navigator_location"});
+var remote_location=createElement({"tag":"div","id":"remote_location"});
+window.addEventListener("load", function () {
  var bodyElement = document.body;
  bodyElement.appendChild(navigator_location);
  bodyElement.appendChild(remote_location);
  refresh()
 })
 
-	</script>
+</script>
 </head>
 <body>
 </body>

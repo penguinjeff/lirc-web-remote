@@ -22,7 +22,7 @@ function download(filename, data, mimeType = 'text/plain') {
 function item_save(item)
 {
  var text='function get_'+item+'(){return '+JSON.stringify(window[item])+';}';
- console.log(text);
+ // console.log(text);
  download('get_'+item+'.js',text);
 }
 
@@ -37,13 +37,13 @@ function save()
 
 function refresh_item(tag)
 {
- console.log(tag+':');
+ // console.log(tag+':');
  var item=document.getElementById(tag);
  item.remove;
 
  document.head.appendChild(createElement({'tag':'script','src':'data/get_'+tag+'.js?ts'+Date.now()}));
  var items=window['get_'+tag]();
- console.log(items);
+ // console.log(items);
  return items;
 }
 

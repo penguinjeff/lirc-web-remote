@@ -28,22 +28,33 @@ function get_default_modules()
 		{
 			"buttons":
 			[
-				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#9654;","ircode","KEY_PLAY"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
 				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
-				[["&amp;#x23FA;","ircode","KEY_RECORD"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23F9;","ircode","KEY_STOP"]]
+				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
-			"needed":["KEY_PLAY","KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PREVIOUS","KEY_NEXT","KEY_PAUSE"],
+			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PREVIOUS","KEY_NEXT"],
 			"skip":false
 		},
 		"navigator2":
 		{
 			"buttons":
 			[
-				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
+				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAY"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
-			"needed":["KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PAUSE"],
+			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PREVIOUS","KEY_NEXT"],
+			"skip":false
+		},
+		"navigator3":
+		{
+			"buttons":
+			[
+				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23b6;","ircode","KEY_PLAY"],["&amp;#x23f8;","ircode","KEY_PAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ed;","ircode","KEY_NEXT"]],
+				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23f9;","ircode","KEY_STOP"]]
+			],
+			"needed":["KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"skip":true
 		},
 		"channels":

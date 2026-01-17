@@ -45,7 +45,7 @@ function select(item)
   parent.appendChild(newselect);
 //  select(parent.lastChild);
  }
- console.log('custom_onchange:'+custom_onchange);
+ // console.log('custom_onchange:'+custom_onchange);
  if(custom_onchange)
  {
   setTimeout(custom_onchange, 0);
