@@ -2,7 +2,7 @@ function get_default_display()
 {
 	return	{
 	"modules":[[["remotename",0]],
-	           [["power",0]],[["catchall",0,{'buttons_columns':5,'buttons_rows':3,'all':'unused'}]],
+	           [["power",0]],[["catchall",0,{'buttons_columns':5,'buttons_rows':3,'alldef':'unused'}]],
 			   [["common",0]],
 			   [["colors",0]],
 			   [["volume",0],["directions",0],["channels",0]],

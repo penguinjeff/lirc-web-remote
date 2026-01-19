@@ -32,7 +32,7 @@ function get_default_modules()
 				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
-			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PREVIOUS","KEY_NEXT"],
+			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"skip":false
 		},
 		"navigator2":
@@ -43,7 +43,7 @@ function get_default_modules()
 				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
-			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD","KEY_PREVIOUS","KEY_NEXT"],
+			"needed":["KEY_PLAY","KEY_PAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"skip":false
 		},
 		"navigator3":

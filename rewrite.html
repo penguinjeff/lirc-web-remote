@@ -29,7 +29,7 @@ function edit(item)
 function activity_display(activity)
 {
  let remote_location=document.getElementById("remote_location");
- var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
+ var activity_modules={"remotes":[],"other":[{"default_modules":[],"default_modules_ids":[],"modules":[],"modules_ids":[]}]};
  const {remotes:activity_remotes,display}=activity;
  // console.log("display");
  // console.log(default_modules_list);
@@ -37,7 +37,7 @@ function activity_display(activity)
  for(let x=0;x<activity_remotes.length;x++)
  {
   // console.log("adding remote "+x);
-  activity_modules["remotes"].push({"default_modules":[],"modules":[]});
+  activity_modules["remotes"].push({"default_modules":[],"default_modules_ids":[],"modules":[],"modules_ids":[]});
  }
  let module_rows=display["modules"];
  let module_counter={}
@@ -52,6 +52,7 @@ function activity_display(activity)
    let location_index=0;
    let module="";
    let module_options={};
+   let module_type="other"
    if(module_rows[x][y].length<1)
    {module="None";
    }
@@ -67,11 +68,18 @@ function activity_display(activity)
     }
     // console.log(location+":"+location_index+":"+module);
     module_index=default_modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]["default_modules"].push([module,module_options]);}
+    if(!(module_index===-1)){module_type="default_modules";}
     module_index=modules_list.indexOf(module);
-    if(!(module_index===-1)){activity_modules[location][location_index]["modules"].push([module,module_options]);}
+    if(!(module_index===-1)){module_type="modules";}
    }
-   let module_location=createElement({"tag":"div","id":module+":"+module_counter[module]+":"+location+":"+location_index});
+   let idtag=module+":"+module_counter[module]+":"+location+":"+location_index;
+   if(module_type==="default_modules"||module_type==="modules")
+   {
+    activity_modules[location][location_index][module_type].push([module,module_options]);
+    activity_modules[location][location_index][module_type+"_ids"].push(idtag)
+   }
+   activity_modules[location][location_index]["default_modules"]
+   let module_location=createElement({"tag":"div","id":idtag});
    // add module_location to row
    module_row_location.appendChild(module_location);
   }
@@ -84,36 +92,92 @@ function activity_display(activity)
 
 function populate_modules(activity_remotes,activity_modules)
 {
+ let location='custom';
  console.log(activity_modules);
  for(let x=0;x<activity_remotes.length;x++)
- {let remote_buttons=remotes[activity_remotes[x]];
-  let remote_button_usage={};
+ {
+  let remote_buttons=remotes[activity_remotes[x]];
   let catchall_instances=[];
   // console.log(remote_buttons)
-  for(let y=0;y<remote_buttons.length;y++)
-  {remote_button_usage[remote_buttons[y]]=0;
-  }
-  console.log(remote_button_usage)
   let remote_custom_modules=activity_modules["remotes"][x]["modules"];
+  let remote_custom_modules_ids=activity_modules["remotes"][x]["modules_ids"];
+  let used_buttons=[];
   for(let y=0;y<remote_custom_modules.length;y++)
   {
    let module=remote_custom_modules[y][0];
-   
+   let idtag=remote_custom_modules_ids[y][0];
+   used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,modules))];
   }
   let remote_default_modules=activity_modules["remotes"][x]["default_modules"];
+  let remote_default_modules_ids=activity_modules["remotes"][x]["default_modules_ids"];
   for(let y=0;y<remote_default_modules.length;y++)
   {
    let module=remote_default_modules[y][0];
+   let idtag=remote_default_modules_ids[y][0];
    if(module==="catchall"){catchall_instances.push(y);continue;}
-
+   used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,default_modules))];
   }
   for(let y=0;y<catchall_instances.length;y++)
-  {let module_options=activity_modules["remotes"][x]["default_modules"][catchall_instances[y]];
-
+  {
+   let module_options=activity_modules["remotes"][x]["default_modules"][catchall_instances[y]];
+   let idtag=activity_modules["remotes"][x]["default_modules_ids"][catchall_instances[y]];
+   build_catchall(remote_buttons,used_buttons,idtag,module_options)
+  }
+ }
+ module_types=["modules","default_modules"];
+ for(let y=0;y<module_types.length;y++)
+ {
+  for(let z=0;z<activity_modules["other"][0]["modules"].length;z++)
+  {
+   //function build_module(remote_buttons,module,idtag,modules_obj)
+   let module=activity_modules["other"][0][module_types[y]][z];
+   let idtag=activity_modules["other"][0][module_types[y]+"_ids"][z];
+   build_module([],module,idtag,modules);
   }
  }
 }
 
+function build_catchall(remote_buttons,used_buttons,idtag,module_options)
+{
+ if(used_buttons.length>0)
+ {
+  let unused_buttons=remote_buttons;
+  for(let x=0;x<used_buttons.length;x++)
+  {unused_buttons.splice(unused_buttons.indexOf(used_buttons[x]),1);
+  }
+  build_catchall(unused_buttons,[],idtag,module_options);
+  return;
+ }
+ let remote_buttons_obj={};
+ let {buttons_columns,buttons_rows,alldef}=module_options;
+ for(let x=0;x<remote_buttons.length;x++)
+ {
+  let remote_buttons_name=remote_buttons[x].replace(/^KEY_/i, '').replace(/^BTN_/i, '');
+  remote_buttons_obj[remote_buttons_name]=remote_buttons[x];
+ }
+
+ let name_list=Object.keys(remote_buttons_obj);
+ let sorted=name_list.sort();
+ for(let x=0;x<sorted.length;x++)
+ {
+ }
+ 
+
+}
+
+function build_module(remote_buttons,module,idtag,modules_obj)
+{
+ let has_needed=false;
+ let used_buttons=[];
+ if(!modules_obj[module]||!modules_obj[module]['needed']){return [];}
+ let needed=modules_obj[module]['needed'];
+ for(;has_needed<needed.length;has_needed++)
+ {
+  if(remote_buttons.indexOf([needed[has_needed]]) != -1){return [];}
+ }
+ 
+ return used_buttons;
+}
 
 function display(item,subitem)
 {
