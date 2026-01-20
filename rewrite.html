@@ -29,23 +29,20 @@ function edit(item)
 function activity_display(activity)
 {
  let remote_location=document.getElementById("remote_location");
- var activity_modules={"remotes":[],"other":[{"default_modules":[],"default_modules_ids":[],"modules":[],"modules_ids":[]}]};
+ var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
  const {remotes:activity_remotes,display}=activity;
  // console.log("display");
  // console.log(default_modules_list);
- 
- for(let x=0;x<activity_remotes.length;x++)
+ for(const remote of activity_remotes)
  {
-  // console.log("adding remote "+x);
-  activity_modules["remotes"].push({"default_modules":[],"default_modules_ids":[],"modules":[],"modules_ids":[]});
+  activity_modules["remotes"][remote]={"default_modules":[],"modules":[]};
  }
  let module_rows=display["modules"];
  let module_counter={}
- for(let x=0;x<module_rows.length;x++)
+ for(const module_column of module_rows)
  {
-  // console.log(module_rows[x].length);
   let module_row_location=createElement({"tag":"div"});
-  for(let y=0;y<module_rows[x].length;y++)
+  for(const module_item of module_column)
   {
    let module_index=-1
    let location="other";
@@ -53,18 +50,18 @@ function activity_display(activity)
    let module="";
    let module_options={};
    let module_type="other"
-   if(module_rows[x][y].length<1)
+   if(module_item.length<1)
    {module="None";
    }
    else
    {
-    module=module_rows[x][y][0];
+    module=module_item[0];
     if(!module_counter[module]){module_counter[module]=1;}else{module_counter[module]++;}
-    if(module_rows[x][y].length>1 && typeof(module_rows[x][y][1]==="number") && module_rows[x][y][1] < activity_remotes.length)
+    if(module_item.length>1 && typeof(module_item[1]==="number") && module_item[1] < activity_remotes.length)
     {
      location="remotes";
-     location_index=module_rows[x][y][1];
-     if(module_rows[x][y].length>2){module_options=module_rows[x][y][2];}
+     location_index=activity_remotes[module_item[1]];
+     if(module_item.length>2){module_options=module_item[2];}
     }
     // console.log(location+":"+location_index+":"+module);
     module_index=default_modules_list.indexOf(module);
@@ -75,8 +72,7 @@ function activity_display(activity)
    let idtag=module+":"+module_counter[module]+":"+location+":"+location_index;
    if(module_type==="default_modules"||module_type==="modules")
    {
-    activity_modules[location][location_index][module_type].push([module,module_options]);
-    activity_modules[location][location_index][module_type+"_ids"].push(idtag)
+    activity_modules[location][location_index][module_type].push([module,idtag,module_options]);
    }
    activity_modules[location][location_index]["default_modules"]
    let module_location=createElement({"tag":"div","id":idtag});
@@ -94,44 +90,42 @@ function populate_modules(activity_remotes,activity_modules)
 {
  let location='custom';
  console.log(activity_modules);
- for(let x=0;x<activity_remotes.length;x++)
+ for(const remote of activity_remotes)
  {
-  let remote_buttons=remotes[activity_remotes[x]];
+  let remote_buttons=remotes[remote];
   let catchall_instances=[];
   // console.log(remote_buttons)
-  let remote_custom_modules=activity_modules["remotes"][x]["modules"];
-  let remote_custom_modules_ids=activity_modules["remotes"][x]["modules_ids"];
+  let remote_custom_modules=activity_modules["remotes"][remote]["modules"];
   let used_buttons=[];
-  for(let y=0;y<remote_custom_modules.length;y++)
+  for(const remote_custom_module of remote_custom_modules)
   {
-   let module=remote_custom_modules[y][0];
-   let idtag=remote_custom_modules_ids[y][0];
+   let module=remote_custom_module[0];
+   let idtag=remote_custom_module[1];
    used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,modules))];
   }
-  let remote_default_modules=activity_modules["remotes"][x]["default_modules"];
-  let remote_default_modules_ids=activity_modules["remotes"][x]["default_modules_ids"];
-  for(let y=0;y<remote_default_modules.length;y++)
+  let remote_default_modules=activity_modules["remotes"][remote]["default_modules"];
+  for(const remote_default_module of remote_default_modules)
   {
-   let module=remote_default_modules[y][0];
-   let idtag=remote_default_modules_ids[y][0];
-   if(module==="catchall"){catchall_instances.push(y);continue;}
+   let module=remote_default_module[0];
+   let idtag=remote_default_module[1];
+   if(module==="catchall"){catchall_instances.push([...remote_default_module]);continue;}
    used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,default_modules))];
   }
-  for(let y=0;y<catchall_instances.length;y++)
+  for(const catchall_instance of catchall_instances)
   {
-   let module_options=activity_modules["remotes"][x]["default_modules"][catchall_instances[y]];
-   let idtag=activity_modules["remotes"][x]["default_modules_ids"][catchall_instances[y]];
+   let module_options=catchall_instance[2];
+   let idtag=catchall_instance[1];
    build_catchall(remote_buttons,used_buttons,idtag,module_options)
   }
  }
  module_types=["modules","default_modules"];
- for(let y=0;y<module_types.length;y++)
+ for(const module_type of module_types)
  {
-  for(let z=0;z<activity_modules["other"][0]["modules"].length;z++)
+  for(const activity_module of activity_modules["other"][0]["modules"])
   {
    //function build_module(remote_buttons,module,idtag,modules_obj)
-   let module=activity_modules["other"][0][module_types[y]][z];
-   let idtag=activity_modules["other"][0][module_types[y]+"_ids"][z];
+   let module=activity_module[0];
+   let idtag=activity_module[1];
    build_module([],module,idtag,modules);
   }
  }
@@ -141,40 +135,38 @@ function build_catchall(remote_buttons,used_buttons,idtag,module_options)
 {
  if(used_buttons.length>0)
  {
-  let unused_buttons=remote_buttons;
-  for(let x=0;x<used_buttons.length;x++)
-  {unused_buttons.splice(unused_buttons.indexOf(used_buttons[x]),1);
-  }
-  build_catchall(unused_buttons,[],idtag,module_options);
+  build_catchall(
+   //remove all used buttons from what we send to make it easier
+   remote_buttons.filter(item => !used_buttons.includes(item)),
+   [],
+   idtag,
+   module_options);
   return;
  }
  let remote_buttons_obj={};
  let {buttons_columns,buttons_rows,alldef}=module_options;
- for(let x=0;x<remote_buttons.length;x++)
+ for(const button of remote_buttons)
  {
-  let remote_buttons_name=remote_buttons[x].replace(/^KEY_/i, '').replace(/^BTN_/i, '');
-  remote_buttons_obj[remote_buttons_name]=remote_buttons[x];
+  let remote_buttons_name=button.replace(/^KEY_/i, '').replace(/^BTN_/i, '');
+  remote_buttons_obj[remote_buttons_name]=button;
  }
 
  let name_list=Object.keys(remote_buttons_obj);
  let sorted=name_list.sort();
- for(let x=0;x<sorted.length;x++)
+ for(const button_name of sorted)
  {
  }
  
 
 }
 
-function build_module(remote_buttons,module,idtag,modules_obj)
+function build_module(remote_buttons,module_name,idtag,modules_obj)
 {
  let has_needed=false;
  let used_buttons=[];
- if(!modules_obj[module]||!modules_obj[module]['needed']){return [];}
- let needed=modules_obj[module]['needed'];
- for(;has_needed<needed.length;has_needed++)
- {
-  if(remote_buttons.indexOf([needed[has_needed]]) != -1){return [];}
- }
+ let module=modules_obj[module_name];
+ if(!module||!module['needed']){return [];}
+ if(!module['needed'].every(item => remote_buttons.includes(item))){return [];}
  
  return used_buttons;
 }
