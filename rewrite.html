@@ -147,14 +147,19 @@ function build_catchall(remote_buttons,used_buttons,idtag,module_options)
  let {buttons_columns,buttons_rows,alldef}=module_options;
  for(const button of remote_buttons)
  {
-  let remote_buttons_name=button.replace(/^KEY_/i, '').replace(/^BTN_/i, '');
+  let remote_buttons_name=button.replace(new RegExp("^KEY_","i"), "").replace(new RegExp("^BTN_","i"), "");
   remote_buttons_obj[remote_buttons_name]=button;
  }
 
  let name_list=Object.keys(remote_buttons_obj);
  let sorted=name_list.sort();
+ const multiple_of_rows=Math.ceil(sorted.length/buttons_rows)*buttons_rows;
+ const padding=multiple_of_rows-sorted.length;
+ sorted=sorted.concat(Array(padding).fill(""));
  for(const button_name of sorted)
  {
+  if(button_name===""){continue;}
+  
  }
  
 
