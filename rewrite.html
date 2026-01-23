@@ -172,9 +172,11 @@ function display_catchall(idtag,instance,index)
  const multiple_of_rows=Math.ceil(sorted.length/rows)*rows;
  const padding=multiple_of_rows-sorted.length;
  sorted=sorted.concat(Array(padding).fill(""));
+ console.log("index:"+index)
  if(sorted.length<=(rows*columns)){index=0}
- if(index<0){index=(sorted.length/rows)-1;}
+ if(index<0){index=((sorted.length/rows)-1);}
  if(index+1>(sorted.length/rows)){index=0;}
+ console.log("index:"+index)
  let itemrows=[];
  const start_index=index;
  for(let y=0;y<rows+1;y++)
@@ -183,17 +185,14 @@ function display_catchall(idtag,instance,index)
  }
  for(let x=0;x<columns;x++)
  {
-  if(index*rows<sorted.length)
+  for(let y=0;y<rows;y++)
   {
-   for(let y=0;y<rows;y++)
-   {
     let button_name=sorted[(index*rows+y)];
  //   console.log("button:"+button_name);
-    itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
-   }
+   itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
   }
   index++;
-  if(index>(sorted.length/rows)){index=0;}
+  if(index+1>(sorted.length/rows)){index=0;}
   console.log("index:"+index);
  }
  if(sorted.length>(rows*columns))
@@ -206,6 +205,7 @@ function display_catchall(idtag,instance,index)
  }
  const base=document.getElementById(idtag);
  base.innerHTML="";
+// for(itemrow of itemrows){itemrow.appendChild(createElement({"tag":"div","innerHTML":"<br>"}));}
  for(itemrow of itemrows){base.appendChild(itemrow);}
 }
 
