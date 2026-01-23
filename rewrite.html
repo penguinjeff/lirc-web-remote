@@ -173,8 +173,8 @@ function display_catchall(idtag,instance,index)
  const padding=multiple_of_rows-sorted.length;
  sorted=sorted.concat(Array(padding).fill(""));
  if(sorted.length<=(rows*columns)){index=0}
- if(index<0){index=(sorted.length/rows)-columns;}
- if(index>(sorted.length/rows)){index=0;}
+ if(index<0){index=(sorted.length/rows)-1;}
+ if(index+1>(sorted.length/rows)){index=0;}
  let itemrows=[];
  const start_index=index;
  for(let y=0;y<rows+1;y++)
@@ -183,20 +183,23 @@ function display_catchall(idtag,instance,index)
  }
  for(let x=0;x<columns;x++)
  {
-  for(let y=0;y<rows;y++)
+  if(index*rows<sorted.length)
   {
-   let button_name=sorted[(index*rows+y)];
-   console.log("button:"+button_name);
-   itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
+   for(let y=0;y<rows;y++)
+   {
+    let button_name=sorted[(index*rows+y)];
+ //   console.log("button:"+button_name);
+    itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
+   }
   }
   index++;
-  if(index*rows+1>sorted.length){break;}
   if(index>(sorted.length/rows)){index=0;}
+  console.log("index:"+index);
  }
  if(sorted.length>(rows*columns))
  {
- console.log("rows:"+rows)
- console.log("rows:"+itemrows.length)
+// console.log("rows:"+rows)
+// console.log("rows:"+itemrows.length)
   itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index-1)+")","innerHTML":"&lt;"}));
   for(let y=0;y<columns-2;y++){itemrows[rows].appendChild(create_button(remote,"",""));}
   itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index+1)+")","innerHTML":"&gt;"}))
