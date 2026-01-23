@@ -101,7 +101,7 @@ function populate_modules(activity_remotes,activity_modules)
   {
    let module=remote_custom_module[0];
    let idtag=remote_custom_module[1];
-   used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,modules))];
+   used_buttons=[...new Set(...used_buttons, ...build_module(remote,remote_buttons,module,idtag,modules))];
   }
   let remote_default_modules=activity_modules["remotes"][remote]["default_modules"];
   for(const remote_default_module of remote_default_modules)
@@ -109,13 +109,13 @@ function populate_modules(activity_remotes,activity_modules)
    let module=remote_default_module[0];
    let idtag=remote_default_module[1];
    if(module==="catchall"){catchall_instances.push([...remote_default_module]);continue;}
-   used_buttons=[...new Set(...used_buttons, ...build_module(remote_buttons,module,idtag,default_modules))];
+   used_buttons=[...new Set(...used_buttons, ...build_module(remote,remote_buttons,module,idtag,default_modules))];
   }
   for(const catchall_instance of catchall_instances)
   {
    let module_options=catchall_instance[2];
    let idtag=catchall_instance[1];
-   build_catchall(remote_buttons,used_buttons,idtag,module_options)
+   build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
   }
  }
  module_types=["modules","default_modules"];
@@ -131,8 +131,12 @@ function populate_modules(activity_remotes,activity_modules)
  }
 }
 
-function build_catchall(remote_buttons,used_buttons,idtag,module_options)
+let catch_all_instances=[];
+
+function build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
 {
+ const i=catch_all_instances.length
+ catch_all_instances.push({});
  if(used_buttons.length>0)
  {
   build_catchall(
@@ -143,29 +147,78 @@ function build_catchall(remote_buttons,used_buttons,idtag,module_options)
    module_options);
   return;
  }
- let remote_buttons_obj={};
  let {buttons_columns,buttons_rows,alldef}=module_options;
+ catch_all_instances[i]["remote"]=remote;
+ catch_all_instances[i]["button_map"]={};
+ catch_all_instances[i]["rows"]=buttons_rows;
+ catch_all_instances[i]["columns"]=buttons_columns;
+ catch_all_instances[i]["button_map"][""]="";
  for(const button of remote_buttons)
  {
   let remote_buttons_name=button.replace(new RegExp("^KEY_","i"), "").replace(new RegExp("^BTN_","i"), "");
-  remote_buttons_obj[remote_buttons_name]=button;
+  catch_all_instances[i]["button_map"][remote_buttons_name]=button;
  }
-
- let name_list=Object.keys(remote_buttons_obj);
- let sorted=name_list.sort();
- const multiple_of_rows=Math.ceil(sorted.length/buttons_rows)*buttons_rows;
- const padding=multiple_of_rows-sorted.length;
- sorted=sorted.concat(Array(padding).fill(""));
- for(const button_name of sorted)
- {
-  if(button_name===""){continue;}
-  
- }
- 
-
+ display_catchall(idtag,i,0);
 }
 
-function build_module(remote_buttons,module_name,idtag,modules_obj)
+function display_catchall(idtag,instance,index)
+{
+ const {remote,rows,columns,button_map}=catch_all_instances[instance];
+ let name_list=Object.keys(button_map).splice(0,1);
+ let sorted=name_list.sort();
+ const multiple_of_rows=Math.ceil(sorted.length/rows)*rows;
+ const padding=multiple_of_rows-sorted.length;
+ sorted=sorted.concat(Array(padding).fill(""));
+ if(sorted.length<=(rows*columns)){index=0}
+ if(index<0){index=(sorted.length/rows)-1;}
+ if(index>(sorted.length/rows)){index=0;}
+ let itemrows=[];
+ for(let y=0;y<rows+1;y++)
+ {
+  itemrows.push(createElement({"tag":"div"}));
+ }
+ for(let x=0;x<columns;x++)
+ {
+  for(let y=0;y<rows;y++)
+  {
+   button_name=sorted[(index*rows+y)];
+   itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
+  }
+  index=index+1;
+  if(index>(sorted.length/rows)){index=0;}
+ }
+ if(sorted.length>(rows*columns))
+ {
+  itemrows[rows+1].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(index-1)+")","innerHTML":"<"}));
+  for(let y=0;y<columns-2;y++){itemrows[rows+1].appendChild(create_button(remote,"",""));}
+  itemrows[rows+1].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(index+1)+")","innerHTML":">"}))
+ }
+ const base=document.getElementById(idtag);
+ for(itemrow of itemrows){base.appendChild(itemrow);}
+}
+
+function create_button(remote,button_name,button)
+{
+ if(button_name==="")
+ {
+  return createElement({"tag":"div","class":"empty"});
+ }
+ const common="('"+remote+"','"+button+"',this.event)"
+ const presshold="presshold"+common;
+ const release="release"+common;
+ return createElement({"tag":"button","class":"button","onpointerdown":presshold,"onpointerup":release,"onpointerleave":release,"innerHTML":button_name});
+}
+
+function presshold(remote,button,event)
+{
+}
+
+function release(remote,button,event)
+{
+}
+
+
+function build_module(remote,remote_buttons,module_name,idtag,modules_obj)
 {
  let has_needed=false;
  let used_buttons=[];
