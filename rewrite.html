@@ -206,6 +206,13 @@ function display_catchall(idtag,instance,index)
  for(itemrow of itemrows){base.appendChild(itemrow);}
 }
 
+function decodeHtmlEntities(str)
+{
+ const tempElement = document.createElement('div');
+ tempElement.innerHTML = str;
+ return tempElement.textContent || tempElement.innerText;
+}
+
 function create_button(remote,button_name,button)
 {
  if(button_name==="")
