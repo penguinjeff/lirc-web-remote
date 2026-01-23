@@ -215,7 +215,7 @@ function create_button(remote,button_name,button)
  const common="('"+remote+"','"+button+"',this.event)"
  const presshold="presshold"+common;
  const release="release"+common;
- return createElement({"tag":"button","class":"button","onpointerdown":presshold,"onpointerup":release,"onpointerleave":release,"innerHTML":button_name});
+ return createElement({"tag":"button","class":"button","onpointerdown":presshold,"onpointerup":release,"onpointerleave":release,"innerHTML":decodeHtmlEntities(button_name)});
 }
 
 function presshold(remote,button,event)
