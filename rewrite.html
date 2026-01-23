@@ -28,10 +28,10 @@ function edit(item)
 
 function activity_display(activity)
 {
+ console.log("activity_display");
  let remote_location=document.getElementById("remote_location");
  var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
  const {remotes:activity_remotes,display}=activity;
- // console.log("display");
  // console.log(default_modules_list);
  for(const remote of activity_remotes)
  {
@@ -88,6 +88,7 @@ function activity_display(activity)
 
 function populate_modules(activity_remotes,activity_modules)
 {
+ console.log("populate_modules");
  let location='custom';
  console.log(activity_modules);
  for(const remote of activity_remotes)
@@ -135,6 +136,7 @@ let catch_all_instances=[];
 
 function build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
 {
+ console.log("build_catchall");
  const i=catch_all_instances.length
  catch_all_instances.push({});
  if(used_buttons.length>0)
@@ -163,16 +165,18 @@ function build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
 
 function display_catchall(idtag,instance,index)
 {
+ console.log("display_catchall");
  const {remote,rows,columns,button_map}=catch_all_instances[instance];
- let name_list=Object.keys(button_map).splice(0,1);
+ let name_list=Object.keys(button_map).splice(1);
  let sorted=name_list.sort();
  const multiple_of_rows=Math.ceil(sorted.length/rows)*rows;
  const padding=multiple_of_rows-sorted.length;
  sorted=sorted.concat(Array(padding).fill(""));
  if(sorted.length<=(rows*columns)){index=0}
- if(index<0){index=(sorted.length/rows)-1;}
+ if(index<0){index=(sorted.length/rows)-columns;}
  if(index>(sorted.length/rows)){index=0;}
  let itemrows=[];
+ const start_index=index;
  for(let y=0;y<rows+1;y++)
  {
   itemrows.push(createElement({"tag":"div"}));
@@ -181,19 +185,24 @@ function display_catchall(idtag,instance,index)
  {
   for(let y=0;y<rows;y++)
   {
-   button_name=sorted[(index*rows+y)];
+   let button_name=sorted[(index*rows+y)];
+   console.log("button:"+button_name);
    itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
   }
-  index=index+1;
+  index++;
+  if(index*rows+1>sorted.length){break;}
   if(index>(sorted.length/rows)){index=0;}
  }
  if(sorted.length>(rows*columns))
  {
-  itemrows[rows+1].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(index-1)+")","innerHTML":"<"}));
-  for(let y=0;y<columns-2;y++){itemrows[rows+1].appendChild(create_button(remote,"",""));}
-  itemrows[rows+1].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(index+1)+")","innerHTML":">"}))
+ console.log("rows:"+rows)
+ console.log("rows:"+itemrows.length)
+  itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index-1)+")","innerHTML":"&lt;"}));
+  for(let y=0;y<columns-2;y++){itemrows[rows].appendChild(create_button(remote,"",""));}
+  itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index+1)+")","innerHTML":"&gt;"}))
  }
  const base=document.getElementById(idtag);
+ base.innerHTML="";
  for(itemrow of itemrows){base.appendChild(itemrow);}
 }
 
