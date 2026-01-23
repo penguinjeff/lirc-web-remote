@@ -167,8 +167,8 @@ function display_catchall(idtag,instance,index)
 {
  console.log("display_catchall");
  const {remote,rows,columns,button_map}=catch_all_instances[instance];
- let name_list=Object.keys(button_map).splice(1);
- let sorted=name_list.sort();
+ let name_list=Object.keys(button_map);
+ let sorted=name_list.filter(str => str).sort();
  const multiple_of_rows=Math.ceil(sorted.length/rows)*rows;
  const padding=multiple_of_rows-sorted.length;
  sorted=sorted.concat(Array(padding).fill(""));
