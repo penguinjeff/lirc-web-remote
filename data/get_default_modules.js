@@ -29,7 +29,7 @@ function get_default_modules()
 			"buttons":
 			[
 				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
+				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
@@ -40,7 +40,7 @@ function get_default_modules()
 			"buttons":
 			[
 				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAY"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
+				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAY","KEY_PAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
