@@ -9,7 +9,7 @@
 <script id="activities" src="data/get_activities.js"></script>
 <script id="macros" src="data/get_macros.js"></script>
 <script id="modules" src="data/get_modules.js"></script>
-<script id="default_modules" src="data/get_default_modules.js?ts=0"></script>
+<script id="default_modules" src="data/get_default_modules.js?ts=2"></script>
 <script src="js/save_load_refresh.js"></script>
 <script>
 var remotes={};
@@ -32,12 +32,12 @@ function activity_display(activity)
  {
   function build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
   {
-   console.log("build_catchall");
    const i=catch_all_instances.length
    catch_all_instances.push({});
    if(used_buttons.length>0)
    {
     build_catchall(
+     remote,
      //remove all used buttons from what we send to make it easier
      remote_buttons.filter(item => !used_buttons.includes(item)),
      [],
@@ -45,11 +45,11 @@ function activity_display(activity)
      module_options);
     return;
    }
-   let {buttons_columns,buttons_rows,alldef}=module_options;
+   let {button_columns=5,button_rows=3,alldef="unused"}=module_options;
    catch_all_instances[i]["remote"]=remote;
    catch_all_instances[i]["button_map"]={};
-   catch_all_instances[i]["rows"]=buttons_rows;
-   catch_all_instances[i]["columns"]=buttons_columns;
+   catch_all_instances[i]["rows"]=button_rows;
+   catch_all_instances[i]["columns"]=button_columns;
    catch_all_instances[i]["button_map"][""]="";
    for(const button of remote_buttons)
    {
@@ -73,7 +73,7 @@ function activity_display(activity)
    {
     let module=remote_custom_module[0];
     let idtag=remote_custom_module[1];
-    used_buttons=[...new Set(...used_buttons, ...build_module(remote,remote_buttons,module,idtag,modules))];
+    used_buttons=[...used_buttons, ...build_module(remote,remote_buttons,module,idtag,modules)];
    }
    let remote_default_modules=activity_modules["remotes"][remote]["default_modules"];
    for(const remote_default_module of remote_default_modules)
@@ -81,8 +81,10 @@ function activity_display(activity)
     let module=remote_default_module[0];
     let idtag=remote_default_module[1];
     if(module==="catchall"){catchall_instances.push([...remote_default_module]);continue;}
-    used_buttons=[...new Set(...used_buttons, ...build_module(remote,remote_buttons,module,idtag,default_modules))];
+    used_buttons=[...used_buttons, ...build_module(remote,remote_buttons,module,idtag,default_modules)];
    }
+   // console.log("used_buttons:");
+   // console.log(used_buttons);
    for(const catchall_instance of catchall_instances)
    {
     let module_options=catchall_instance[2];
@@ -103,8 +105,8 @@ function activity_display(activity)
   }
  }
  //-----------internalizing function
- console.log("activity_display");
- let remote_location=document.getElementById("remote_location");
+ //console.log("activity_display");
+ let remote_location=createElement({"tag":"div","class":"container"});
  var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
  const {remotes:activity_remotes,display}=activity;
  // console.log(default_modules_list);
@@ -116,7 +118,7 @@ function activity_display(activity)
  let module_counter={}
  for(const module_column of module_rows)
  {
-  let module_row_location=createElement({"tag":"div"});
+  let module_row_location=createElement({"tag":"div","class":"container-1"});
   for(const module_item of module_column)
   {
    let module_index=-1
@@ -150,13 +152,28 @@ function activity_display(activity)
     activity_modules[location][location_index][module_type].push([module,idtag,module_options]);
    }
    activity_modules[location][location_index]["default_modules"]
-   let module_location=createElement({"tag":"div","id":idtag});
+   let theclass=module;
+   // console.log("module:"+module);
+   if(module_type==="default_modules")
+   {
+    theclass=default_modules[module]["class"];
+    //  console.log(default_modules[module])
+   }
+   if(module_type==="modules")
+   {
+    theclass=modules[module]["class"];
+    // console.log(modules[module])
+   }
+   let module_location=createElement({"tag":"div","id":idtag,"class":theclass});
    // add module_location to row
    module_row_location.appendChild(module_location);
   }
   // add row to remote_location
   remote_location.appendChild(module_row_location);
  }
+ let base=document.getElementById("remote_location");
+ base.innerHTML=""
+ base.appendChild(createElement({"tag":"div","class":"container"}).appendChild(remote_location))
  // console.log(module_counter);
  populate_modules(activity_remotes,activity_modules);
 }
@@ -179,10 +196,7 @@ function display_catchall(idtag,instance,index)
  const start_index=index;
 
  let itemrows=[];
- for(let y=0;y<rows+1;y++)
- {
-  itemrows.push(createElement({"tag":"div"}));
- }
+ Array.from({ "length": (rows+1) }, () => itemrows.push(createElement({"tag":"div","class":"container-2"})));
  for(let x=0;x<columns;x++)
  {
   for(let y=0;y<rows;y++)
@@ -192,7 +206,7 @@ function display_catchall(idtag,instance,index)
   }
   index++;
   if(index+1>(sorted.length/rows)){index=0;}
-  console.log("index:"+index);
+  // console.log("index:"+index);
  }
  if(sorted.length>(rows*columns))
  {
@@ -200,14 +214,15 @@ function display_catchall(idtag,instance,index)
   for(let y=0;y<columns-2;y++){itemrows[rows].appendChild(create_button(remote,"",""));}
   itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index+1)+")","innerHTML":"&gt;"}))
  }
+ let common=createElement({"tag":"div","class":"common"});
+ for(itemrow of itemrows){common.appendChild(itemrow);}
  const base=document.getElementById(idtag);
  base.innerHTML="";
-// for(itemrow of itemrows){itemrow.appendChild(createElement({"tag":"div","innerHTML":"<br>"}));}
- for(itemrow of itemrows){base.appendChild(itemrow);}
+ base.appendChild(common);
 }
 
 
-function create_button(remote,button_name,button)
+function create_button(remote="",button_name="",button="")
 {
  function decodeHtmlEntities(str)
  {
@@ -236,31 +251,74 @@ function release(remote,button,event)
 
 function build_module(remote,remote_buttons,module_name,idtag,modules_obj)
 {
- console.log("build_module for "+module_name);
+ // console.log("build_module for "+module_name);
  let has_needed=false;
  let used_buttons=[];
  let module=modules_obj[module_name];
- if(!module||!module['needed']){return [];}
+ if(!module||!module["needed"]){return [];}
+ 
  if(!module['needed'].every(item => remote_buttons.includes(item))){return [];}
- console.log(module);
+ // console.log(module);
  let itemrows=[];
- const base=document.getElementById(idtag);
+ let base=document.getElementById(idtag);
  base.innerHTML="";
+// let common=createElement({"tag":"div"})
  for(const row of module["buttons"])
  {
-  let itemrow=createElement({"tag":"div"});
+  let itemrow=createElement({"tag":"div","class":"container-2"});
   console.log("row:");
   for(const column of row)
   {
-   console.log("column:");
-   console.log(column);
-   itemrow.appendChild(createElement({"tag":"div"}));
+   // console.log("column:");
+   // console.log(column);
+   let button_name=column[0];
+   let button_type=column[1];
+   let type_item=column[2];
+   // console.log("remote_buttons:");
+   // console.log(remote_buttons);
+   switch(button_type)
+   {
+    case "ircode":
+     if(remote_buttons.indexOf(type_item)>-1)
+     {
+      used_buttons.push(type_item);
+      itemrow.appendChild(create_button(remote,button_name,type_item));
+     }
+     else
+     {
+      if(!module["skip"])
+      {
+       itemrow.appendChild(create_button());
+      }
+     }
+    break;
+    case "macro":
+     if(macros[type_item])
+     {
+      itemrow.appendChild(create_macro_button(type_item,button_name));
+     }
+     else
+     {
+      if(!module["skip"])
+      {
+       itemrow.appendChild(create_button());
+      }
+     }
+    break;
+   }
   }
   base.appendChild(itemrow)
  }
- 
+ // console.log("used_buttons:")
+ // console.log(used_buttons)
  return used_buttons;
 }
+
+function create_macro_button(macro,button_name)
+{
+
+}
+
 
 function display(item,subitem)
 {
@@ -417,7 +475,8 @@ window.addEventListener("load", function () {
 })
 
 </script>
+<link rel="stylesheet" href="/lirc-web-remote/css/remote_css.php?scale=1&amp;timestamp=1769216568">
 </head>
-<body>
+<body style="width:100%,height:100%">
 </body>
 </html>

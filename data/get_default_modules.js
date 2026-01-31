@@ -11,6 +11,7 @@ function get_default_modules()
 				[["-","ircode","KEY_MINUS"],["0","ircode","KEY_0"],["E","ircode","KEY_OK"]]
 			],
 			"needed":["KEY_1","KEY_2","KEY_3","KEY_4","KEY_5","KEY_6","KEY_7","KEY_8","KEY_9","KEY_0"],
+			"class":"numbers",
 			"skip":false
 		},
 		"directions":
@@ -22,39 +23,43 @@ function get_default_modules()
 				[[],["&amp;#9662;","ircode","KEY_DOWN"],[]]
 			],
 			"needed":["KEY_UP","KEY_DOWN","KEY_LEFT","KEY_RIGHT"],
+			"class":"directions",
 			"skip":false
 		},
 		"navigator":
 		{
 			"buttons":
 			[
-				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
 				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
+			"class":"navigator",
 			"skip":false
 		},
 		"navigator2":
 		{
 			"buttons":
 			[
-				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAY"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23f5;","ircode","KEY_PLAY"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
 				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAY","KEY_PAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
+			"class":"navigator",
 			"skip":false
 		},
 		"navigator3":
 		{
 			"buttons":
 			[
-				[["&amp;#x23EA;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23b6;","ircode","KEY_PLAY"],["&amp;#x23f8;","ircode","KEY_PAUSE"],["&amp;#x23E9;","ircode","KEY_FASTFORWARD"]],
+				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23b6;","ircode","KEY_PLAY"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
 				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ed;","ircode","KEY_NEXT"]],
 				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23f9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_FASTREWIND","KEY_FASTFORWARD"],
+			"class":"navigator",
 			"skip":true
 		},
 		"channels":
@@ -66,18 +71,20 @@ function get_default_modules()
 				[["Ch&amp;#x21BA;","ircode","KEY_CHANNELPREVIOUS"]]
 			],
 			"needed":["KEY_CHANNELUP","KEY_CHANNELDOWN"],
+			"class":"channels",
 			"skip":true
 		},
 		"volume":
 		{
 			"buttons":
 			[
-				[["&mp;#x1F50A;+","ircode","KEY_VOLUMEUP"]],
+				[["&amp;#x1F50A;+","ircode","KEY_VOLUMEUP"]],
 				[["&amp;#x1F50A;Vol"]],
 				[["&amp;#x1F50A;-","ircode","KEY_VOLUMEDOWN"]],
 				[["&amp;#x1F507;","ircode","KEY_MUTE"]]
 			],
 			"needed":["KEY_VOLUMEUP","KEY_VOLUMEDOWN"],
+			"class":"volume",
 			"skip":true
 		},
 		"common":
@@ -87,20 +94,23 @@ function get_default_modules()
 				[["Home","ircode","KEY_HOME"],["List","ircode","KEY_LIST"],["Exit","ircode","KEY_EXIT"],["Menu","ircode","KEY_MENU"],["Guide","ircode","KEY_GUIDE"],["Info","ircode","KEY_INFO"]]
 			],
 			"needed":[],
+			"class":"common",
 			"skip":true
+
 		},
 		"colors":
 		{
 			"buttons":
 			[
 				[
-					["&lt;font color=&quote;red&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_RED"],
-					["&lt;font color=&quote;green&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_GREEN"],
-					["&lt;font color=&quote;yellow&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_YELLOW"],
-					["&lt;font color=&quote;#0000FF&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_BLUE"]
+					["&lt;font color=&quot;red&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_RED"],
+					["&lt;font color=&quot;green&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_GREEN"],
+					["&lt;font color=&quot;yellow&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_YELLOW"],
+					["&lt;font color=&quot;#0000FF&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_BLUE"]
 				]
 			],
 			"needed":[],
+			"class":"colors",
 			"skip":true
 		},
 		"power":
@@ -110,24 +120,28 @@ function get_default_modules()
 				[["Power","ircode","KEY_POWER"],["On","ircode","KEY_POWERON"],["Off","ircode","KEY_POWEROFF"]]
 			],
 			"needed":[],
+			"class":"power",
 			"skip":true
 		},
 		"numberpads":
 		{
 			"buttons":[],
 			"needed":[],
+			"class":"numberpads",
 			"skip":true
 		},
 		"navigatorpads":
 		{
 			"buttons":[],
 			"needed":[],
+			"class":"navigatorpads",
 			"skip":true
 		},
 		"catchall":
 		{
 			"buttons":"REST",
 			"needed":[],
+			"class":"catchall",
 			"skip":false
 		}
 	};
