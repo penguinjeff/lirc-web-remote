@@ -197,14 +197,17 @@ function display_catchall(idtag,instance,index)
 
  let itemrows=[];
  Array.from({ "length": (rows+1) }, () => itemrows.push(createElement({"tag":"div","class":"container-2"})));
+ let z=0;
  for(let x=0;x<columns;x++)
  {
   for(let y=0;y<rows;y++)
   {
    let button_name=sorted[(index*rows+y)];
    itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
+   z++;
   }
   index++;
+  if(z>=sorted.length){break;}
   if(index+1>(sorted.length/rows)){index=0;}
   // console.log("index:"+index);
  }
@@ -234,19 +237,75 @@ function create_button(remote="",button_name="",button="")
  {
   return createElement({"tag":"div","class":"empty"});
  }
- const common="('"+remote+"','"+button+"',this.event)"
+ const common="('"+remote+"','"+button+"',this,event)"
  const presshold="presshold"+common;
  const release="release"+common;
  return createElement({"tag":"button","class":"button","onpointerdown":presshold,"onpointerup":release,"onpointerleave":release,"innerHTML":decodeHtmlEntities(button_name)});
 }
 
-function presshold(remote,button,event)
+let held=false;
+let lolding=false;
+let mousedown=false;
+let holdtimer=0;
+
+function presshold(remote,button,item,event)
 {
+ function hold(remote,button)
+ {
+  if(holding)
+  {
+   held=true
+   // loop an unreasonable amount of times 1000 is unreasonable and should be cut off long before reached
+   execute([[remote,button,0,1000]])
+   console.log("remote:"+remote+" button:"+button);
+  }
+ }
+ console.log(remote+"+"+button);
+ item.setAttribute('class','button_clicked')
+ mousedown=true;
+ holding=true;
+ held=false;
+ holdtimer=setTimeout(function(){hold(remote,button); }, 700);
+ navigator.vibrate(700);
+ console.log("remote:"+remote+" button:"+button);
+ execute([[remote,button,0,1]])
 }
 
-function release(remote,button,event)
+
+function execute(list)
 {
+  var id = Math.round(+new Date()/1000);
+  var reallist=[];
+  json='{"ircodes":'+JSON.stringify(list)+'}'
+  fetch('irsend_mult.php?'+'id='+id,{
+        method: 'POST',
+        headers: {
+                'Accept':'application/json',
+                'Content-Type':'application/x-www-form-urlencoded'
+        },
+        body:'json='+json,
+        signal: AbortSignal.timeout(5000)
+  });
+  return;
 }
+
+let altholdtimer=0;
+function release(remote,button,item,event)
+{
+ function delayed_release(item)
+ {item.setAttribute('class','button')
+ }
+ if(event && !event['button'])
+ {
+   holding=false;
+   clearTimeout(this.holdtimer);
+   if(held){execute([[]]);}
+   altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
+   mousedown=false;
+   held=false;
+ }
+}
+
 
 
 function build_module(remote,remote_buttons,module_name,idtag,modules_obj)

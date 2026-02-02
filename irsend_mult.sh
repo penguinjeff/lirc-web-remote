@@ -11,22 +11,21 @@
 #                                              V            V          V       V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
+return_value=""
+current=""
 if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
-        function realtime(){ echo $EPOCHREALTIME; }
+        function realtime(){ current=$EPOCHREALTIME; }
 else
-    	echo "using date"
-        function realtime(){ date +%s.%6N; }
+    	# echo "using date"
+        function realtime(){ current=$(date +%s.%6N); }
 fi
 
+ms_return_value=""
 microseconds() {
         #remove zero padding
-        rzp() {
-               	local number="${1#${1%%[!0]*}}";
-                [ -z $number ]&&number=0
-                echo $number
-        }
-	echo $(( (${2%%.*} - ${1%%.*})*1000000 +\
-                ($(rzp ${2##*.}) - $(rzp ${1##*.})) ));
+	ms1=${1##*.}
+	ms2=${2##*.}
+	ms_return_value=$(((${2%%.*} - ${1%%.*})*1000000)+(10#ms2 - 10#ms1)));
 }
 
 
@@ -38,7 +37,8 @@ errors="false"
 broke='false'
 #last time since we want to kill any existing ones when we end new ones.
 time_start_file=/tmp/${USER}_irsend_started_time.txt
-time_start=$(realtime)
+realtime
+time_start=${current};
 echo ${time_start} > ${time_start_file}
 
 
@@ -58,40 +58,42 @@ echo ${time_start} > ${time_start_file}
 #watch_startfile &
 #pid=$!
 
-function list
+function list()
 {
- location=$(dirname $0)
- remote_buttons() {
- while read remote; do
-  buttons=$(irsend list "${remote}" ''|awk '{print $2}'|sed 's/^/"/' | sed 's/$/",/'|sed -z 's/\n//g')
-  printf '"%s":[%s],' "${remote}" "${buttons::-4}" 
- done <<< "$(irsend list '' ''||printf '';)"
- }
- all_buttons=$(remote_buttons)
- printf '{"remotes":{%s}}' "${all_buttons::-1}" > ${location}/remotes/remotes.js
- printf 'function get_remotes(){ return {%s};}' "${all_buttons::-1}" > ${location}/remotes/get_remotes.js
- chmod g+w ${location}/remotes/*
+	location=$(dirname $0)
+	remote_buttons() {
+		while read remote; do
+			buttons=$(irsend list "${remote}" ''|awk '{print $2}'|sed 's/^/"/' | sed 's/$/",/'|sed -z 's/\n//g')
+			printf '"%s":[%s],' "${remote}" "${buttons::-4}" 
+		done <<< "$(irsend list '' ''||printf '';)"
+	}
+	all_buttons=$(remote_buttons)
+	printf '{"remotes":{%s}}' "${all_buttons::-1}" > ${location}/remotes/remotes.js
+	printf 'function get_remotes(){ return {%s};}' "${all_buttons::-1}" > ${location}/remotes/get_remotes.js
+	chmod g+w ${location}/remotes/*
 }
-
 
 function urlencode()
 {
- # urlencode <string>
- local length="${#1}"
- for (( i = 0; i < length; i++ )); do
-  local c="${1:i:1}"
-   case $c in
-    [a-zA-Z0-9.~_-]) printf "$c" ;;
-    *) printf '%%%02X' "'$c" ;;
-   esac
- done
+	# urlencode <string>
+	local length="${#1}"
+	return_value=""
+        local temp=""
+	for (( i = 0; i < length; i++ )); do
+		local c="${1:i:1}"
+		case $c in
+			[a-zA-Z0-9.~_-]) printf -v temp "$c" ;;
+			*) printf -v temp '%%%02X' "'$c" ;;
+		esac
+		return_value+=${temp}
+	done
 }
 
 function urldecode()
 {
- # urldecode <string>
- local url_encoded="${1//+/ }"
- printf '%b' "${url_encoded//%/\\x}"
+	# urldecode <string>
+	local url_encoded="${1//+/ }"
+	printf -v return_value '%b' "${url_encoded//%/\\x}"
 }
 
 sleepvar=0
@@ -101,105 +103,107 @@ sleepvar=0
 # example:
 # if sanatize="arg1=test"
 # "extract arg1" should return test
+sanatized=""
 function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
 function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
 function add2ran()
 {
- ran+=("$(jq -c -n \
-                  --argjson args "$(lines "$1\n$2")" \
-                  --arg delay "$3" \
-                  --arg loops "$4" \
-                  --argjson stderr "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
-                  '$ARGS.named' \
-             )")
- if [ "$(echo -e "$7" | grep -v "^$")" != "" ];then
-  errors="true from ran"
- fi
+	ran+=("$(jq -c -n \
+		--argjson args "$(lines "$1\n$2")" \
+		--arg delay "$3" \
+		--arg loops "$4" \
+		--argjson stderr "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
+		'$ARGS.named' \
+	     )")
+	[ "$(echo -e "$7" | grep -v "^$")" != "" ] && errors="true from ran"
 }
 
 function subrestart
 {
- local stdout=$(systemctl restart irsend_mult.sh);
- jq -n --arg stdout "$(urlencode "${stdout}")" '$ARGS.named'
+	local stdout=$(systemctl restart irsend_mult.sh);
+	urlencode "${stdout}"
+	jq -n --arg stdout "${return_value}" '$ARGS.named'
 }
 
-function subprocess()
-{
- irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false;
-}
+function subprocess() { irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false; }
 
 function process()
 {
- # echo "irsend \"send_once\" \"$1\" \"$2\""
- local both=$(subprocess $1 $2)
- [ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
+	# echo "irsend \"send_once\" \"$1\" \"$2\""
+	local both=$(subprocess $1 $2)
+	[ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
 }
-
-#get input from user and sanatize it.
-while read -t .01 line;do sanatized=$(echo "${line}" | \
-sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
- | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-[ "${sanatized:0:3}" != "GET " ] && break
-[ "${line}" = "" ] && break
-done
 
 declare -a ran
 
-json=$(extract json)
+main()
+{
+	#get input from user and sanatize it.
+	while read -t .01 line;do
+		sanatized=$(echo "${line}" | \
+			sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
+			| sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
+		[ "${sanatized:0:3}" != "GET " ] && break
+		[ "${line}" = "" ] && break
+	done
 
-#printf '%s' ${json} >> /tmp/irsend_mult-$(realtime).txt
+	json=$(extract json)
 
-#error checking if json is bad it will give check something otherwise it will be empty
-check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
+	#realtime
+	#printf '%s' ${json} >> /tmp/irsend_mult-${current}.txt
 
-if [ "$check" = "" ];then
-if [ "$(printf '%s' "${json}" | jq -Mc '.ircodes[]')" = "" ];then list; fi
-while read row; do
- if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-  broke="true";
-  break;
- fi
- count=$(echo "$row" | jq length)
- if [ "${count}" = "4" ];then
-#  echo "$(realtime) $row" >> /tmp/activity.txt
-  arg1=$(echo "$row" | jq -r '.[0]')
-  arg2=$(echo "$row" | jq -r '.[1]')
-  delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
-  loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
-#  echo "$(realtime) $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
-  if [ "${delay}" = "" ];then delay=0; fi
-  if [ "${loops}" = "" ];then loops=1; fi
-  while [ "${loops}" -gt "0" ];do
-   process "${arg1}" "${arg2}" "${delay}" "${loops}"
-   loops=$((${loops}-1))
-   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-    broke="true";break;
-   fi
-  done
-  start=$(realtime)
-  current=${start};
-  interval=0
-  while [ "$((delay-$(microseconds $start $current)))" -gt "0" ];do
-   if [ "$(cat ${time_start_file})" != "${time_start}" ];then
-    broke="true";break;
-   fi
-   sleep .0001
-   ((interval++))
-   current=$(realtime)
-   [ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
-  done
-  echo 0 > /tmp/${USER}_irsend_sleep
- fi
-done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
-else
- ran+=("$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')")
- errors="true bad json"
-fi
+	#error checking if json is bad it will give check something otherwise it will be empty
+	check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
 
+	[ "$check" != "" ] &&
+		ran+=("$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')") &&
+		errors="true bad json" &&
+		return 1;
+	[ "$(printf '%s' "${json}" | jq -Mc '.ircodes[]')" = "" ] && list && exit 0
+	while read row; do
+		[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+		count=$(echo "$row" | jq length)
+                [ "${count}" != "0" ] && break;
+		[ "${count}" != "4" ] && 
+			ran+=("$(jq -n --arg stderr "Wrong number of arguments" '$ARGS.named')") &&
+			errors="true bad json" &&
+			return 1;
+		#realtime
+		#  echo "${current} $row" >> /tmp/activity.txt
+		arg1=$(echo "$row" | jq -r '.[0]')
+		arg2=$(echo "$row" | jq -r '.[1]')
+		delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
+		loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
+		#realtime
+		#  echo "${current} $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
+		[ "${delay}" = "" ] && delay=0;
+		[ "${loops}" = "" ] && loops=1;
+		while [ "${loops}" -gt "0" ];do
+			process "${arg1}" "${arg2}" "${delay}" "${loops}"
+			loops=$((${loops}-1))
+   			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+		done
+		realtime
+		start=${current}
+		interval=0
+		microseconds $start $current
+		while [ "$((delay-${ms_return_value}))" -gt "0" ];do
+			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+			sleep .0001
+			((interval++))
+			realtime
+			microseconds $start $current
+			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
+		done
+		echo 0 > /tmp/${USER}_irsend_sleep
+	done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
+}
+
+main "$*"
 jq -n \
- --argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
- --arg broke "${broke}" \
- --arg errors "${errors}" \
- '$ARGS.named'
+	--argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
+	--arg broke "${broke}" \
+	--arg errors "${errors}" \
+	'$ARGS.named'

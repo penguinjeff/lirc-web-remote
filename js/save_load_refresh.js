@@ -39,7 +39,7 @@ function refresh_item(tag)
 {
  // console.log(tag+':');
  var item=document.getElementById(tag);
- item.remove;
+ if(item){item.remove};
 
  document.head.appendChild(createElement({'tag':'script','src':'data/get_'+tag+'.js?ts'+Date.now()}));
  var items=window['get_'+tag]();
