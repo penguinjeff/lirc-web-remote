@@ -12,33 +12,69 @@
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
 return_value=""
-current=""
+
+# realtime is just a function wrapper for $EPOCHREALTIME if you have a latter bash version
+# otherwise it uses date unfortunately it forks for date
+# if given a variable as an argument it avoids a fork layer.
+
+#this prevents mistakes for someone setting a varable EPOCHREALTIME
+#a system that implements this should have a diffent time for both
+#unless it is really really fast and in that case you are on your own
 if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
-        function realtime(){ current=$EPOCHREALTIME; }
+        function realtime(){
+                # if we are not given a variable to send to write to local retval
+                [ "$1" = "" ] && local retval=""
+                [ "$1" != "" ] && local -n retval="$1"
+                retval=$EPOCHREALTIME;
+                # if we are not given a variable to send to echo to screen
+                [ "$1" = "" ] && echo "$retval"
+        }
 else
-    	# echo "using date"
-        function realtime(){ current=$(date +%s.%6N); }
+        # echo "falling back and using date"
+        function realtime(){
+                # if we are not given a variable to send to write to local retval
+                [ "$1" = "" ] && local retval=""
+                [ "$1" != "" ] && local -n retval="$1"
+                retval=$(date +%s.%6N);
+                # if we are not given a variable to send to echo to screen
+                [ "$1" = "" ] && echo "$retval"
+        }
 fi
 
-ms_return_value=""
-microseconds() {
-        #remove zero padding
-	ms1=${1##*.}
-	ms2=${2##*.}
-	ms_return_value=$(((${2%%.*} - ${1%%.*})*1000000)+(10#ms2 - 10#ms1)));
+# microseconds is a function that calculates the difference between 2 times
+# given in $seconds.$nanosecond format to the nearest microsecond
+# only the fist time is nessicary if a second time is not given or
+# is an emtpty string (IE:"") it gets the current time as the
+# second time if you give a 3rd option of a variabe to put it in
+# you can eliminate a fork and it does not print to screen
+function microseconds() {
+        # if we are not given a variable write to local retval
+        [ "$3" = "" ] && local retval=""
+        [ "$3" != "" ] && local -n retval="$3"
+        local current="$2"
+        # if the second argument is blank get the current time to compare
+        [ "${current}" = "" ] && realtime current
+        # get the part after the decimal
+        local dec1="${1##*.}"
+        # get the part after the decimal
+        local dec2="${current##*.}"
+        # multiply the difference in sceonds times 1000000
+        # add the difference in micro seconds
+        retval=$(( (${current%%.*} - ${1%%.*})*1000000+(10#${dec2:0:6} - 10#${dec1:0:6})));
+        # if we are not given a variable echo to screen
+        [ "$3" = "" ] && echo "$retval"
 }
-
-
 
 
 printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
 
 broke='false'
+current=""
 #last time since we want to kill any existing ones when we end new ones.
 time_start_file=/tmp/${USER}_irsend_started_time.txt
-realtime
-time_start=${current};
+time_start=""
+realtime time_start
 echo ${time_start} > ${time_start_file}
 
 
@@ -77,7 +113,9 @@ function urlencode()
 {
 	# urlencode <string>
 	local length="${#1}"
-	return_value=""
+	[ "$2" = "" ] && local retval=""
+	[ "$2" != "" ] && local -n retval="$2"
+        retval=""
         local temp=""
 	for (( i = 0; i < length; i++ )); do
 		local c="${1:i:1}"
@@ -85,15 +123,19 @@ function urlencode()
 			[a-zA-Z0-9.~_-]) printf -v temp "$c" ;;
 			*) printf -v temp '%%%02X' "'$c" ;;
 		esac
-		return_value+=${temp}
+		retval+="${temp}"
 	done
+	[ "$2" = "" ] && echo "${retval}"
 }
 
 function urldecode()
 {
 	# urldecode <string>
+	[ "$2" = "" ] && local retval=""
+	[ "$2" != "" ] && local -n retval="$2"
 	local url_encoded="${1//+/ }"
-	printf -v return_value '%b' "${url_encoded//%/\\x}"
+	printf -v retval '%b' "${url_encoded//%/\\x}"
+	[ "$2" = "" ] && echo "${retval}"
 }
 
 sleepvar=0
@@ -123,7 +165,7 @@ function add2ran()
 function subrestart
 {
 	local stdout=$(systemctl restart irsend_mult.sh);
-	urlencode "${stdout}"
+	urlencode "${stdout}" return_value
 	jq -n --arg stdout "${return_value}" '$ARGS.named'
 }
 
@@ -151,7 +193,7 @@ main()
 
 	json=$(extract json)
 
-	#realtime
+	#realtime current
 	#printf '%s' ${json} >> /tmp/irsend_mult-${current}.txt
 
 	#error checking if json is bad it will give check something otherwise it will be empty
@@ -170,31 +212,31 @@ main()
 			ran+=("$(jq -n --arg stderr "Wrong number of arguments" '$ARGS.named')") &&
 			errors="true bad json" &&
 			return 1;
-		#realtime
+		#realtime current
 		#  echo "${current} $row" >> /tmp/activity.txt
 		arg1=$(echo "$row" | jq -r '.[0]')
 		arg2=$(echo "$row" | jq -r '.[1]')
 		delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
 		loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
-		#realtime
+		#realtime current
 		#  echo "${current} $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
 		[ "${delay}" = "" ] && delay=0;
 		[ "${loops}" = "" ] && loops=1;
 		while [ "${loops}" -gt "0" ];do
 			process "${arg1}" "${arg2}" "${delay}" "${loops}"
 			loops=$((${loops}-1))
-   			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 		done
-		realtime
-		start=${current}
+                local start=""
+		realtime start
 		interval=0
-		microseconds $start $current
+		microseconds $start "" ms_return_value
 		while [ "$((delay-${ms_return_value}))" -gt "0" ];do
 			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 			sleep .0001
 			((interval++))
-			realtime
-			microseconds $start $current
+			realtime current
+			microseconds $start $current ms_return_value
 			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
 		done
 		echo 0 > /tmp/${USER}_irsend_sleep
