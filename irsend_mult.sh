@@ -11,60 +11,15 @@
 #                                              V            V          V       V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
+location="${0%/*}"
+
 return_value=""
 
-# realtime is just a function wrapper for $EPOCHREALTIME if you have a latter bash version
-# otherwise it uses date unfortunately it forks for date
-# if given a variable as an argument it avoids a fork layer.
+# for realtime and microseconds
+. "${location}/time_functions.sh"
 
-#this prevents mistakes for someone setting a varable EPOCHREALTIME
-#a system that implements this should have a diffent time for both
-#unless it is really really fast and in that case you are on your own
-if [ "$EPOCHREALTIME" != "$EPOCHREALTIME" ];then
-        function realtime(){
-                # if we are not given a variable to send to write to local retval
-                [ "$1" = "" ] && local retval=""
-                [ "$1" != "" ] && local -n retval="$1"
-                retval=$EPOCHREALTIME;
-                # if we are not given a variable to send to echo to screen
-                [ "$1" = "" ] && echo "$retval"
-        }
-else
-        # echo "falling back and using date"
-        function realtime(){
-                # if we are not given a variable to send to write to local retval
-                [ "$1" = "" ] && local retval=""
-                [ "$1" != "" ] && local -n retval="$1"
-                retval=$(date +%s.%6N);
-                # if we are not given a variable to send to echo to screen
-                [ "$1" = "" ] && echo "$retval"
-        }
-fi
-
-# microseconds is a function that calculates the difference between 2 times
-# given in $seconds.$nanosecond format to the nearest microsecond
-# only the fist time is nessicary if a second time is not given or
-# is an emtpty string (IE:"") it gets the current time as the
-# second time if you give a 3rd option of a variabe to put it in
-# you can eliminate a fork and it does not print to screen
-function microseconds() {
-        # if we are not given a variable write to local retval
-        [ "$3" = "" ] && local retval=""
-        [ "$3" != "" ] && local -n retval="$3"
-        local current="$2"
-        # if the second argument is blank get the current time to compare
-        [ "${current}" = "" ] && realtime current
-        # get the part after the decimal
-        local dec1="${1##*.}"
-        # get the part after the decimal
-        local dec2="${current##*.}"
-        # multiply the difference in sceonds times 1000000
-        # add the difference in micro seconds
-        retval=$(( (${current%%.*} - ${1%%.*})*1000000+(10#${dec2:0:6} - 10#${dec1:0:6})));
-        # if we are not given a variable echo to screen
-        [ "$3" = "" ] && echo "$retval"
-}
-
+#for url_encode and url_decode
+. "${location}/url_functions.sh"
 
 printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
@@ -109,34 +64,6 @@ function list()
 	chmod g+w ${location}/remotes/*
 }
 
-function urlencode()
-{
-	# urlencode <string>
-	local length="${#1}"
-	[ "$2" = "" ] && local retval=""
-	[ "$2" != "" ] && local -n retval="$2"
-        retval=""
-        local temp=""
-	for (( i = 0; i < length; i++ )); do
-		local c="${1:i:1}"
-		case $c in
-			[a-zA-Z0-9.~_-]) printf -v temp "$c" ;;
-			*) printf -v temp '%%%02X' "'$c" ;;
-		esac
-		retval+="${temp}"
-	done
-	[ "$2" = "" ] && echo "${retval}"
-}
-
-function urldecode()
-{
-	# urldecode <string>
-	[ "$2" = "" ] && local retval=""
-	[ "$2" != "" ] && local -n retval="$2"
-	local url_encoded="${1//+/ }"
-	printf -v retval '%b' "${url_encoded//%/\\x}"
-	[ "$2" = "" ] && echo "${retval}"
-}
 
 sleepvar=0
 
@@ -230,13 +157,12 @@ main()
                 local start=""
 		realtime start
 		interval=0
-		microseconds $start "" ms_return_value
+		microseconds $start current ms_return_value
 		while [ "$((delay-${ms_return_value}))" -gt "0" ];do
 			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 			sleep .0001
 			((interval++))
-			realtime current
-			microseconds $start $current ms_return_value
+			microseconds $start current ms_return_value
 			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
 		done
 		echo 0 > /tmp/${USER}_irsend_sleep
