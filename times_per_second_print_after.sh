@@ -1,7 +1,9 @@
 #!/bin/bash
 #Filename: times_per_second.sh
 #Author: Jeff Sadowski
-. time_functions.sh
+
+location="${0%/*}"
+. "${location}/time_functions.sh"
 
 _clump=""
 function clump()
@@ -15,7 +17,7 @@ realtime first
 count=0
 ms=0
 clump 'Seconds_and_Milliseconds   ms_diff #ofTimes\n';
-while [ "$ms" -lt "100000" ]; do
+while [ "$ms" -lt "10000" ]; do
 	microseconds $first current ms
 	clump 'interval:%s %6s %5s\n' $current $ms $((++count));
 done
