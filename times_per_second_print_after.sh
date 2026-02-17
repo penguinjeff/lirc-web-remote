@@ -17,7 +17,7 @@ realtime first
 count=0
 ms=0
 clump 'Seconds_and_Milliseconds   ms_diff #ofTimes\n';
-while [ "$ms" -lt "10000" ]; do
+while [ "$ms" -lt "1000000" ]; do
 	microseconds $first current ms
 	clump 'interval:%s %6s %5s\n' $current $ms $((++count));
 done

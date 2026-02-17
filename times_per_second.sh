@@ -8,7 +8,7 @@ location="${0%/*}"
 first=$(realtime)
 count=0
 ms=0
-while [ "$ms" -lt "100000" ]; do
+while [ "$ms" -lt "1000000" ]; do
         microseconds $first current ms
         printf 'interval:%s %6s %5s\n' $current $ms $((++count));
 done
