@@ -11,7 +11,7 @@
 #                                              V            V          V       V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
-location="${0%/*}"
+location="${0%/*}/lib"
 
 return_value=""
 
