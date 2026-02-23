@@ -27,13 +27,15 @@ function urldecode()
 	[ "$2" = "" ] && echo "${retval}"
 }
 
-parse_http_data() {
-        [ "$3" = "" ] && local retval=""
-        [ "$3" != "" ] && local -n retval="$3"
+function parse_get_post() {
+        [ "$3" = "" ] && declare retval="" || declare -n retval="$3"
         local input="$1"
         local method="${2:-GET}"  # Default to GET if not specified
-        declare -gA params
-
+        if [ "$4" != "" ];then
+		[[ "${var@a}" == "A" ]]  && declare -A params && declare -n ret_params="$4" || echo "4th argument shout be an assoiciative array"
+	else
+		declare -gA params
+	fi
         # Extract based on method
         case "$method" in
                 GET)
@@ -61,5 +63,10 @@ parse_http_data() {
                 retval+="$tmp"
         done
         [ "$3" = "" ] && echo -en "$retval"
+	if [ "$4" != "" ];then
+		for key in "${!params[@]}"; do
+			ret_params["$key"]="${params[$key]}"
+		done
+	fi
 }
 

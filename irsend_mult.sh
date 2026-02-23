@@ -118,6 +118,11 @@ main()
 		[ "${line}" = "" ] && break
 	done
 
+	declare -A my_params
+	parse_get_post "${sanatized}" '' output my_params
+
+
+
 	json=$(extract json)
 
 	#realtime current

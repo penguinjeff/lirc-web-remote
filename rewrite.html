@@ -256,7 +256,7 @@ function presshold(remote,button,item,event)
   {
    held=true
    // loop an unreasonable amount of times 1000 is unreasonable and should be cut off long before reached
-   execute([[remote,button,0,1000]])
+   execute('macro',[[remote,button,0,1000]])
    console.log("remote:"+remote+" button:"+button);
   }
  }
@@ -268,11 +268,11 @@ function presshold(remote,button,item,event)
  holdtimer=setTimeout(function(){hold(remote,button); }, 700);
  navigator.vibrate(700);
  console.log("remote:"+remote+" button:"+button);
- execute([[remote,button,0,1]])
+ execute('macro',[[remote,button,0,1]])
 }
 
 
-function execute(list)
+function execute(mode,list)
 {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
@@ -283,7 +283,7 @@ function execute(list)
                 'Accept':'application/json',
                 'Content-Type':'application/x-www-form-urlencoded'
         },
-        body:'json='+json,
+        body:'mode='+mode+'&json='+json,
         signal: AbortSignal.timeout(5000)
   });
   return;
@@ -299,7 +299,7 @@ function release(remote,button,item,event)
  {
    holding=false;
    clearTimeout(this.holdtimer);
-   if(held){execute([[]]);}
+   if(held){execute('macro',[[]]);}
    altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
    mousedown=false;
    held=false;
