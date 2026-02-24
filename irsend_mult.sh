@@ -11,17 +11,19 @@
 #                                              V            V          V       V
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
-location="${0%/*}/lib"
+location="${0%/*}"
+liblocation="${location}/lib"
+datalocation="${location}/data"
+idlocation="${location}/data/ids"
 
 return_value=""
 
 # for realtime and microseconds
-. "${location}/time_functions.sh"
+. "${liblocation}/time_functions.sh"
 
 #for url_encode and url_decode
-. "${location}/url_functions.sh"
+. "${liblocation}/url_functions.sh"
 
-printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
 errors="false"
 
 broke='false'
@@ -30,7 +32,6 @@ current=""
 time_start_file=/tmp/${USER}_irsend_started_time.txt
 time_start=""
 realtime time_start
-echo ${time_start} > ${time_start_file}
 
 
 # THIS IS WRONG somehow reading a file takes less time than using ps
@@ -73,21 +74,8 @@ sleepvar=0
 # if sanatize="arg1=test"
 # "extract arg1" should return test
 sanatized=""
-function extract() { echo -n "${sanatized}"|awk '{print $2 "&"}'|sed -n "s/.*$1=\([^&]*\).*/\1/p"; }
 
 function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
-
-function add2ran()
-{
-	ran+=("$(jq -c -n \
-		--argjson args "$(lines "$1\n$2")" \
-		--arg delay "$3" \
-		--arg loops "$4" \
-		--argjson stderr "$(lines "$(echo -e "$5" | grep -v "^$" | sed 's/\"/%22/g')")" \
-		'$ARGS.named' \
-	     )")
-	[ "$(echo -e "$7" | grep -v "^$")" != "" ] && errors="true from ran"
-}
 
 function subrestart
 {
@@ -100,31 +88,22 @@ function subprocess() { irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .fa
 
 function process()
 {
-	# echo "irsend \"send_once\" \"$1\" \"$2\""
+	remote="$1"
+	ircode="$2"
+	delay="$3"
+	loops="$4"
+	idfile="$5"
+	# echo "irsend \"send_once\" \"$remote\" \"$ircode\""
 	local both=$(subprocess $1 $2)
-	[ "${both##*.}" = 'false' ] && add2ran "$1" "$2" "$3" "$4" "${both%%.}"
+	[ "${both##*.}" = 'false' ] && echo "{\"status\":[\"$remote\",\"$ircode\",\"$delay\",\"$loops\",\"${both%%.}\"" > "$idfile"
 }
 
 declare -a ran
 
-main()
+macro_helper()
 {
-	#get input from user and sanatize it.
-	while read -t .01 line;do
-		sanatized=$(echo "${line}" | \
-			sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
-			| sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-		[ "${sanatized:0:3}" != "GET " ] && break
-		[ "${line}" = "" ] && break
-	done
-
-	declare -A my_params
-	parse_get_post "${sanatized}" '' output my_params
-
-
-
-	json=$(extract json)
-
+	id="$1"
+	json="$2"
 	#realtime current
 	#printf '%s' ${json} >> /tmp/irsend_mult-${current}.txt
 
@@ -155,7 +134,7 @@ main()
 		[ "${delay}" = "" ] && delay=0;
 		[ "${loops}" = "" ] && loops=1;
 		while [ "${loops}" -gt "0" ];do
-			process "${arg1}" "${arg2}" "${delay}" "${loops}"
+			process "${arg1}" "${arg2}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
 			loops=$((${loops}-1))
 			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 		done
@@ -172,6 +151,77 @@ main()
 		done
 		echo 0 > /tmp/${USER}_irsend_sleep
 	done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
+	[ "broke" = "true" ] && echo '{"status":"interrupted"}'
+	echo '{"status":"finnished"}'
+}
+
+macro()
+{
+	id="$1"
+	json="$2"
+	header
+	["$"]
+	macro_helper "$1" "$2" &
+	disown %1
+}
+
+header()
+{
+ printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
+}
+
+stop()
+{
+ header
+ printf '{"status":"stopping"}'
+}
+
+status()
+{
+	
+}
+
+
+main()
+{
+	#get input from user and sanatize it.
+	while read -t .01 line;do
+		sanatized=$(echo "${line}" | \
+			sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
+			| sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
+		[ "${sanatized:0:3}" != "GET " ] && break
+		[ "${line}" = "" ] && break
+	done
+
+	declare -A my_params
+	parse_get_post "${sanatized}" '' output my_params
+
+	mode="${my_params["mode"]}"
+
+	case "${mode}" in
+		"list")
+			list;
+			return 0;
+		;;
+		"status")
+			status "${my_params["id"]}" "${my_params["json"]}"
+		;;
+		"macro"|"stop")
+			echo ${time_start} > ${time_start_file}
+			[ "${mode}" = "stop" ] && stop
+			macro "${my_params["id"]}" "${my_params["json"]}"
+		;;
+		"write_macros")
+			write_macros "${my_params["json"]}"
+		;;
+		"write_desktops")
+			write_desktops "${my_params["json"]}"
+		;;
+
+	esac
+
+	json=$(extract json)
+
 }
 
 main "$*"

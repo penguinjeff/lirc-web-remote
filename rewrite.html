@@ -5,11 +5,11 @@
 <script src="js/0utils.js"></script>
 <script id="remotes" src="data/get_remotes.js"></script>
 <script id="displays" src="data/get_displays.js"></script>
-<script id="default_display" src="data/get_default_display.js"></script>
+<script id="default_display" src="defaults/get_default_display.js"></script>
 <script id="activities" src="data/get_activities.js"></script>
 <script id="macros" src="data/get_macros.js"></script>
 <script id="modules" src="data/get_modules.js"></script>
-<script id="default_modules" src="data/get_default_modules.js?ts=2"></script>
+<script id="default_modules" src="defaults/get_default_modules.js?ts=2"></script>
 <script src="js/save_load_refresh.js"></script>
 <script>
 var remotes={};
@@ -276,7 +276,7 @@ function execute(mode,list)
 {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
-  json='{"ircodes":'+JSON.stringify(list)+'}'
+  json=JSON.stringify(list);
   fetch('irsend_mult.php?'+'id='+id,{
         method: 'POST',
         headers: {
@@ -299,7 +299,7 @@ function release(remote,button,item,event)
  {
    holding=false;
    clearTimeout(this.holdtimer);
-   if(held){execute('macro',[[]]);}
+   if(held){execute('stop',[]);}
    altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
    mousedown=false;
    held=false;
