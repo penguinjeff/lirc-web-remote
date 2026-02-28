@@ -2,7 +2,7 @@
 #Filename: times_per_second.sh
 #Author: Jeff Sadowski
 
-location="${0%/*}/lib"
+location="${0%/*}/bash-libs"
 . "${location}/time_functions.sh"
 
 _clump=""

@@ -12,14 +12,14 @@
 #example: echo GET "json={%22ircodes%22:[[%22remote%22,%22ircode%22,%220%22,%221%22]]}" | ./irsend_mult.sh
 
 location="${0%/*}"
-liblocation="${location}/lib"
+liblocation="${location}/bash-libs"
 datalocation="${location}/data"
 idlocation="${location}/data/ids"
 
 return_value=""
 
-# for realtime and microseconds
-. "${liblocation}/time_functions.sh"
+# for time-realtime and time-microseconds
+. "${liblocation}/time/microseconds.sh"
 
 #for url_encode and url_decode
 . "${liblocation}/url_functions.sh"
@@ -31,7 +31,7 @@ current=""
 #last time since we want to kill any existing ones when we end new ones.
 time_start_file=/tmp/${USER}_irsend_started_time.txt
 time_start=""
-realtime time_start
+time-realtime time_start
 
 
 # THIS IS WRONG somehow reading a file takes less time than using ps
@@ -59,10 +59,9 @@ function list()
 			printf '"%s":[%s],' "${remote}" "${buttons::-4}" 
 		done <<< "$(irsend list '' ''||printf '';)"
 	}
-	all_buttons=$(remote_buttons)
-	printf '{"remotes":{%s}}' "${all_buttons::-1}" > ${location}/remotes/remotes.js
-	printf 'function get_remotes(){ return {%s};}' "${all_buttons::-1}" > ${location}/remotes/get_remotes.js
-	chmod g+w ${location}/remotes/*
+	all_buttons="{$(remote_buttons)}"
+        wrap_element "remotes" all_buttons
+        write "remotes" all_buttons
 }
 
 
@@ -104,11 +103,12 @@ macro_helper()
 {
 	id="$1"
 	json="$2"
-	#realtime current
+	#time-realtime current
 	#printf '%s' ${json} >> /tmp/irsend_mult-${current}.txt
 
 	#error checking if json is bad it will give check something otherwise it will be empty
 	check=$(printf '%s' "${json}" | jq -Mc '.ircodes[]' 2>&1 1>/dev/null)
+
 
 	[ "$check" != "" ] &&
 		ran+=("$(jq -n --arg stderr "Not given a proper json" '$ARGS.named')") &&
@@ -123,13 +123,13 @@ macro_helper()
 			ran+=("$(jq -n --arg stderr "Wrong number of arguments" '$ARGS.named')") &&
 			errors="true bad json" &&
 			return 1;
-		#realtime current
+		#time-realtime current
 		#  echo "${current} $row" >> /tmp/activity.txt
 		arg1=$(echo "$row" | jq -r '.[0]')
 		arg2=$(echo "$row" | jq -r '.[1]')
 		delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
 		loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
-		#realtime current
+		#time-realtime current
 		#  echo "${current} $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
 		[ "${delay}" = "" ] && delay=0;
 		[ "${loops}" = "" ] && loops=1;
@@ -139,15 +139,15 @@ macro_helper()
 			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 		done
                 local start=""
-		realtime start
+		time-realtime start
 		interval=0
-		microseconds $start current ms_return_value
-		while [ "$((delay-${ms_return_value}))" -gt "0" ];do
+		time-microseconds $start now diff
+		while [ "$((delay-diff))" -gt "0" ];do
 			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 			sleep .0001
 			((interval++))
-			microseconds $start current ms_return_value
-			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-$(microseconds $start $current)))" > /tmp/${USER}_irsend_sleep
+			time-microseconds $start now diff
+			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-diff)))" > /tmp/${USER}_irsend_sleep
 		done
 		echo 0 > /tmp/${USER}_irsend_sleep
 	done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
@@ -176,11 +176,38 @@ stop()
  printf '{"status":"stopping"}'
 }
 
-status()
-{
-	
+status(){
+
 }
 
+wrap_element(){
+  declare -n __element="$2"
+  printf -v __element='{ "%s":"%s" }' "$1" "${__element}"
+}
+
+write_data_msg(){
+  declare -n __message="$1"
+  [ "${__message}" = "" ] && __message="successfult written ${datalocation}/get_${extension}"
+  wrap_element "data" __message
+  echo "${__message}"
+}
+
+write(){
+  extension=$1
+  json=$2
+  header
+  case "${extension}" in
+    "activities"|"displays"|"macros"|"modules"|"remotes")
+      string-trim json
+      message=$(echo "get_${extension}() { return ${json}; }" > "${datalocation}/get_${extension}" 2>&1)
+      write_data_msg
+    ;;
+    *)
+      message="invalid type ${extension}"
+      wrap_data_msg message
+    ;;
+  esac
+}
 
 main()
 {
@@ -211,11 +238,9 @@ main()
 			[ "${mode}" = "stop" ] && stop
 			macro "${my_params["id"]}" "${my_params["json"]}"
 		;;
-		"write_macros")
-			write_macros "${my_params["json"]}"
-		;;
-		"write_desktops")
-			write_desktops "${my_params["json"]}"
+		"write.*")
+			extension="${mode##*.}"
+			write "${extension}" "${my_params["json"]}"
 		;;
 
 	esac

@@ -2,8 +2,8 @@
 #Filename: times_per_second.sh
 #Author: Jeff Sadowski
 
-location="${0%/*}/lib"
-. "${location}/time_functions.sh"
+location="${0%/*}/bash-libs"
+. "${location}/time-microseconds.sh"
 
 first=$(realtime)
 count=0
