@@ -1,4 +1,6 @@
 tmp=' [ [ "a" , "b" , "c"] , [ "d", "e" ]   ,   [ "f", "g" ] ] '
+regex='\s*\[\s*[\s*(.*)\s*]\s*]\s*'
+[[ "${tmp}" =~ $regex ]] echo "[$BASH_REMATCH]"
 tmp="${tmp# *}"
 tmp="${tmp#[[]}"
 tmp="${tmp# *}"
