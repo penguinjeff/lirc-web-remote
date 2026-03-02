@@ -18,11 +18,16 @@ idlocation="${location}/data/ids"
 
 return_value=""
 
+# for string-trim
+. "${liblocation}/string/trim.sh"
+
 # for time-realtime and time-microseconds
 . "${liblocation}/time/microseconds.sh"
 
-#for url_encode and url_decode
-. "${liblocation}/url_functions.sh"
+#for url-encode and url-decode urr-parse-get-post
+. "${liblocation}/url/encode.sh"
+. "${liblocation}/url/decode.sh"
+. "${liblocation}/url/parse-get-post.sh"
 
 errors="false"
 
@@ -49,20 +54,6 @@ time-realtime time_start
 #}
 #watch_startfile &
 #pid=$!
-
-function list()
-{
-	location=$(dirname $0)
-	remote_buttons() {
-		while read remote; do
-			buttons=$(irsend list "${remote}" ''|awk '{print $2}'|sed 's/^/"/' | sed 's/$/",/'|sed -z 's/\n//g')
-			printf '"%s":[%s],' "${remote}" "${buttons::-4}" 
-		done <<< "$(irsend list '' ''||printf '';)"
-	}
-	all_buttons="{$(remote_buttons)}"
-        wrap_element "remotes" all_buttons
-        write "remotes" all_buttons
-}
 
 
 sleepvar=0
@@ -99,6 +90,28 @@ function process()
 
 declare -a ran
 
+wait()
+{
+  delay="$1"
+  local start=""
+  time-realtime start
+  local interval=0
+  local diff=0
+  echo 0 > /tmp/${USER}_irsend_sleep
+  while [ "$((delay-diff))" -gt "0" ];do
+    time-microseconds $start now diff
+    [ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-diff)))" > /tmp/${USER}_irsend_sleep
+    [ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+    sleep .0001
+    ((interval++))
+  done
+}
+
+end(){
+  id=$1
+  message=$1
+}
+
 macro_helper()
 {
 	id="$1"
@@ -118,38 +131,25 @@ macro_helper()
 	while read row; do
 		[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
 		count=$(echo "$row" | jq length)
-                [ "${count}" != "0" ] && break;
-		[ "${count}" != "4" ] && 
-			ran+=("$(jq -n --arg stderr "Wrong number of arguments" '$ARGS.named')") &&
+		[ "${count}" != "4" ] &&
+			message="Wrong number of arguments" >> "${idlocation}/${id}.jsonl"
 			errors="true bad json" &&
 			return 1;
 		#time-realtime current
 		#  echo "${current} $row" >> /tmp/activity.txt
-		arg1=$(echo "$row" | jq -r '.[0]')
-		arg2=$(echo "$row" | jq -r '.[1]')
+		remote=$(echo "$row" | jq -r '.[0]')
+		ircode=$(echo "$row" | jq -r '.[1]')
 		delay=$(echo "$row" | jq -r '.[2]'|sed "s/^0*[^0-9]*//")
 		loops=$(echo "$row" | jq -r '.[3]'|sed "s/^0*[^0-9]*//")
 		#time-realtime current
-		#  echo "${current} $arg1 $arg2 $delay $loops" >> /tmp/activity.txt
 		[ "${delay}" = "" ] && delay=0;
 		[ "${loops}" = "" ] && loops=1;
+		wait "${delay}"
 		while [ "${loops}" -gt "0" ];do
-			process "${arg1}" "${arg2}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
-			loops=$((${loops}-1))
-			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
+			process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
+			$((loops--))
+			[ "$(cat ${time_start_file})" != "${time_start}" ] && end "$id" "interupted" && exit;
 		done
-                local start=""
-		time-realtime start
-		interval=0
-		time-microseconds $start now diff
-		while [ "$((delay-diff))" -gt "0" ];do
-			[ "$(cat ${time_start_file})" != "${time_start}" ] && broke="true" && break;
-			sleep .0001
-			((interval++))
-			time-microseconds $start now diff
-			[ "${interval}" -gt 1000 ] && interval=0 && echo "$((delay-diff)))" > /tmp/${USER}_irsend_sleep
-		done
-		echo 0 > /tmp/${USER}_irsend_sleep
 	done <<< $(printf '%s' "${json}" | jq -Mc '.ircodes[]');
 	[ "broke" = "true" ] && echo '{"status":"interrupted"}'
 	echo '{"status":"finnished"}'
@@ -177,81 +177,100 @@ stop()
 }
 
 status(){
-
+  id="$1"
+  json="$2"
 }
 
 wrap_element(){
   declare -n __element="$2"
-  printf -v __element='{ "%s":"%s" }' "$1" "${__element}"
+  printf -v __element '{"%s":"%s"}' "$1" "${__element}"
 }
 
 write_data_msg(){
   declare -n __message="$1"
-  [ "${__message}" = "" ] && __message="successfult written ${datalocation}/get_${extension}"
+  [ "${__message}" = "" ] && __message="successfully written ${datalocation}/get_${extension}"
   wrap_element "data" __message
   echo "${__message}"
 }
 
 write(){
   extension=$1
-  json=$2
+  declare -n __json=$2
   header
+#  echo "json:$__json"
   case "${extension}" in
     "activities"|"displays"|"macros"|"modules"|"remotes")
-      string-trim json
-      message=$(echo "get_${extension}() { return ${json}; }" > "${datalocation}/get_${extension}" 2>&1)
-      write_data_msg
+      string-trim __json
+      message=$(echo "function get_${extension}(){ return ${__json};}" > "${datalocation}/get_${extension}" 2>&1)
+      write_data_msg message
     ;;
     *)
-      message="invalid type ${extension}"
-      wrap_data_msg message
+      message="invalid type ${extension} to mode write"
+      write_data_msg message
     ;;
   esac
 }
 
+
+function list()
+{
+	location=$(dirname $0)
+	local del=""
+	remote_buttons() {
+		while read remote; do
+			buttons=$(irsend list "${remote}" ''|awk '{print $2}'|sed 's/^/"/' | sed 's/$/",/'|sed -z 's/\n//g')
+			printf '%s"%s":[%s]' "${del}" "${remote}" "${buttons::-4}"
+			del=","
+		done <<< "$(irsend list '' ''||printf '';)"
+	}
+	all_buttons="{$(remote_buttons 2>&1)}"
+        write "remotes" all_buttons
+}
+
+
 main()
 {
-	#get input from user and sanatize it.
-	while read -t .01 line;do
-		sanatized=$(echo "${line}" | \
-			sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
-			| sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-		[ "${sanatized:0:3}" != "GET " ] && break
-		[ "${line}" = "" ] && break
-	done
+  #get input from user and sanatize it.
+  while read -t .01 line;do
+    sanatized=$(echo "${line}" | \
+    sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
+      | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
+    [ "${sanatized:0:3}" != "GET " ] && break
+    [ "${line}" = "" ] && break
+  done
+  [ -n "$1" ] && sanatized="$1"
 
-	declare -A my_params
-	parse_get_post "${sanatized}" '' output my_params
+  declare -A my_params
+    url-parse-get-post "${sanatized}" '' output my_params
 
-	mode="${my_params["mode"]}"
+  local mode="${my_params["mode"]}"
+  local json="${my_params["json"]}"
+  case "${mode}" in
+    "list")
+      list;
+      return 0;
+    ;;
+    "status")
+      status "${my_params["id"]}" "${my_params["json"]}"
+    ;;
+    "macro"|"stop")
+      echo "${time_start}" > "${time_start_file}"
+      [ "${mode}" = "stop" ] && stop
+      macro "${my_params["id"]}" "${my_params["json"]}"
+    ;;
+    'write.'* )
+      extension="${mode##*.}"
+      write "${extension}" json
+    ;;
+    *)
+      header
+      message="invalid mode ${extension}"
+      write_data_msg message
+    ;;
+  esac
 
-	case "${mode}" in
-		"list")
-			list;
-			return 0;
-		;;
-		"status")
-			status "${my_params["id"]}" "${my_params["json"]}"
-		;;
-		"macro"|"stop")
-			echo ${time_start} > ${time_start_file}
-			[ "${mode}" = "stop" ] && stop
-			macro "${my_params["id"]}" "${my_params["json"]}"
-		;;
-		"write.*")
-			extension="${mode##*.}"
-			write "${extension}" "${my_params["json"]}"
-		;;
-
-	esac
-
-	json=$(extract json)
+#	json=$(extract json)
 
 }
 
 main "$*"
-jq -n \
-	--argjson ran "$(echo -e "$(for item in "${ran[@]}"; do echo "$item";done)" | jq -s .)" \
-	--arg broke "${broke}" \
-	--arg errors "${errors}" \
-	'$ARGS.named'
