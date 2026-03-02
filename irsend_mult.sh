@@ -65,19 +65,17 @@ sleepvar=0
 # "extract arg1" should return test
 sanatized=""
 
-function lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
+lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
-function subrestart
-{
+subrestart(){
 	local stdout=$(systemctl restart irsend_mult.sh);
 	urlencode "${stdout}" return_value
 	jq -n --arg stdout "${return_value}" '$ARGS.named'
 }
 
-function subprocess() { irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false; }
+subprocess() { irsend "send_once" "$1" "$2" 2>&1&&echo .true-||echo .false; }
 
-function process()
-{
+process(){
 	remote="$1"
 	ircode="$2"
 	delay="$3"
@@ -245,32 +243,29 @@ main()
 
   local mode="${my_params["mode"]}"
   local json="${my_params["json"]}"
+  local id="${my_params["id"]}"
   case "${mode}" in
-    "list")
-      list;
-      return 0;
-    ;;
-    "status")
-      status "${my_params["id"]}" "${my_params["json"]}"
-    ;;
+    "list") list; return 0;;
+
+    "status") status "$id" "$json";;
+
     "macro"|"stop")
       echo "${time_start}" > "${time_start_file}"
       [ "${mode}" = "stop" ] && stop
-      macro "${my_params["id"]}" "${my_params["json"]}"
+      macro "$id" "$json"
     ;;
+
     'write.'* )
       extension="${mode##*.}"
       write "${extension}" json
     ;;
+
     *)
       header
       message="invalid mode ${extension}"
       write_data_msg message
     ;;
   esac
-
-#	json=$(extract json)
-
 }
 
 main "$*"
