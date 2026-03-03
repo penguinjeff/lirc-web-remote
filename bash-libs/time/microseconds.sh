@@ -17,7 +17,7 @@ liblocation="${0%/*}/bash-libs"
 # you must give a 3rd option of a variabe to put microseconds difference in
 # you can eliminate a fork and it does not print to screen
 # if te second argument's name is "now" it is populated with the current time
-function microseconds() {
+function time-microseconds() {
 #	[ "$1" = "" ] && echo "Must be given a start time in format \$seconds.\$nanosecond ." && return 1;
 	# if given a variable to put current time in give it to it.
 	!([[ "$2" =~ ^[0-9.] ]] || [ -z "$2" ]) && declare -n __now="$2" && __now="" || declare __now="$2"
