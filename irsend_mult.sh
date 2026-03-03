@@ -84,7 +84,7 @@ process(){
   idfile="$5"
   local both
   #echo "irsend \"send_once\" \"$remote\" \"$ircode\""
-  [ -z "remote" ] && both=$(subprocess "$remote" "$ircode")
+  [ -n "$remote" ] && both=$(subprocess "$remote" "$ircode")
   message="[\"$remote\",\"$ircode\",\"$delay\",\"$loops\",\"${both%%.}\"]" && \
   write_unquoted_data_msg message >> "$idfile"
 }
@@ -193,7 +193,7 @@ status(){
 remove_newlines()
 {
  declare -n __string="$1"
- __string="${__string//$'\n'/}"
+ __string="${__string//$'\n'/\\n}"
 }
 
 wrap_element(){

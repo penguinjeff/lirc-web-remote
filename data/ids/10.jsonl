@@ -1,0 +1,12 @@
+{"data":"1772505751.159551 sleeping 0 microseconds"}
+{"data":" woke up"}
+{"data":["Logitech_Samsung","KEY_POWERON","0","1",""]}
+{"data":"finnished"}
+{"data":"1772505950.060371 sleeping 0 microseconds"}
+{"data":" woke up"}
+{"data":["Logitech_Samsung","KEY_POWERON","0","1","hardware does not support sendingError running command: Input/output error"]}
+{"data":"finnished"}
+{"data":"1772506095.666959 sleeping 0 microseconds"}
+{"data":" woke up"}
+{"data":["Logitech_Samsung","KEY_POWERON","0","1","hardware does not support sending\nError running command: Input/output error"]}
+{"data":"finnished"}
