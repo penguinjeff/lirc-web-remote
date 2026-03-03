@@ -64,7 +64,6 @@ time-realtime time_start
 # example:
 # if sanatize="arg1=test"
 # "extract arg1" should return test
-sanatized=""
 
 lines() {  echo -ne "$1"|jq -c -M -R -s 'split("\n")'; }
 
@@ -91,7 +90,7 @@ process(){
 
 wait()
 {
-  delay="$1"
+  delay="$(($1*1000))"
   status_file="$2"
   local start=""
   time-realtime start
@@ -261,20 +260,82 @@ list()
   write "remotes" all_buttons
 }
 
+readinto() {
+    declare -n __out="$1"
+
+    local request_line method path header content_length=0 body=""
+
+    # Read request line with timeout
+    if ! IFS= read -r -t 0.05 request_line; then
+        __out=""
+        return
+    fi
+
+    method="${request_line%% *}"
+    path="${request_line#* }"
+    path="${path%% *}"
+
+    # Read headers with timeout
+    while IFS= read -r -t 0.01 header; do
+        [ "$header" = $'\r' ] && break
+        if [[ "$header" =~ Content-Length:\ ([0-9]+) ]]; then
+            content_length="${BASH_REMATCH[1]}"
+        fi
+    done
+
+    # Read POST body with timeout
+    if [ "$method" = "POST" ] && [ "$content_length" -gt 0 ]; then
+        IFS= read -r -n "$content_length" -t 0.05 body
+    fi
+
+    # Return path or body
+    if [ "$method" = "GET" ]; then
+        __out="$path"
+    else
+        __out="$body"
+    fi
+}
+
+sanitize() {
+    declare -n __out="$1"
+    local in="$2"
+    local tmp=""
+    local c
+    local i
+
+    for ((i=0; i<${#in}; i++)); do
+        c="${in:i:1}"
+
+        case "$c" in
+            [A-Za-z0-9] ) tmp+="$c" ;;
+            "_" ) tmp+="$c" ;;
+            "." ) tmp+="$c" ;;
+            "-" ) tmp+="$c" ;;
+            "+" ) tmp+="$c" ;;
+            "=" ) tmp+="$c" ;;
+            "&" ) tmp+="$c" ;;
+            "{" ) tmp+="$c" ;;
+            "}" ) tmp+="$c" ;;
+            "%" ) tmp+="$c" ;;
+            "[" ) tmp+="$c" ;;
+            "]" ) tmp+="$c" ;;
+            " " ) tmp+="$c" ;;
+        esac
+    done
+    __out="$tmp"
+}
+
+
 main()
 {
   #get input from user and sanatize it.
-  while read -t .01 line;do
-    sanatized=$(echo "${line}" | \
-    sed 's/[^A-Za-z0-9\_\.\-\+\=\&\{\}\%\[\] ]//g' | sed 's/%22/\"/g' \
-      | sed 's/%5B/\[/g' | sed 's/%5D/\]/g' )
-    [ "${sanatized:0:3}" != "GET " ] && break
-    [ "${line}" = "" ] && break
-  done
-  [ -n "$1" ] && sanatized="$1"
+#  [ -n "$1" ] && sanatized="$1"
+  readinto data
+  sanitize data "${data}"
+  [ -n "$1" ] && data="$1"
 
   declare -A my_params
-    url-parse-get-post "${sanatized}" '' output my_params
+  url-parse-get-post "${data}" '' output my_params
 
   local mode="${my_params["mode"]}"
   local json="${my_params["json"]}"

@@ -8,8 +8,8 @@ After=lircd.service network-online.target
 Type=simple
 ExecStart=/usr/bin/nc -k -l 127.0.0.1 4343 -c /var/www/html/lirc-web-remote/irsend_mult.sh
 
-User=lirc
-Group=lirc
+User=irsend
+Group=irsend
 
 ; Hardening opts, see systemd.exec(5). Doesn't add much unless
 ; not running as root.
