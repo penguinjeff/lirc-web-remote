@@ -56,8 +56,8 @@ function select(item)
 //I wanted a way to pass more into a createElement to simplify my code
 //since I am using class names because html do no provide searchbyname on subelements
 //I add name to classname 
-
 let radioinc=0;
+
 function createElement(uitems)
 {const items=uitems;
  let {onchange='',name='',type='unknown',class:oclass,noneoptions=false}=items;

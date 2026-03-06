@@ -1,0 +1,31 @@
+<---- import method---->
+<script type="module">
+    import { createElement } from '../js/createElement.js';
+
+    const el = createElement({
+        select: ["A", "B", "C"],
+        label: "Choose one"
+    });
+
+    document.body.appendChild(el);
+</script>
+
+<---IIFE --->
+<script src="../js/utils.js"></script>
+
+<-- the way I want--->
+
+<script type="module">
+    import { createElement } from './ui/index.js';
+
+    const el = createElement({
+        select: ["A", "B", "C"],
+        label: "Choose one"
+    });
+
+    document.body.appendChild(el);
+</script>
+
+
+import * as UI from './ui/index.js';
+
