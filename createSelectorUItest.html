@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Selector UI Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    select { margin-bottom: 10px; display: block; }
+  </style>
+</head>
+<body>
+
+  <h2>Dynamic Selector UI Demo</h2>
+
+  <div id="selector-container"></div>
+
+  <button id="get-values">Get Selected Values</button>
+
+  <pre id="output"></pre>
+
+  <!-- Load your selector UI script -->
+  <script src="js/createSelectorUI.js"></script>
+  <script id="remotes" src="data/get_remotes.js"></script>
+  <script>
+    // Example data structure
+    var data = get_remotes();
+
+    // Initialize the selector UI
+    createSelectorUI(
+      document.getElementById("selector-container"),
+      data,
+      {
+        allowNone: true
+      }
+    );
+
+    // Button to read selected values
+    document.getElementById("get-values").addEventListener("click", () => {
+      const selects = [...document.querySelectorAll("#selector-container select")];
+      const values = selects.map(s => s.value);
+      document.getElementById("output").textContent = JSON.stringify(values, null, 2);
+    });
+  </script>
+
+</body>
+</html>
+

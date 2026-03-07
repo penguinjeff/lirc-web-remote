@@ -1,0 +1,16 @@
+curl 'http://127.0.0.1:4343' \
+  -H 'Accept: application/json' \
+  -H 'Accept-Language: en-US,en;q=0.9' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'Origin: http://127.0.0.1' \
+  -H 'Referer: http://127.0.0.1/lirc-web-remote/macro_designer.html?ts=1772837232027' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-GPC: 1' \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Not:A-Brand";v="99", "Brave";v="145", "Chromium";v="145"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Linux"' \
+  --data-raw 'mode=macro&json=[["Logitech_Samsung","KEY_POWERON",0,"2"],["Logitech_Denon","KEY_POWERON",0,"1"],["Logitech_Samsung","KEY_HDMI1",0,"1"],["Logitech_Denon","KEY_BLURAY","1000","1"],["Logitech_Samsung","KEY_HDMI1",0,"1"],["Logitech_Denon","KEY_BLURAY",0,"1"]]'

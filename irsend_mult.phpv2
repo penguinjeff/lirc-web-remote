@@ -33,13 +33,13 @@ function validate_macro_steps($steps) {
 
     foreach ($steps as $step) {
         if (!is_array($step)) return false;
-        if (count($step) < 2) return false; // at least [remote, command]
+        if (count($step) < 2) return false; // remote + command minimum
     }
     return true;
 }
 
 /* ---------------------------------------------------------
- *   Validate write_macros object (name -> list-of-lists)
+ *   Validate write_macros object
  * --------------------------------------------------------- */
 function validate_macro_file($obj) {
     if (!is_array($obj)) return false;
@@ -52,29 +52,24 @@ function validate_macro_file($obj) {
 }
 
 /* ---------------------------------------------------------
- *   Forward request to IR server and echo EXACT response
+ *   Forward request to IR server and return EXACT output
  * --------------------------------------------------------- */
 function irsend_passthrough($mode, $json_raw, $id = "") {
 
-    // Build POST body
-    $postdata = "mode=" . urlencode($mode);
+    $url = "http://127.0.0.1:4343?mode=" . urlencode($mode);
 
     if ($id !== "") {
-        $postdata .= "&id=" . urlencode($id);
+        $url .= "&id=" . urlencode($id);
     }
 
     if ($json_raw !== "") {
-        $postdata .= "&json=" . urlencode($json_raw);
+        $url .= "&json=" . urlencode($json_raw);
     }
 
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:4343");
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    // Use POST, like your working curl example
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
     $response = curl_exec($ch);
 
@@ -107,14 +102,11 @@ if (isset($_REQUEST['mode'])) {
         exit;
     }
 
-    /* ---- Validate JSON (if provided) ---- */
-    $json_decoded = null;
-    if ($json_raw !== "") {
-        $json_decoded = validate_json($json_raw);
-        if ($json_decoded === false) {
-            echo json_encode(["success" => false, "error" => "Invalid JSON"]);
-            exit;
-        }
+    /* ---- Validate JSON ---- */
+    $json_decoded = validate_json($json_raw);
+    if ($json_raw !== "" && $json_decoded === false) {
+        echo json_encode(["success" => false, "error" => "Invalid JSON"]);
+        exit;
     }
 
     /* ---- Mode-specific validation ---- */
@@ -132,7 +124,7 @@ if (isset($_REQUEST['mode'])) {
         }
     }
 
-    /* ---- Pass through to IR server ---- */
+    /* ---- Forward to IR server ---- */
     irsend_passthrough($mode, $json_raw, $id);
     exit;
 }

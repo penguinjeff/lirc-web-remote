@@ -272,11 +272,11 @@ function presshold(remote,button,item,event)
 }
 
 
-function execute(mode,list)
+function execute(mode,json_obj)
 {
   var id = Math.round(+new Date()/1000);
   var reallist=[];
-  json=JSON.stringify(list);
+  json=JSON.stringify(json_obj);
   fetch('irsend_mult.php?'+'id='+id,{
         method: 'POST',
         headers: {

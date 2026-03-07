@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IR Macro Builder</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    select, input { margin: 5px 0; display: block; }
+    .cmd { padding: 5px; border-bottom: 1px solid #ccc; }
+    .cmd button { margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>IR Macro Builder</h2>
+
+<button id="refresh-data">Refresh Remotes & Macros</button>
+
+<hr>
+
+<!-- Macro selection -->
+<label>Existing Macros:</label>
+<select id="macro-select"></select>
+<button id="load-macro">Load Macro</button>
+<button id="new-macro">New Macro</button>
+
+<hr>
+
+<!-- Command builder -->
+<h3>Add IR Command</h3>
+
+<label>Remote:</label>
+<select id="remote-select"></select>
+
+<label>Command:</label>
+<select id="command-select"></select>
+
+<label>Delay (ms):</label>
+<input type="number" id="delay" value="0">
+
+<label>Loops:</label>
+<input type="number" id="loops" value="1">
+
+<button id="add-command">Add Step</button>
+
+<hr>
+
+<!-- Macro editor -->
+<h3>Macro Steps</h3>
+<div id="macro-steps"></div>
+
+<hr>
+
+<!-- Save macro -->
+<label>Macro Name:</label>
+<input type="text" id="macro-name">
+
+<button id="save-macro">Save Macro</button>
+
+<h3>Updated Macros Object</h3>
+<pre id="output"></pre>
+
+<!-- Your dynamic data scripts -->
+<script id="remotes" src="data/get_remotes.js"></script>
+<script id="macros" src="data/get_macros.js"></script>
+
+<script>
+/* -----------------------------------------
+   Refresh Page with Timestamp
+------------------------------------------ */
+
+document.getElementById("refresh-data").addEventListener("click", () => {
+  const ts = Date.now();
+  const base = window.location.href.split("?")[0];
+  window.location.href = `${base}?ts=${ts}`;
+});
+
+/* -----------------------------------------
+   UI Initialization
+------------------------------------------ */
+
+let remotes = {};
+let macros = {};
+let currentMacro = [];
+
+function initializeUI() {
+  remotes = get_remotes();
+  macros = get_macros();
+
+  console.log("Macros loaded:", macros);
+  console.log("Remotes loaded:", remotes);
+
+  populateRemoteSelector();
+  populateMacroSelector();
+
+  currentMacro = [];
+  renderMacro();
+}
+
+/* -----------------------------------------
+   Populate UI Elements
+------------------------------------------ */
+
+function populateRemoteSelector() {
+  const remoteSelect = document.getElementById("remote-select");
+  remoteSelect.innerHTML = "";
+
+  Object.keys(remotes).forEach(remote => {
+    const opt = document.createElement("option");
+    opt.value = remote;
+    opt.textContent = remote;
+    remoteSelect.appendChild(opt);
+  });
+
+  remoteSelect.dispatchEvent(new Event("change"));
+}
+
+function populateMacroSelector() {
+  const macroSelect = document.getElementById("macro-select");
+  macroSelect.innerHTML = "";
+
+  Object.keys(macros).forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    macroSelect.appendChild(opt);
+  });
+}
+
+/* -----------------------------------------
+   Command Selector Logic
+------------------------------------------ */
+
+document.getElementById("remote-select").addEventListener("change", () => {
+  const remote = document.getElementById("remote-select").value;
+  const commandSelect = document.getElementById("command-select");
+
+  commandSelect.innerHTML = "";
+  remotes[remote].forEach(cmd => {
+    const opt = document.createElement("option");
+    opt.value = cmd;
+    opt.textContent = cmd;
+    commandSelect.appendChild(opt);
+  });
+});
+
+/* -----------------------------------------
+   Macro Loading / New Macro
+------------------------------------------ */
+
+document.getElementById("load-macro").addEventListener("click", () => {
+  const name = document.getElementById("macro-select").value;
+  const macro = macros[name];
+
+  currentMacro = Array.isArray(macro) ? macro : macro.ircodes;
+  document.getElementById("macro-name").value = name;
+
+  renderMacro();
+});
+
+document.getElementById("new-macro").addEventListener("click", () => {
+  currentMacro = [];
+  document.getElementById("macro-name").value = "";
+  renderMacro();
+});
+
+/* -----------------------------------------
+   Add Step
+------------------------------------------ */
+
+document.getElementById("add-command").addEventListener("click", () => {
+  const remote = document.getElementById("remote-select").value;
+  const command = document.getElementById("command-select").value;
+  const delay = document.getElementById("delay").value;
+  const loops = document.getElementById("loops").value;
+
+  currentMacro.push([remote, command, delay, loops]);
+  renderMacro();
+});
+
+/* -----------------------------------------
+   Render Macro Steps
+------------------------------------------ */
+
+function renderMacro() {
+  const container = document.getElementById("macro-steps");
+  container.innerHTML = "";
+
+  currentMacro.forEach((cmd, index) => {
+    const div = document.createElement("div");
+    div.className = "cmd";
+    div.textContent = JSON.stringify(cmd);
+
+    const del = document.createElement("button");
+    del.textContent = "Delete";
+    del.onclick = () => {
+      currentMacro.splice(index, 1);
+      renderMacro();
+    };
+
+    div.appendChild(del);
+    container.appendChild(div);
+  });
+}
+
+/* -----------------------------------------
+   Save Macro
+------------------------------------------ */
+
+document.getElementById("save-macro").addEventListener("click", () => {
+  const name = document.getElementById("macro-name").value.trim();
+  if (!name) {
+    alert("Enter a macro name");
+    return;
+  }
+
+  macros[name] = currentMacro;
+
+  document.getElementById("output").textContent =
+    JSON.stringify(macros, null, 2);
+});
+
+/* -----------------------------------------
+   Initial Load
+------------------------------------------ */
+
+window.onload = initializeUI;
+</script>
+
+</body>
+</html>
