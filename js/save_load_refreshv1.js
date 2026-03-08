@@ -35,26 +35,16 @@ function save()
  item_save('modules');
 }
 
+function refresh_item(tag)
+{
+ // console.log(tag+':');
+ var item=document.getElementById(tag);
+ if(item){item.remove};
 
-function refresh_item(tag) {
-  return new Promise(resolve => {
-    // Remove old script
-    const old = document.getElementById(tag);
-    if (old) old.remove();
-
-    // Create new script
-    const script = document.createElement('script');
-    script.id = tag;
-    script.src = 'data/get_' + tag + '.js?ts=' + Date.now();
-
-    // Wait for script to load
-    script.onload = () => {
-      const fn = window['get_' + tag];
-      resolve(fn ? fn() : {});
-    };
-
-    document.head.appendChild(script);
-  });
+ document.head.appendChild(createElement({'tag':'script','src':'data/get_'+tag+'.js?ts'+Date.now()}));
+ var items=window['get_'+tag]();
+ // console.log(items);
+ return items;
 }
 
 window.addEventListener('load', function () {

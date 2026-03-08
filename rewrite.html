@@ -10,7 +10,8 @@
 <script id="macros" src="data/get_macros.js"></script>
 <script id="modules" src="data/get_modules.js"></script>
 <script id="default_modules" src="defaults/get_default_modules.js?ts=2"></script>
-<script src="js/save_load_refresh.js"></script>
+<script src="js/save_load_refreshv1.js"></script>
+<script src="js/execute.js"></script>
 <script>
 var remotes={};
 var default_display=get_default_display();
@@ -271,23 +272,6 @@ function presshold(remote,button,item,event)
  execute('macro',[[remote,button,0,1]])
 }
 
-
-function execute(mode,json_obj)
-{
-  var id = Math.round(+new Date()/1000);
-  var reallist=[];
-  json=JSON.stringify(json_obj);
-  fetch('irsend_mult.php?'+'id='+id,{
-        method: 'POST',
-        headers: {
-                'Accept':'application/json',
-                'Content-Type':'application/x-www-form-urlencoded'
-        },
-        body:'mode='+mode+'&json='+json,
-        signal: AbortSignal.timeout(5000)
-  });
-  return;
-}
 
 let altholdtimer=0;
 function release(remote,button,item,event)

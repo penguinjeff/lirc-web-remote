@@ -14,7 +14,7 @@
 
 <h2>IR Macro Builder</h2>
 
-<button id="refresh-data">Refresh Remotes & Macros</button>
+<button id="refresh-data" onclick="refresh()">Refresh Remotes & Macros</button>
 
 <hr>
 
@@ -70,37 +70,30 @@
 <!-- Your dynamic data scripts -->
 <script id="remotes" src="data/get_remotes.js"></script>
 <script id="macros" src="data/get_macros.js"></script>
+<script src="js/execute.js"></script>
+<script src="js/save_load_refresh.js"></script>
+<script src="js/0utils.js"></script>
+
 
 <script>
-/* -----------------------------------------
-   Refresh Page with Timestamp
------------------------------------------- */
 
-document.getElementById("refresh-data").addEventListener("click", () => {
-  const ts = Date.now();
-  const base = window.location.href.split("?")[0];
-  window.location.href = `${base}?ts=${ts}`;
-});
 
-/* -----------------------------------------
-   execute() function
------------------------------------------- */
-
-function execute(mode,json_obj=[])
-{
-  var id = Math.round(+new Date()/1000);
-  json = JSON.stringify(json_obj);
-
-  fetch('irsend_mult.php?'+'id='+id,{
-        method: 'POST',
-        headers: {
-                'Accept':'application/json',
-                'Content-Type':'application/x-www-form-urlencoded'
-        },
-        body:'mode='+mode+'&json='+json,
-        signal: AbortSignal.timeout(5000)
-  });
+async function load() {
+  remotes   = await refresh_item('remotes');
+  macros    = await refresh_item('macros');
 }
+
+
+async function refresh() {
+  remotes = await refresh_item('remotes');
+  macros  = await refresh_item('macros');
+
+  // Now safe to update UI
+  populateRemoteSelector();
+  populateMacroSelector();
+  renderMacro();
+}
+refresh();
 
 /* -----------------------------------------
    AUTOSAVE helper
