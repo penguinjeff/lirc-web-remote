@@ -34,6 +34,7 @@ return_value=""
 
 #for json-list2array
 . "${liblocation}/json/list2array.sh"
+. "${liblocation}/json/listOfLists2arrayOfLists.sh"
 
 errors="false"
 
@@ -85,8 +86,8 @@ macro_helper()
   json="$2"
   local message=""
   local array=()
-
-  while read row; do
+  json-listOfLists2arrayOfLists "${json}" arrayOfLists
+  for row in "${arrayOfLists[@]}"; do
     [ "$(cat ${time_start_file})" != "${time_start}" ] && \
       echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
     json-list2array "$row" array 4
@@ -104,7 +105,7 @@ macro_helper()
       [ "$(cat ${time_start_file})" != "${time_start}" ] && \
         echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
     done
-  done <<< $(printf '%s' "${json}" | jq -Mc .[] 2>/dev/null);
+  done
   echo '["finished"]' >> "${idlocation}/${id}.jsonl"
 }
 
@@ -146,7 +147,6 @@ status(){
 
   local lastlinedata="${message##*$'\n'}"
   local array
-  echo "lastline:${lastlinedata}"
   json-list2array "$lastlinedata" array
   case "${array[0]}" in
    "finished"|"interupted") rm -f "$file";;
