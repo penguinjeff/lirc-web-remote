@@ -32,7 +32,7 @@ return_value=""
 . "${liblocation}/url/decode.sh"
 . "${liblocation}/url/parse-get-post.sh"
 
-#for json-list2array
+#for json-list2array and listOfLists2arrayOfLists
 . "${liblocation}/json/list2array.sh"
 . "${liblocation}/json/listOfLists2arrayOfLists.sh"
 
