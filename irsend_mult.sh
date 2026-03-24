@@ -32,6 +32,9 @@ return_value=""
 . "${liblocation}/url/decode.sh"
 . "${liblocation}/url/parse-get-post.sh"
 
+#for json-list2array
+. "${liblocation}/json/list2array.sh"
+
 errors="false"
 
 #last time since we want to kill any existing ones when we end new ones.
@@ -87,14 +90,16 @@ macro_helper()
   id="$1"
   json="$2"
   local message=""
+  local array=()
 
   while read row; do
     [ "$(cat ${time_start_file})" != "${time_start}" ] && \
       echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
-    remote=$(echo "$row" | jq -r '.[0]' 2>/dev/null)
-    ircode=$(echo "$row" | jq -r '.[1]' 2>/dev/null)
-    delay=$(echo "$row" | jq -r '.[2]' 2>/dev/null|sed "s/^0*[^0-9]*//")
-    loops=$(echo "$row" | jq -r '.[3]' 2>/dev/null|sed "s/^0*[^0-9]*//")
+    json-list2array "$row" array 4
+    remote="${array[0]}"
+    ircode="${array[1]}"
+    delay="${array[2]}"
+    loops="${array[3]}"
     [ -z "$delay" ] && delay=0
     [ -z "$loops" ] && loops=1
     #time-realtime current
@@ -126,25 +131,31 @@ header()
 }
 
 status(){
-  local json="$1"
-  local id=$(echo "$json"|jq -r .[0] 2>/dev/null)
-  local start=$(echo "$json"|jq -r .[1] 2>/dev/null)
-  local end=$(echo "$json"|jq -r .[2] 2>/dev/null)
+  header
+  local array=()
+  json-list2array "$1" array 3
+  local id="${array[0]}"
+  local start="${array[1]}"
+  local end="${array[2]}"
   ([ -z "$id" ] || [ "$id" = "null" ]) && echo '["finished"]' && return 0
   ([ -z "$start" ] || [ "$start" = "null" ]) && start=0;
   ([ -z "$end" ] || [ "$end" = "null" ] )&& end=-1;
   file="${location}/data/ids/${id}.jsonl"
+  [ ! -f ${file} ] && echo '["finished"]' && return 0
   [ "$end" = "-1" ] && {
     message=$(dd if="$file" bs=1 skip="$start" status=none)
   } || {
     local count=$(( end - start + 1 ))
     message=$(dd if="$file" bs=1 skip="$start" count="$count" status=none)
   }
-  header
   echo -e "$message"
-  lastlinedata=$(echo -e "$message" | tail -n 1 | jq -r .[0])
-  case "$lastlinedata" in
-   "finished"|"interupted") rm "$file";;
+
+  local lastlinedata="${message##*$'\n'}"
+  local array
+  echo "lastline:${lastlinedata}"
+  json-list2array "$lastlinedata" array
+  case "${array[0]}" in
+   "finished"|"interupted") rm -f "$file";;
   esac
 }
 

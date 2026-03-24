@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <!-- STATIC default modules (loaded once) -->
+  <script src="defaults/get_default_modules.js"></script>
+  <script src="js/save_load_refresh.js"></script>
+
+  <!-- DYNAMIC modules + macros (reloaded on refresh) -->
+  <script id="modules" src="data/get_modules.js"></script>
+  <script id="macros_js" src="data/get_macros.js"></script>
+
+  <!-- Your execute() backend -->
+  <script src="js/execute.js"></script>
+
+  <script>
+    // -----------------------------
+    // Dynamic Reloaders
+    // -----------------------------
+
+    function reload_modules_js() {
+      return new Promise(resolve => {
+        const old = document.getElementById("modules");
+        if (old) old.remove();
+
+        const ts = Date.now();
+        const script = document.createElement("script");
+        script.id = "modules";
+        script.src = "data/get_modules.js?ts=" + ts;
+
+        script.onload = () => resolve(get_modules());
+        document.head.appendChild(script);
+      });
+    }
+
+    function reload_macros_js() {
+      return new Promise(resolve => {
+        const old = document.getElementById("macros_js");
+        if (old) old.remove();
+
+        const ts = Date.now();
+        const script = document.createElement("script");
+        script.id = "macros_js";
+        script.src = "data/get_macros.js?ts=" + ts;
+
+        script.onload = () => resolve(get_macros());
+        document.head.appendChild(script);
+      });
+    }
+
+    // -----------------------------
+    // UI List Loader
+    // -----------------------------
+
+    function refresh_list(name) {
+      const el = document.getElementById(name);
+      if (!el) return Promise.resolve(); // skip if not on this page
+
+      return fetch("ajax_list.php?name=" + name)
+        .then(r => r.text())
+        .then(html => el.innerHTML = html)
+        .catch(err => console.error("refresh_list failed:", name, err));
+    }
+
+    // -----------------------------
+    // Main Refresh Flow
+    // -----------------------------
+
+    async function refresh() {
+      console.log("refresh() start");
+
+      // Load static data (if load() exists)
+      const maybeLoad = load?.();
+      if (maybeLoad && typeof maybeLoad.then === "function") {
+        await maybeLoad;
+      }
+
+      // Reload dynamic JS files
+      const [modules, macros] = await Promise.all([
+        reload_modules_js(),
+        reload_macros_js()
+      ]);
+
+      console.log("modules loaded:", modules);
+      console.log("macros loaded:", macros);
+
+      // Refresh UI lists
+      await Promise.all([
+        refresh_list("macros"),
+        refresh_list("modules"),
+      ]);
+
+      // Rebuild navigation
+      create_navigator?.();
+
+      console.log("refresh() done");
+      return { modules, macros };
+    }
+
+    // -----------------------------
+    // Save Modules
+    // -----------------------------
+
+    function saveModules() {
+      const modules = get_modules();
+      execute("write_modules", modules);
+    }
+  </script>
+</head>
+
+<body>
+
+  <button onclick="refresh()">Refresh</button>
+  <button onclick="saveModules()">Save Modules</button>
+
+  <div id="remotes"></div>
+  <div id="displays"></div>
+  <div id="activities"></div>
+  <div id="macros"></div>
+  <div id="modules"></div>
+  <div id="default_modules"></div>
+
+</body>
+</html>

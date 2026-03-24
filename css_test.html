@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CSS Visualization</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    pre {
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.15);
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Generated CSS Preview</h2>
+<div id="css_output"></div>
+
+<script src="js/json2css.js"></script>
+<script>
+function get_default_classes() {
+  return {
+    "remotename": {
+      "width": "calc(350px * var(--scale))",
+      "background-color": "#A7A7A7"
+    },
+    "power": {
+      "width": "calc(350px * var(--scale))",
+      "background-color": "#A7A7A7"
+    },
+    "catchall": {
+      "width": "calc(350px * var(--scale))",
+      "background-color": "#979797"
+    },
+    "common": {
+      "width": "calc(350px * var(--scale))",
+      "background-color": "#878787"
+    },
+    "colors": {
+      "width": "calc(350px * var(--scale))",
+      "background-color": "#979797"
+    },
+    "volume": {
+      "width": "calc(70px * var(--scale))",
+      "background-color": "#A7A7A7"
+    },
+    "directions": {
+      "width": "calc(210px * var(--scale))",
+      "background-color": "#878787"
+    },
+    "channels": {
+      "width": "calc(70px * var(--scale))",
+      "background-color": "#A7A7A7"
+    },
+    "navigator": {
+      "width": "calc(210px * var(--scale))",
+      "background-color": "#979797"
+    },
+    "navigatorpads": {
+      "width": "calc(70px * var(--scale))",
+      "background-color": "#979797"
+    },
+    "numbers": {
+      "width": "calc(210px * var(--scale))",
+      "background-color": "#878787"
+    },
+    "numberpads": {
+      "width": "calc(70px * var(--scale))",
+      "background-color": "#878787"
+    }
+  };
+}
+
+function showCssPreview() {
+  const classes = get_default_classes();
+  const container = document.getElementById("css_output");
+
+  for (const key of Object.keys(classes)) {
+    const wrapped = { [key]: classes[key] };
+    const css = json2css(wrapped);
+
+    const pre = document.createElement("pre");
+    pre.textContent = css;
+
+    container.appendChild(pre);
+  }
+}
+
+window.onload = showCssPreview;
+</script>
+
+</body>
+</html>

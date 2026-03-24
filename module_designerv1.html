@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Module Builder</title>
+<style>
+  body { font-family: Arial; display: flex; gap: 20px; padding: 20px; }
+  .panel { flex: 1; border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+  table { border-collapse: collapse; }
+  td { border: 1px solid #ccc; padding: 6px; vertical-align: top; }
+  input, select { width: 100%; margin-bottom: 4px; }
+  .cell-empty { color: #888; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <h2>Module</h2>
+  <select id="moduleSelect" onchange="loadModule()"></select>
+  <button onclick="newModule()">New Module</button>
+  <button onclick="cloneModule()">Clone Module</button>
+</div>
+
+<div class="panel">
+  <h2>Buttons</h2>
+  <button onclick="addRow()">Add Row</button>
+  <button onclick="addCol()">Add Column</button>
+  <div id="grid"></div>
+</div>
+
+<div class="panel">
+  <h2>Metadata</h2>
+  <label>Needed</label>
+  <input id="neededField" oninput="updateModule()">
+
+  <label>Class</label>
+  <input id="classField" oninput="updateModule()">
+
+  <label><input type="checkbox" id="skipField" onchange="updateModule()"> Skip</label>
+
+  <h2>Output</h2>
+  <pre id="output"></pre>
+  <button onclick="copyOutput()">Copy</button>
+</div>
+
+<script>
+let modules = {};
+let current = null;
+
+function loadDefaults() {
+  modules = get_default_modules();
+  populateSelector();
+}
+
+function populateSelector() {
+  const sel = document.getElementById("moduleSelect");
+  sel.innerHTML = "";
+  Object.keys(modules).forEach(name => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  loadModule();
+}
+
+function loadModule() {
+  const name = document.getElementById("moduleSelect").value;
+  current = JSON.parse(JSON.stringify(modules[name])); // deep clone
+  renderGrid();
+  renderMetadata();
+  renderOutput();
+}
+
+function newModule() {
+  const name = prompt("Module name?");
+  if (!name) return;
+  modules[name] = {
+    buttons: [[]],
+    needed: [],
+    class: "",
+    skip: false
+  };
+  populateSelector();
+  document.getElementById("moduleSelect").value = name;
+  loadModule();
+}
+
+function cloneModule() {
+  const base = document.getElementById("moduleSelect").value;
+  const name = prompt("New module name?");
+  if (!name) return;
+  modules[name] = JSON.parse(JSON.stringify(modules[base]));
+  populateSelector();
+  document.getElementById("moduleSelect").value = name;
+  loadModule();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  const table = document.createElement("table");
+
+  current.buttons.forEach((row, r) => {
+    const tr = document.createElement("tr");
+    row.forEach((btn, c) => {
+      const td = document.createElement("td");
+
+      if (btn.length === 0) {
+        td.innerHTML = `<div class="cell-empty">(empty)</div>`;
+      } else {
+        td.innerHTML = `
+          <input value="${btn[0]}" onchange="editCell(${r},${c},0,this.value)">
+          <select onchange="editCell(${r},${c},1,this.value)">
+            <option value="ircode" ${btn[1]==="ircode"?"selected":""}>ircode</option>
+            <option value="macro" ${btn[1]==="macro"?"selected":""}>macro</option>
+          </select>
+          <input value="${btn[2]}" onchange="editCell(${r},${c},2,this.value)">
+        `;
+      }
+
+      td.onclick = () => {
+        if (btn.length === 0) {
+          current.buttons[r][c] = ["","ircode",""];
+          renderGrid();
+          renderOutput();
+        }
+      };
+
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+
+  grid.appendChild(table);
+}
+
+function editCell(r,c,i,val) {
+  current.buttons[r][c][i] = val;
+  renderOutput();
+}
+
+function addRow() {
+  const cols = current.buttons[0].length || 1;
+  const row = Array.from({length: cols}, () => []);
+  current.buttons.push(row);
+  renderGrid();
+  renderOutput();
+}
+
+function addCol() {
+  current.buttons.forEach(row => row.push([]));
+  renderGrid();
+  renderOutput();
+}
+
+function renderMetadata() {
+  document.getElementById("neededField").value = current.needed.join(",");
+  document.getElementById("classField").value = current.class;
+  document.getElementById("skipField").checked = current.skip;
+}
+
+function updateModule() {
+  current.needed = document.getElementById("neededField").value.split(",").filter(x=>x);
+  current.class = document.getElementById("classField").value;
+  current.skip = document.getElementById("skipField").checked;
+  renderOutput();
+}
+
+function renderOutput() {
+  document.getElementById("output").textContent =
+    JSON.stringify(current, null, 2);
+}
+
+function copyOutput() {
+  navigator.clipboard.writeText(document.getElementById("output").textContent);
+  alert("Copied!");
+}
+
+function get_default_modules() {
+  return /* paste your default modules here */ {};
+}
+
+loadDefaults();
+</script>
+
+</body>
+</html>
