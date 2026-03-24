@@ -42,12 +42,6 @@ time_start_file=/tmp/${USER}_irsend_started_time.txt
 time-realtime time_start
 
 
-subrestart(){
-        local stdout=$(systemctl restart irsend_mult.sh);
-        urlencode "${stdout}" return_value
-        jq -n --arg stdout "${return_value}" '$ARGS.named'
-}
-
 process(){
   remote="$1"
   ircode="$2"
