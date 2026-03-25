@@ -1,4 +1,6 @@
-curl 'http://127.0.0.1/lirc-web-remote/irsend_mult.php?'\
-'json=\{%22ircodes%22:%5B%5B%22Logitech_Samsung%22,%22KEY_1%22,2000,2%5D%5D\}&id=1755042951'
-sleep 2
-curl 'http://127.0.0.1/lirc-web-remote/irsend_mult.php?json=\{%22ircodes%22:%5B%5D\}&id=1755042951'
+id=$(curl --no-progress-meter  'http://127.0.0.1/lirc-web-remote/irsend_mult.php' --data-raw 'mode=macro&json=[["Logitech_Samsung","KEY_VOLUMEDOWN",0,1]]')
+echo -e "$id"
+id=$(echo -e "$id"|head -n 1)
+id="${id#[\"}"
+id="${id%\"]}"
+curl --no-progress-meter 'http://127.0.0.1/lirc-web-remote/irsend_mult.php' --data-raw "mode=status&json=[\"$id\"]"

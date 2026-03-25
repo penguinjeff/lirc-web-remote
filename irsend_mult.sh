@@ -32,9 +32,8 @@ return_value=""
 . "${liblocation}/url/decode.sh"
 . "${liblocation}/url/parse-get-post.sh"
 
-#for json-list2array and listOfLists2arrayOfLists
+#for json-list2array and json-listOfLists2arrayOfLists
 . "${liblocation}/json/list2array.sh"
-. "${liblocation}/json/listOfLists2arrayOfLists.sh"
 
 errors="false"
 
@@ -80,44 +79,16 @@ wait_delay()
   echo "[\"$now woke up\"]" >> "$status_file"
 }
 
-macro_helper()
-{
-  id="$1"
-  json="$2"
-  local message=""
-  local array=()
-  json-listOfLists2arrayOfLists "${json}" arrayOfLists
-  for row in "${arrayOfLists[@]}"; do
-    [ "$(cat ${time_start_file})" != "${time_start}" ] && \
-      echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
-    json-list2array "$row" array 4
-    remote="${array[0]}"
-    ircode="${array[1]}"
-    delay="${array[2]}"
-    loops="${array[3]}"
-    [ -z "$delay" ] && delay=0
-    [ -z "$loops" ] && loops=1
-    #time-realtime current
-    while [ "${loops}" -gt "0" ];do
-      wait_delay "${delay}" "${idlocation}/${id}.jsonl"
-      process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
-      ((loops--))
-      [ "$(cat ${time_start_file})" != "${time_start}" ] && \
-        echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
-    done
-  done
-  echo '["finished"]' >> "${idlocation}/${id}.jsonl"
-}
-
-macro()
-{
+macro() {
   local id="$1"
   local json="$2"
   [ -z "$id" ] && id="$time_start"
+
   header
-  macro_helper "$id" "$json" &
-  disown %1
+  # Send response to client immediately
   echo "[\"$id\"]"
+  echo "$json"
+  printf '%q %q %q\n' "${location}/macro_helper.sh" "$id" "$json" | at now >/dev/null 2>&1
 }
 
 header()
