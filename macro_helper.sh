@@ -115,4 +115,6 @@ macro_helper()
   echo '["finished"]' >> "${idlocation}/${id}.jsonl"
 }
 
-macro_helper "$1" "$2"
+json=$(< "${location}/data/macro.json")
+rm -rf "${location}/data/macro.json"
+macro_helper "$1" "$json"

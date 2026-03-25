@@ -87,8 +87,8 @@ macro() {
   header
   # Send response to client immediately
   echo "[\"$id\"]"
-  echo "$json"
-  printf '%q %q %q\n' "${location}/macro_helper.sh" "$id" "$json" | at now >/dev/null 2>&1
+  echo "$json" > "${location}/data/macro.json"
+  printf '%q %q %q\n' "${location}/macro_helper.sh" "$id" | at now >/dev/null 2>&1
 }
 
 header()
