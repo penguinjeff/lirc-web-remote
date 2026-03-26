@@ -10,7 +10,6 @@
 #example: ./irsend_mult.sh 'mode=status&json=["10"]'
 #example: ./irsend_mult.sh 'mode=list'
 
-
 location="${0%/*}"
 . "${location}/common.sh"
 
@@ -70,7 +69,9 @@ status(){
 }
 
 write(){
-  extension=$1
+  local extension=$1
+  local status="s"
+  local msglist=()
   declare -n __json=$2
   header
   case "${extension}" in
@@ -79,13 +80,15 @@ write(){
       message=$(
         echo "function get_${extension}(){ return ${__json};}" \
         > "${datalocation}/get_${extension}.js" 2>&1)
-      write_data_msg message
+      [ -n "${message}" ] && status="e" && msglist+=("${message}")
+	  msglist+=("writing");msglist+=("data/get_${extension}.js")
     ;;
     *)
-      message="invalid type ${extension} to mode write"
-      write_data_msg message
+       status="e";
+	   msglist+=("invalid type ${extension} to mode write")
     ;;
   esac
+  msg "${status}" "${msglist[@]}"
 }
 
 list()
@@ -94,7 +97,7 @@ list()
   local all_buttons="{"
   local remote buttons first_button line button comma
 
-  command_exists irsend || { header; echo '["missing irsend"]'; return 0; }
+  command_exists irsend || { header; msg e "missing irsend"; return 0; }
 
   # Loop over all remotes
   while IFS="" read -r remote; do
@@ -210,8 +213,7 @@ main()
 
     *)
       header
-      message="invalid mode ${extension}"
-      write_data_msg message
+      msg e "invalid mode ${extension}"
     ;;
   esac
 }

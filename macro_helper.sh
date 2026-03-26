@@ -22,23 +22,22 @@ mkdir -p "${idlocation}"
 wait_delay()
 {
   delay="$(($1*1000))"
-  status_file="$2"
+  idfile="$2"
   local start=""
   time-realtime start
   local interval=0
   local diff=0
   local now="$start"
-  local message="$start sleeping $delay microseconds"
-  write_data_msg message >> "$status_file"
+  msg o "$now" "sleeping $delay microseconds" >> "$idfile"
   while [ "$((delay-diff))" -gt "0" ];do
     time-microseconds $start now diff
     [ "${interval}" -gt 1000 ] && interval=0 && \
     [ "$(cat ${time_start_file})" != "${time_start}" ] && \
-      echo '["interupted"]' >> "$status_file" && exit;
+      echo '["interupted"]' >> "$idfile" && exit;
     sleep .0001
     ((interval++))
   done
-  echo "[\"$now woke up\"]" >> "$status_file"
+  msg o "$now" "woke up" >> "$idfile"
 }
 
 process(){
@@ -48,11 +47,12 @@ process(){
   loops="$4"
   idfile="$5"
   local both
-  command_exists irsend || { header; echo '["missing irsend"]' >> "$idfile"; return 0; }
+  command_exists irsend || { header; msg e "missing irsend" >> "$idfile"; return 0; }
   #echo "irsend \"send_once\" \"$remote\" \"$ircode\""
   ( [ -n "$remote" ] && [ -n "$ircode" ] )&& both=$(irsend send_once "$remote" "$ircode" 2>&1)
   remove_newlines both
-  printf '["%s","%s","%s","%s","%s"]\n' "$remote" "$ircode" "$delay" "$loops" "${both%%.}" >> "$idfile"
+  [ -n "${both}" ] msg e "${both}" "$remote" "$ircode" "$delay" "$loops" >> "$idfile" || \
+  msg o "$remote" "$ircode" "$delay" "$loops" >> "$idfile"
 }
 
 macro_helper()
@@ -79,10 +79,10 @@ macro_helper()
       process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
       ((loops--))
       [ "$(cat ${time_start_file})" != "${time_start}" ] && \
-        echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
+        msg i >> "${idlocation}/${id}.jsonl" && exit;
     done
   done
-  echo '["finished"]' >> "${idlocation}/${id}.jsonl"
+  msg f >> "${idlocation}/${id}.jsonl"
 }
 
 [ -n "$2" ] && json="$2" || json=$(< "${json_pass}")

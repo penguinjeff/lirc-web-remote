@@ -24,21 +24,29 @@ time_start_file=/tmp/${USER}_irsend_tmpfs/irsend_started_time.txt
 json_pass=/tmp/${USER}_irsend_tmpfs/irsend_pass.json
 time-realtime time_start
 
-remove_newlines() {
+remove_newlines(){
   declare -n __string="$1"
   __string="${__string//$'\n'/\\\\n}"
 }
 
-write_data_msg(){
-  declare -n __message="$1";
-  [[  -z "${__message}" ]] && \
-  echo "[\"successfully written ${datalocation}/get_${extension}.js\"]" && return 0;
-  remove_newlines __message;
-  echo "[\"$__message\"]";
-}
-
-command_exists() {
+command_exists(){
   # 'command -v' returns 0 if found, non-zero otherwise
   command -v "$1" >/dev/null 2>&1
 }
 
+msg(){
+ local severity="info";
+ local message=();
+ local wrapped;
+ local mask='"%s"';
+ case "$1" in
+ "e") severity="error"; shift;;
+ "f") severity="finnished";shift;;
+ "i") severity="interupted";shift;;
+ "o") severity="info";shift;;
+ "s") severity="success";shift;;
+ esac
+ while [ -n "$1" ];do message+=("$1");mask+=',"%s"';shift; done
+ printf -v wrapped '[%s]\n' "${mask}"
+ printf "${wrapped}" "${severity}" "${message[@]}"
+}
