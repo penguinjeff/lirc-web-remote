@@ -7,48 +7,84 @@ set_time_limit(0);
  *   Allowed modes
  * --------------------------------------------------------- */
 $allowed_modes = [
-    "macro",
-"list",
-"status",
-"stop",
-"write_macros",
-"write_displays",
-"write_activities",
-"write_modules"
+  "macro",
+  "list",
+  "status",
+  "stop",
+  "write_macros",
+  "write_displays",
+  "write_activities",
+  "write_modules"
 ];
+
+/* ---------------------------------------------------------
+ * Restrict the json to what irsend_mult.sh needs
+ * --------------------------------------------------------- */
+function encodeRestricted($value) {
+  if (is_string($value)) {
+    return encodeRestrictedString($value);
+  }
+
+  if (is_array($value)) {
+    $items = array_map('encodeRestricted', $value);
+    return '[' . implode(',', $items) . ']';
+  }
+
+  throw new Exception("Invalid type: only strings or arrays allowed");
+}
+
+/* ---------------------------------------------------------
+ * Fix input to conform with needed format
+ * --------------------------------------------------------- */
+function encodeRestrictedString(string $s): string {
+  // Step 1: escape percent signs
+  $s = str_replace('%', '%25', $s);
+
+  // Step 2: URL encode
+  $s = rawurlencode($s);
+
+  // Step 3: restore spaces (rawurlencode turns them into %20)
+  $s = str_replace('%20', ' ', $s);
+
+  // Step 4: remove forbidden characters (shouldn't appear after encoding)
+  $s = str_replace(['"', '[', ']', ','], '', $s);
+
+  // Wrap in quotes
+  return '"' . $s . '"';
+}
 
 /* ---------------------------------------------------------
  *   Validate JSON input
  * --------------------------------------------------------- */
 function validate_json($json_raw) {
-    $decoded = json_decode($json_raw, true);
-    return (json_last_error() === JSON_ERROR_NONE) ? $decoded : false;
+  $decoded = json_decode($json_raw, true);
+  return (json_last_error() === JSON_ERROR_NONE) ? $decoded : false;
 }
 
 /* ---------------------------------------------------------
  *   Validate macro list-of-lists
  * --------------------------------------------------------- */
 function validate_macro_steps($steps) {
-    if (!is_array($steps)) return false;
+  if (!is_array($steps)) return false;
 
-    foreach ($steps as $step) {
-        if (!is_array($step)) return false;
-        if (count($step) < 2) return false; // at least [remote, command]
-    }
-    return true;
+  foreach ($steps as $step) {
+    if (!is_array($step)) return false;
+    if (count($step) < 2) return false; // at least [remote, command]
+  }
+  return true;
 }
 
 /* ---------------------------------------------------------
  *   Validate write_macros object (name -> list-of-lists)
  * --------------------------------------------------------- */
 function validate_macro_file($obj) {
-    if (!is_array($obj)) return false;
+  if (!is_array($obj)) return false;
 
-    foreach ($obj as $name => $steps) {
-        if (!is_string($name)) return false;
-        if (!validate_macro_steps($steps)) return false;
-    }
-    return true;
+  foreach ($obj as $name => $steps) {
+    if (!is_string($name)) return false;
+    if (!validate_macro_steps($steps)) return false;
+  }
+  return true;
 }
 
 /* ---------------------------------------------------------
@@ -56,85 +92,87 @@ function validate_macro_file($obj) {
  * --------------------------------------------------------- */
 function irsend_passthrough($mode, $json_raw, $id = "") {
 
-    // Build POST body
-    $postdata = "mode=" . urlencode($mode);
+  // Build POST body
+  $postdata = "mode=" . urlencode($mode);
 
-    if ($id !== "") {
-        $postdata .= "&id=" . urlencode($id);
-    }
+  if ($id !== "") {
+    $postdata .= "&id=" . urlencode($id);
+  }
 
-    if ($json_raw !== "") {
-        $postdata .= "&json=" . urlencode($json_raw);
-    }
+  if ($json_raw !== "") {
+//    $postdata .= "&json=" . urlencode(encodeRestricted($json_raw));
+    $postdata .= "&json=" . urlencode($json_raw);
+  }
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:4343");
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:4343");
+  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    // Use POST, like your working curl example
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+  // Use POST, like your working curl example
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
-    $response = curl_exec($ch);
+  $response = curl_exec($ch);
 
-    if (curl_errno($ch)) {
-        $err = curl_error($ch);
-        curl_close($ch);
-        echo json_encode(["success" => false, "error" => $err]);
-        return;
-    }
-
+  if (curl_errno($ch)) {
+    $err = curl_error($ch);
     curl_close($ch);
-
-    // Output EXACTLY what the IR server returned
-    echo $response;
+    echo json_encode(["success" => false, "error" => $err]);
     return;
+  }
+
+  curl_close($ch);
+
+  // Output EXACTLY what the IR server returned
+  echo $response;
+  return;
 }
+
 
 /* ---------------------------------------------------------
  *   MAIN REQUEST HANDLER
  * --------------------------------------------------------- */
 if (isset($_REQUEST['mode'])) {
 
-    $mode = $_REQUEST['mode'];
-    $id   = isset($_REQUEST['id']) ? $_REQUEST['id'] : "";
-    $json_raw = isset($_REQUEST['json']) ? $_REQUEST['json'] : "";
+  $mode = $_REQUEST['mode'];
+  $id   = isset($_REQUEST['id']) ? $_REQUEST['id'] : "";
+  $json_raw = isset($_REQUEST['json']) ? $_REQUEST['json'] : "";
 
-    /* ---- Validate mode ---- */
-    if (!in_array($mode, $allowed_modes)) {
-        echo json_encode(["success" => false, "error" => "Invalid mode"]);
-        exit;
-    }
-
-    /* ---- Validate JSON (if provided) ---- */
-    $json_decoded = null;
-    if ($json_raw !== "") {
-        $json_decoded = validate_json($json_raw);
-        if ($json_decoded === false) {
-            echo json_encode(["success" => false, "error" => "Invalid JSON"]);
-            exit;
-        }
-    }
-
-    /* ---- Mode-specific validation ---- */
-    if ($mode === "macro") {
-        if (!validate_macro_steps($json_decoded)) {
-            echo json_encode(["success" => false, "error" => "Macro must be a list of lists"]);
-            exit;
-        }
-    }
-
-    if ($mode === "write_macros") {
-        if (!validate_macro_file($json_decoded)) {
-            echo json_encode(["success" => false, "error" => "write_macros must be {name: [steps]}"]);
-            exit;
-        }
-    }
-
-    /* ---- Pass through to IR server ---- */
-    irsend_passthrough($mode, $json_raw, $id);
+  /* ---- Validate mode ---- */
+  if (!in_array($mode, $allowed_modes)) {
+    echo json_encode(["success" => false, "error" => "Invalid mode"]);
     exit;
+  }
+
+  /* ---- Validate JSON (if provided) ---- */
+  $json_decoded = null;
+  if ($json_raw !== "") {
+    $json_decoded = validate_json($json_raw);
+    if ($json_decoded === false) {
+      echo json_encode(["success" => false, "error" => "Invalid JSON"]);
+      exit;
+    }
+  }
+
+  /* ---- Mode-specific validation ---- */
+  if ($mode === "macro") {
+    if (!validate_macro_steps($json_decoded)) {
+      echo json_encode(["success" => false, "error" => "Macro must be a list of lists"]);
+      exit;
+    }
+  }
+
+  if ($mode === "write_macros") {
+    if (!validate_macro_file($json_decoded)) {
+      echo json_encode(["success" => false, "error" => "write_macros must be {name: [steps]}"]);
+      exit;
+    }
+  }
+
+  /* ---- Pass through to IR server ---- */
+  irsend_passthrough($mode, $json_raw, $id);
+  exit;
 }
 
 echo json_encode(["success" => false, "error" => "No mode provided"]);
