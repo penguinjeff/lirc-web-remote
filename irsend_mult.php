@@ -18,42 +18,6 @@ $allowed_modes = [
 ];
 
 /* ---------------------------------------------------------
- * Restrict the json to what irsend_mult.sh needs
- * --------------------------------------------------------- */
-function encodeRestricted($value) {
-  if (is_string($value)) {
-    return encodeRestrictedString($value);
-  }
-
-  if (is_array($value)) {
-    $items = array_map('encodeRestricted', $value);
-    return '[' . implode(',', $items) . ']';
-  }
-
-  throw new Exception("Invalid type: only strings or arrays allowed");
-}
-
-/* ---------------------------------------------------------
- * Fix input to conform with needed format
- * --------------------------------------------------------- */
-function encodeRestrictedString(string $s): string {
-  // Step 1: escape percent signs
-  $s = str_replace('%', '%25', $s);
-
-  // Step 2: URL encode
-  $s = rawurlencode($s);
-
-  // Step 3: restore spaces (rawurlencode turns them into %20)
-  $s = str_replace('%20', ' ', $s);
-
-  // Step 4: remove forbidden characters (shouldn't appear after encoding)
-  $s = str_replace(['"', '[', ']', ','], '', $s);
-
-  // Wrap in quotes
-  return '"' . $s . '"';
-}
-
-/* ---------------------------------------------------------
  *   Validate JSON input
  * --------------------------------------------------------- */
 function validate_json($json_raw) {
@@ -100,7 +64,7 @@ function irsend_passthrough($mode, $json_raw, $id = "") {
   }
 
   if ($json_raw !== "") {
-//    $postdata .= "&json=" . urlencode(encodeRestricted($json_raw));
+    $json_raw=json_encode(json_decode($json_raw));
     $postdata .= "&json=" . urlencode($json_raw);
   }
 
