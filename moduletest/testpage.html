@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="js/timestamp.js"></script>
+    <script type="module">
+        import { json2dom } from "./js/JSON2DOM.js";
+        import "./js/JSON2DOM/plugins.js";
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const model = {
+                linka: {
+                    url: "https://example.com",
+                    label: "Click me ( {url} )"
+                }
+            };
+
+            document.getElementById("test-area")
+                .appendChild(json2dom(model));
+        });
+    </script>
+</head>
+<body>
+    <h1>Test</h1>
+    <div id="test-area"></div>
+</body>
+</html>

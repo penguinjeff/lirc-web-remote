@@ -1,0 +1,46 @@
+UI Logic Specification
+
+Primary Select Box:
+- Always visible.
+- Contains four options:
+  1. Activities
+  2. Remotes
+  3. Edit Options
+  4. Refresh
+
+Display Logic:
+- When the Primary Select Box changes:
+  - Hide all corresponding areas.
+  - Hide all secondary select boxes.
+  - Show only the select box (if any) and the corresponding area for the selected option.
+
+Corresponding Areas:
+- Activities area
+- Remotes area
+- Edit Options area
+
+Update Logic:
+- When any variable changes:
+  - Update the display for the area that corresponds to that variable as necessary.
+  - This applies even if the area is currently hidden.
+  - When the user switches to that area later, it will already be correct.
+
+Select Box Update Logic:
+- The Activities select box updates only when the key values or their order in variables.activities change.
+- The Remotes select box updates only when the key values or their order in variables.remotes change.
+- The Edit Options select box (if present) updates only when the key values or their order in variables.edit_options change.
+- Subobject changes inside those keys may also trigger updates if they affect what is displayed.
+- Internal changes that do not affect the visible representation should not trigger updates.
+- Updates occur as necessary, even when the corresponding area is hidden.
+
+Refresh Behavior:
+- When "Refresh" is selected:
+  - Do not change which area is visible.
+  - Do not switch pages.
+  - Refresh variables.
+  - Each area updates as necessary based on its corresponding variables.
+
+Summary:
+- Visibility is controlled only by the Primary Select Box.
+- Each area and select box updates only when its corresponding variables change in a way that affects what the user sees.
+- Hidden areas stay up to date so they are always correct when shown.

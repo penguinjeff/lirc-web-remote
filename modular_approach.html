@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <script type="module">
+        import { json2dom } from "./js/JSON2DOM.js";
+        import "./js/JSON2DOM/plugins.js";
+        import "./js/refresh.js";
+
+        function build_ui() {
+            const ui = {
+                section: {
+                    id: "layout",
+                    children: [
+                        {
+                            section: {
+                                id: "selectors",
+                                children: [
+                                    { text: { text: "Remote:" }},
+                                    {
+                                        sel: {
+                                            id: "remote_select",
+                                            options: Object.keys(variables_copy.remotes).map(r => ({
+                                                value: r,
+                                                text: r
+                                            }))
+                                        }
+                                    },
+                                    { text: { text: "Activity:" }},
+                                    {
+                                        sel: {
+                                            id: "activity_select",
+                                            options: Object.keys(variables_copy.activities).map(a => ({
+                                                value: a,
+                                                text: a
+                                            }))
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            section: {
+                                id: "display_section",
+                                children: [
+                                    { text: { text: "Display Output:" }},
+                                    { section: { id: "display_content" }}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            };
+
+            document.getElementById("app").innerHTML = "";
+            document.getElementById("app").appendChild(json2dom(ui));
+        }
+
+        window.run_after_refresh = function () {
+            console.log("run_after_refresh() fired.");
+            console.log("variables_copy:", variables_copy);
+
+            build_ui();
+        };
+    </script>
+</head>
+
+<body>
+    <h1>Controller UI</h1>
+    <div id="app"></div>
+</body>
+</html>
