@@ -10,8 +10,8 @@ Primary Select Box:
 
 Display Logic:
 - When the Primary Select Box changes:
-  - Hide all corresponding areas.
   - Hide all secondary select boxes.
+  - Hide all corresponding areas.
   - Show only the select box (if any) and the corresponding area for the selected option.
 
 Corresponding Areas:
@@ -44,3 +44,4 @@ Summary:
 - Visibility is controlled only by the Primary Select Box.
 - Each area and select box updates only when its corresponding variables change in a way that affects what the user sees.
 - Hidden areas stay up to date so they are always correct when shown.
+
