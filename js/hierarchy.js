@@ -214,6 +214,7 @@ const buildLevel = (items, container, depth) => {
 ////////////////////////////////////////////////////////////
 
 const select = document.createElement("select");
+select.name=config.name;
 select.className = config.selectClass;
 
 // ⭐ ATTACH HANDLER RIGHT HERE — ALWAYS
@@ -230,16 +231,17 @@ select.addEventListener("change", (event) => {
         return;
     }
 
-
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: DEBUG HANDLER FIRED (BEGIN)
 ////////////////////////////////////////////////////////////
-    console.log("[handler-fired]", {
+if (config.debug) {
+    console.log(`[${config.name}][handler-fired]`, {
         depth,
         selectedKey,
         item: items.find(i => i.key === selectedKey),
         children: items.find(i => i.key === selectedKey)?.children
     });
+}
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: DEBUG HANDLER FIRED (END)
 ////////////////////////////////////////////////////////////
@@ -257,6 +259,7 @@ select.addEventListener("change", (event) => {
     const item = items.find(i => i.key === selectedKey);
     if (!item) return;
 
+
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: LEAF DETECTION (BEGIN)
 ////////////////////////////////////////////////////////////
@@ -267,9 +270,19 @@ const isLeaf =
     (Array.isArray(item.children) && item.children.length === 0);
 
 if (isLeaf) {
-    if (config.onLeaf) config.onLeaf(item.key);
+
+    // ⭐ Collect all <select> elements in order
+    const selects = Array.from(container.querySelectorAll("select"));
+
+    // ⭐ Collect all selected values
+    const selectedValues = selects.map(s => s.value);
+
+    // ⭐ Call user leaf function with the two arguments they expect
+    if (config.onLeaf) config.onLeaf(selects, selectedValues);
+
     return;
 }
+
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: LEAF DETECTION (END)
 ////////////////////////////////////////////////////////////
@@ -335,6 +348,23 @@ for (const item of items) {
 ////////////////////////////////////////////////////////////
 
 container.appendChild(select);
+
+////////////////////////////////////////////////////////////
+// BUILD LEVEL SUBSECTION: AUTO-SELECT FIRST OPTION (BEGIN)
+////////////////////////////////////////////////////////////
+if (!config.showBasePlaceholder && depth === 0) {
+    const firstKey = select.options[0]?.value;
+    if (firstKey) {
+        // ⭐ Delay auto-select until after DOM insertion
+        setTimeout(() => {
+            select.value = firstKey;
+            select.dispatchEvent(new Event("change"));
+        }, 0);
+    }
+}
+////////////////////////////////////////////////////////////
+// BUILD LEVEL SUBSECTION: AUTO-SELECT FIRST OPTION (END)
+////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // BUILD LEVEL SUBSECTION: APPEND SELECT (END)
