@@ -271,6 +271,11 @@ const isLeaf =
 
 if (isLeaf) {
 
+    // Remove deeper levels
+    while (container.children.length > depth + 1) {
+        container.removeChild(container.lastChild);
+    }
+
     // ⭐ Collect all <select> elements in order
     const selects = Array.from(container.querySelectorAll("select"));
 

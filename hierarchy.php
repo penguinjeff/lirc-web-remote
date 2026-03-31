@@ -11,9 +11,14 @@
 <body>
 
 <script>
+
 let data = {
     base1: ["option1.1", "option1.2"],
-    base2: ["option2.1", "option2.2"]
+    base2: {
+        "option2.1": ["option2.1.1", "option2.1.2"],
+        "option2.2": []
+    },
+    base3: []
 };
 
 function leaf(list_of_select_box_objects,list_of_selected_options)
@@ -23,25 +28,11 @@ function leaf(list_of_select_box_objects,list_of_selected_options)
         console.log(list_of_selected_options);
 }
 
-
-const ui1 = hierarchySelector(data,leaf,{
-name: "ui1",
-//debug: true,
-});
-
-const ui2 = hierarchySelector(data,leaf,{
-name: "ui2",
-//debug: true,
-showBasePlaceholder: false,
-});
-
-// ⭐ Add this line here
-//console.log(ui1.outerHTML);
-//console.log(ui2.outerHTML);
+const ui1 = hierarchySelector(data,leaf,{ name: "ui1",});
+const ui2 = hierarchySelector(data,leaf,{name: "ui2",showBasePlaceholder: false,});
 
 document.body.appendChild(ui1);
 document.body.appendChild(ui2);
 </script>
-
 </body>
 </html>
