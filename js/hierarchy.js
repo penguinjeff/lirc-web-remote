@@ -30,6 +30,8 @@ function clearLevels(fromDepth) {
 // UTILITY SUBSECTION: CLEAR LEVELS (END)
 ////////////////////////////////////////////////////////////
 
+
+
 ////////////////////////////////////////////////////////////
 // CONFIG SECTION (BEGIN)
 // Merge user config with defaults.
@@ -38,8 +40,9 @@ const config = {
     className: "hierarchy",
     allowNone: false,
     showPlaceholders: false,
-    showBasePlaceholder: true,   // <-- REQUIRED DEFAULT
+    showBasePlaceholder: true,
     debug: false,
+    onLeaf,            // ⭐ REQUIRED: wire the callback into config
     ...userConfig,
 };
 ////////////////////////////////////////////////////////////
@@ -211,12 +214,56 @@ const buildLevel = (items, container, depth) => {
 ////////////////////////////////////////////////////////////
 
 const select = document.createElement("select");
-select.className = `${config.className}-level-${depth}`;
-levels[depth] = select;
+select.className = config.selectClass;
+
+// ⭐ ATTACH HANDLER RIGHT HERE — ALWAYS
+select.addEventListener("change", (event) => {
+    const selectedKey = event.target.value;
+
+////////////////////////////////////////////////////////////
+// SUBSUBSECTION: DEBUG HANDLER FIRED (BEGIN)
+////////////////////////////////////////////////////////////
+console.log("[handler-fired]", {
+    depth,
+    selectedKey,
+    item: items.find(i => i.key === selectedKey),
+    children: items.find(i => i.key === selectedKey)?.children
+});
+////////////////////////////////////////////////////////////
+// SUBSUBSECTION: DEBUG HANDLER FIRED (END)
+////////////////////////////////////////////////////////////
+
+    if (!selectedKey) {
+        clearLevels(depth);
+        return;
+    }
+
+    const item = items.find(i => i.key === selectedKey);
+    if (!item) return;
+
+////////////////////////////////////////////////////////////
+// SUBSUBSECTION: LEAF DETECTION (BEGIN)
+////////////////////////////////////////////////////////////
+const isLeaf =
+    item.children === null ||
+    item.children === undefined ||
+    (Array.isArray(item.children) && item.children.length === 0);
+
+if (isLeaf) {
+    if (config.onLeaf) config.onLeaf(item.key);
+    return;
+}
+////////////////////////////////////////////////////////////
+// SUBSUBSECTION: LEAF DETECTION (END)
+////////////////////////////////////////////////////////////
+
+    buildLevel(item.children, container, depth + 1);
+});
 
 ////////////////////////////////////////////////////////////
 // BUILD LEVEL SUBSECTION: CREATE SELECT ELEMENT (END)
 ////////////////////////////////////////////////////////////
+
 
 
 ////////////////////////////////////////////////////////////
@@ -279,45 +326,11 @@ container.appendChild(select);
 
 
 ////////////////////////////////////////////////////////////
-// BUILD LEVEL SUBSECTION: SELECTION HANDLER (BEGIN)
-////////////////////////////////////////////////////////////
-
-select.addEventListener("change", (event) => {
-    const selectedKey = event.target.value;
-
-    // If placeholder selected → clear deeper levels
-    if (!selectedKey) {
-        clearLevelsBelow(depth);
-        return;
-    }
-
-    // Find the matching item by key (NOT by index)
-    const item = items.find(i => i.key === selectedKey);
-    if (!item) return;
-
-    // If leaf → fire callback and stop
-    if (!item.children || item.children.length === 0) {
-        if (config.onLeaf) config.onLeaf(item.key);
-        return;
-    }
-
-    // Otherwise build next level
-    buildLevel(item.children, container, depth + 1);
-});
-
-////////////////////////////////////////////////////////////
-// BUILD LEVEL SUBSECTION: SELECTION HANDLER (END)
-////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////
 // BUILD LEVEL SUBSECTION: AUTOSELECT LOGIC (BEGIN)
 ////////////////////////////////////////////////////////////
 
-// AUTOSELECT: pick first non-empty option (skip placeholder)
-if (select.options.length > 0) {
-    let firstReal = null;
+if (depth > 0) {
+    let firstReal = null;  
     for (const opt of select.options) {
         if (opt.value !== "") {
             firstReal = opt;
