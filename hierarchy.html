@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>json2html appendChild Example</title>
+    <script src="js/json2html.js"></script>
+    <script src="js/json2dom.js"></script>
+    <script src="js/hierarchy.js"></script>
+</head>
+<body>
+
+<script>
+let data = {
+    base1: ["option1.1", "option1.2"],
+    base2: ["option2.1", "option2.2"]
+};
+
+const ui = hierarchySelector(
+    data,
+    (leaf) => {
+        console.log("Leaf selected:", leaf);
+    },
+    { debug: true
+	, showBasePlaceholder: true
+    }
+);
+
+document.body.appendChild(ui);
+</script>
+
+</body>
+</html>
