@@ -221,20 +221,36 @@ select.addEventListener("change", (event) => {
     const selectedKey = event.target.value;
 
 ////////////////////////////////////////////////////////////
+// FIX: PREVENT PLACEHOLDER AT DEPTH 0 FROM TRIGGERING
+////////////////////////////////////////////////////////////
+    if (depth === 0 && selectedKey === "") {
+        while (container.children.length > 1) {
+            container.removeChild(container.lastChild);
+        }
+        return;
+    }
+
+
+////////////////////////////////////////////////////////////
 // SUBSUBSECTION: DEBUG HANDLER FIRED (BEGIN)
 ////////////////////////////////////////////////////////////
-console.log("[handler-fired]", {
-    depth,
-    selectedKey,
-    item: items.find(i => i.key === selectedKey),
-    children: items.find(i => i.key === selectedKey)?.children
-});
+    console.log("[handler-fired]", {
+        depth,
+        selectedKey,
+        item: items.find(i => i.key === selectedKey),
+        children: items.find(i => i.key === selectedKey)?.children
+    });
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: DEBUG HANDLER FIRED (END)
 ////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////
+// FIX: CLEAR DEEPER LEVELS WHEN SELECTEDKEY IS EMPTY
+////////////////////////////////////////////////////////////
     if (!selectedKey) {
-        clearLevels(depth);
+        while (container.children.length > depth + 1) {
+            container.removeChild(container.lastChild);
+        }
         return;
     }
 
@@ -244,6 +260,7 @@ console.log("[handler-fired]", {
 ////////////////////////////////////////////////////////////
 // SUBSUBSECTION: LEAF DETECTION (BEGIN)
 ////////////////////////////////////////////////////////////
+
 const isLeaf =
     item.children === null ||
     item.children === undefined ||
@@ -329,19 +346,18 @@ container.appendChild(select);
 // BUILD LEVEL SUBSECTION: AUTOSELECT LOGIC (BEGIN)
 ////////////////////////////////////////////////////////////
 
-if (depth > 0) {
-    let firstReal = null;  
-    for (const opt of select.options) {
-        if (opt.value !== "") {
-            firstReal = opt;
-            break;
-        }
+let firstReal = null;
+for (const opt of select.options) {
+    if (opt.value !== "") {
+        firstReal = opt;
+        break;
     }
+}
 
-    if (firstReal) {
-        select.value = firstReal.value;
-        select.dispatchEvent(new Event("change"));
-    }
+// ⭐ Prevent auto-select at depth 0
+if (firstReal && depth > 0) {
+    select.value = firstReal.value;
+    select.dispatchEvent(new Event("change"));
 }
 
 if (config.debug) {

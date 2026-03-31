@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>json2html appendChild Example</title>
+    <script src="js/version.js"></script>
+    <script src="js/version-check.js"></script>
+    <!-- https://github.com/moappi/json2html -->
     <script src="js/json2html.js"></script>
     <script src="js/json2dom.js"></script>
     <script src="js/hierarchy.js"></script>
@@ -22,8 +25,12 @@ const ui = hierarchySelector(
     },
     { debug: true
 	, showBasePlaceholder: false
+/*	, showBasePlaceholder: true */
     }
 );
+
+// ⭐ Add this line here
+console.log(ui.outerHTML);
 
 document.body.appendChild(ui);
 </script>
