@@ -34,11 +34,12 @@ wait_delay()
     read file_time <"${time_start_file}"
     [ "${interval}" -gt 1000 ] && interval=0 && \
     [ "${file_time}" != "${time_start}" ] && \
-      echo '["interupted"]' >> "$idfile" && exit;
+      echo '["interupted"]' >> "$idfile" && return 1;
     sleep .0001
     ((interval++))
   done
   msg o "$now" "woke up" >> "$idfile"
+  return 0
 }
 
 process(){
@@ -67,7 +68,7 @@ macro()
   for row in "${arrayOfLists[@]}"; do
     read file_time <"${time_start_file}"
     [ "${file_time}" != "${time_start}" ] && \
-      echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
+      echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && return 1;
     json-list2array "$row" array 4
     remote="${array[0]}"
     ircode="${array[1]}"
@@ -77,12 +78,12 @@ macro()
     [ -z "$loops" ] && loops=1
     #time-realtime current
     while [ "${loops}" -gt "0" ];do
-      wait_delay "${delay}" "${idlocation}/${id}.jsonl"
+      wait_delay "${delay}" "${idlocation}/${id}.jsonl" || return 1;
       process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
       ((loops--))
       read file_time <"${time_start_file}"
       [ "${file_time}" != "${time_start}" ] && \
-        msg i >> "${idlocation}/${id}.jsonl" && exit;
+        msg i >> "${idlocation}/${id}.jsonl" && return 1;
     done
   done
   msg f >> "${idlocation}/${id}.jsonl"
@@ -92,3 +93,5 @@ echo "2=$2"
 echo "json_pass=${json_pass}"
 rm -rf "${json_pass}"
 macro "$1" "$json"
+sleep 10
+rm -rf "${idlocation}/$1.jsonl"
