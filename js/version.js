@@ -1,1 +1,0 @@
-window.SITE_VERSION = 1774966155;

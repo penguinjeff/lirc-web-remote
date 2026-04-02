@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#example: ./irsend_mult.sh 'mode=macro&id=10&json=[["remote","ircode","0","1"]]'
+#example: ./irsend_mult.sh 'mode=status&json=["10"]'
+#example: ./irsend_mult.sh 'mode=list'
+#
 # Written by: Jeff Sadowski
 # this program simply runs irsend and outputs a JSON with any errors
 #                                                      name of the remote listed in irsend list EX: samsungTVremote
@@ -6,9 +10,6 @@
 #                                                      |        |      delay in miliseconds 0
 #                                                      |        |      |   loops minimum 1
 #                                                      V        V      V   V
-#example: ./irsend_mult.sh 'mode=macro&id=10&json=[["remote","ircode","0","1"]]'
-#example: ./irsend_mult.sh 'mode=status&json=["10"]'
-#example: ./irsend_mult.sh 'mode=list'
 
 location="${0%/*}"
 . "${location}/common.sh"
@@ -22,50 +23,23 @@ location="${0%/*}"
 #for url-parse-get-post
 . "${liblocation}/url/parse-get-post.sh"
 
-macro() {
-  local id="$1"
-  local json="$2"
-  [ -z "$id" ] && id="$time_start"
+#for jsonl-winow
+. "${liblocation}/jsonl/window.sh"
 
-  header
-  echo "[\"$id\"]"
-
-  echo "$json" > "${json_pass}"
-  printf '%q %q\n' "${location}/macro_helper.sh" "$id" | at now >/dev/null 2>&1
-}
-
-header()
-{
-  printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"
-}
+header(){ printf "HTTP/1.1 200 OK\nContent-Type: application/json\n\n"; }
 
 status(){
   header
-  echo "$1"
+  local message=""
   local array=()
   json-list2array "$1" array 3
-  local id="${array[0]}"
-  local start="${array[1]}"
-  local end="${array[2]}"
-  ([ -z "$id" ] || [ "$id" = "null" ]) && echo '["finished"]' && return 0
-  ([ -z "$start" ] || [ "$start" = "null" ]) && start=0;
-  ([ -z "$end" ] || [ "$end" = "null" ] )&& end=-1;
-  file="${idlocation}/${id}.jsonl"
-  [ ! -f ${file} ] && echo '["finished"]' && return 0
-  [ "$end" = "-1" ] && {
-    message=$(dd if="$file" bs=1 skip="$start" status=none)
-  } || {
-    local count=$(( end - start + 1 ))
-    message=$(dd if="$file" bs=1 skip="$start" count="$count" status=none)
-  }
-  echo -e "$message"
-
-  local lastlinedata="${message##*$'\n'}"
-  local array
-  json-list2array "$lastlinedata" array
-  case "${array[0]}" in
-    "finished"|"interupted") rm -f "$file";;
-  esac
+  local file="${idlocation}/${array[0]}.jsonl"
+  [[ -z "${array[0]}" ]] || [[ ! -f "${file}" ]] && { msg e "missing" "$file"; msg f; return 0; }
+  jsonl-window message "${file}" "${array[1]}" "${array[2]}"
+  printf "%s\n" "$message"
+  #check last line of message and remove file if appropriate
+  json-list2array "${message##*$'\n'}" array 1
+  [[ "${array[0]}" = "finished" ]] && rm -f "$file"
 }
 
 write(){
@@ -81,11 +55,11 @@ write(){
         echo "function get_${extension}(){ return ${__json};}" \
         > "${datalocation}/get_${extension}.js" 2>&1)
       [ -n "${message}" ] && status="e" && msglist+=("${message}")
-	  msglist+=("writing");msglist+=("data/get_${extension}.js")
+          msglist+=("writing");msglist+=("data/get_${extension}.js")
     ;;
     *)
        status="e";
-	   msglist+=("invalid type ${extension} to mode write")
+           msglist+=("invalid type ${extension} to mode write")
     ;;
   esac
   msg "${status}" "${msglist[@]}"
@@ -97,7 +71,7 @@ list()
   local all_buttons="{"
   local remote buttons first_button line button comma
 
-  command_exists irsend || { header; msg e "missing irsend"; return 0; }
+  command_exists irsend || { header; msg e "missing irsend" "list"; return 0; }
 
   # Loop over all remotes
   while IFS="" read -r remote; do
@@ -201,9 +175,13 @@ main()
     "status") status "$json";;
 
     "macro"|"stop")
+      header
       echo "${time_start}" > "${time_start_file}"
       [ "${mode}" = "stop" ] &&  header && echo '["stopping"]' && return 0
-      macro "$id" "$json"
+      echo "$json" > "${json_pass}"
+      [ -z "$id" ] && id="${time_start}"
+      msg n "$id"
+      printf '%q %q\n' "${location}/macro.sh" "$id" | at now >/dev/null 2>&1
     ;;
 
     'write_'* )

@@ -6,7 +6,7 @@
 #                                      |        |      delay in miliseconds 0
 #                                      |        |      |   loops minimum 1
 #                                      V        V      V   V
-#example: ./macro_helper.sh "10" '[["remote","ircode","0","1"]]'
+#example: ./macro.sh "10" '[["remote","ircode","0","1"]]'
 
 
 location="${0%/*}"
@@ -31,8 +31,9 @@ wait_delay()
   msg o "$now" "sleeping $delay microseconds" >> "$idfile"
   while [ "$((delay-diff))" -gt "0" ];do
     time-microseconds $start now diff
+    read file_time <"${time_start_file}"
     [ "${interval}" -gt 1000 ] && interval=0 && \
-    [ "$(cat ${time_start_file})" != "${time_start}" ] && \
+    [ "${file_time}" != "${time_start}" ] && \
       echo '["interupted"]' >> "$idfile" && exit;
     sleep .0001
     ((interval++))
@@ -47,7 +48,7 @@ process(){
   loops="$4"
   idfile="$5"
   local both
-  command_exists irsend || { header; msg e "missing irsend" >> "$idfile"; return 0; }
+  command_exists irsend || { header; msg e "missing irsend" "$1" "$2" >> "$idfile"; return 0; }
   #echo "irsend \"send_once\" \"$remote\" \"$ircode\""
   ( [ -n "$remote" ] && [ -n "$ircode" ] )&& both=$(irsend send_once "$remote" "$ircode" 2>&1)
   remove_newlines both
@@ -55,7 +56,7 @@ process(){
   msg o "$remote" "$ircode" "$delay" "$loops" >> "$idfile"
 }
 
-macro_helper()
+macro()
 {
   echo "${time_start}" > "${time_start_file}"
   id="$1"
@@ -64,7 +65,8 @@ macro_helper()
   local array=()
   json-listOfLists2arrayOfLists "${json}" arrayOfLists
   for row in "${arrayOfLists[@]}"; do
-    [ "$(cat ${time_start_file})" != "${time_start}" ] && \
+    read file_time <"${time_start_file}"
+    [ "${file_time}" != "${time_start}" ] && \
       echo '["interupted"]' >> "${idlocation}/${id}.jsonl" && exit;
     json-list2array "$row" array 4
     remote="${array[0]}"
@@ -78,15 +80,15 @@ macro_helper()
       wait_delay "${delay}" "${idlocation}/${id}.jsonl"
       process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
       ((loops--))
-      [ "$(cat ${time_start_file})" != "${time_start}" ] && \
+      read file_time <"${time_start_file}"
+      [ "${file_time}" != "${time_start}" ] && \
         msg i >> "${idlocation}/${id}.jsonl" && exit;
     done
   done
   msg f >> "${idlocation}/${id}.jsonl"
 }
-
 [ -n "$2" ] && json="$2" || json=$(< "${json_pass}")
 echo "2=$2"
 echo "json_pass=${json_pass}"
-#rm -rf "${json_pass}"
-macro_helper "$1" "$json"
+rm -rf "${json_pass}"
+macro "$1" "$json"

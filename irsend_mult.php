@@ -4,140 +4,191 @@ ignore_user_abort(true);
 set_time_limit(0);
 
 /* ---------------------------------------------------------
- *   Allowed modes
+ *   JSON HELPERS
  * --------------------------------------------------------- */
-$allowed_modes = [
-  "macro",
-  "list",
-  "status",
-  "stop",
-  "write_macros",
-  "write_displays",
-  "write_activities",
-  "write_modules"
+
+function decode_json($raw) {
+    $d = json_decode($raw, true);
+    return (json_last_error() === JSON_ERROR_NONE) ? $d : false;
+}
+
+/* Sanitize:
+   - Allowed: A-Z a-z 0-9 _ . - + = & { } % [ ] space
+   - Everything else → %XX (uppercase hex)
+*/
+function sanitize_php($str) {
+    $out = "";
+    $len = strlen($str);
+
+    for ($i = 0; $i < $len; $i++) {
+        $c = $str[$i];
+
+        if (preg_match('/[A-Za-z0-9_\.\-\+\=\&\{\}\%
+
+\[\]
+
+ ]/', $c)) {
+            $out .= $c;
+        } else {
+            $out .= sprintf("%%%02X", ord($c));
+        }
+    }
+
+    return $out;
+}
+
+/* Normalize:
+   - convert ints/bools/floats to strings
+   - sanitize each string
+   - preserve list or list-of-lists structure
+*/
+function normalize($data) {
+    if (!is_array($data)) return sanitize_php(strval($data));
+
+    $out = [];
+    foreach ($data as $item) {
+        if (is_array($item)) {
+            $sub = [];
+            foreach ($item as $s) $sub[] = sanitize_php(strval($s));
+            $out[] = $sub;
+        } else {
+            $out[] = sanitize_php(strval($item));
+        }
+    }
+    return $out;
+}
+
+/* Bash-safe JSON:
+   - list of strings
+   - OR list of lists of strings
+*/
+function validate_bash_json($data) {
+    if (!is_array($data)) return false;
+
+    foreach ($data as $item) {
+        if (is_string($item)) continue;
+
+        if (is_array($item)) {
+            foreach ($item as $s) {
+                if (!is_string($s)) return false;
+            }
+            continue;
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
+/* Macro steps: list of lists of strings */
+function validate_macro_steps($steps) {
+    if (!is_array($steps)) return false;
+    foreach ($steps as $step) {
+        if (!is_array($step)) return false;
+        foreach ($step as $s) {
+            if (!is_string($s)) return false;
+        }
+    }
+    return true;
+}
+
+/* write_macros: { name: list-of-lists } */
+function validate_macro_file($obj) {
+    if (!is_array($obj)) return false;
+    foreach ($obj as $name => $steps) {
+        if (!is_string($name)) return false;
+        if (!validate_macro_steps($steps)) return false;
+    }
+    return true;
+}
+
+/* ---------------------------------------------------------
+ *   MODE DEFINITIONS
+ * --------------------------------------------------------- */
+
+$DEFAULT = ["needs_json" => true, "validator" => "validate_bash_json"];
+
+$MODES = [
+    "macro"            => ["validator" => "validate_macro_steps"],
+    "list"             => ["needs_json" => false],
+    "status"           => [],
+    "stop"             => ["needs_json" => false],
+    "write_macros"     => ["validator" => "validate_macro_file"],
+    "write_displays"   => [],
+    "write_activities" => [],
+    "write_modules"    => []
 ];
 
-/* ---------------------------------------------------------
- *   Validate JSON input
- * --------------------------------------------------------- */
-function validate_json($json_raw) {
-  $decoded = json_decode($json_raw, true);
-  return (json_last_error() === JSON_ERROR_NONE) ? $decoded : false;
+function cfg($mode, $MODES, $DEFAULT) {
+    return isset($MODES[$mode]) ? array_merge($DEFAULT, $MODES[$mode]) : false;
 }
 
 /* ---------------------------------------------------------
- *   Validate macro list-of-lists
+ *   PASSTHROUGH
  * --------------------------------------------------------- */
-function validate_macro_steps($steps) {
-  if (!is_array($steps)) return false;
 
-  foreach ($steps as $step) {
-    if (!is_array($step)) return false;
-    if (count($step) < 2) return false; // at least [remote, command]
-  }
-  return true;
-}
+function passthrough($mode, $json_raw, $id) {
+    $post = "mode=" . urlencode($mode);
+    if ($id !== "") $post .= "&id=" . urlencode($id);
+    if ($json_raw !== "") $post .= "&json=" . urlencode($json_raw);
 
-/* ---------------------------------------------------------
- *   Validate write_macros object (name -> list-of-lists)
- * --------------------------------------------------------- */
-function validate_macro_file($obj) {
-  if (!is_array($obj)) return false;
+    $ch = curl_init("http://127.0.0.1:4343");
+    curl_setopt_array($ch, [
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => $post
+    ]);
 
-  foreach ($obj as $name => $steps) {
-    if (!is_string($name)) return false;
-    if (!validate_macro_steps($steps)) return false;
-  }
-  return true;
-}
-
-/* ---------------------------------------------------------
- *   Forward request to IR server and echo EXACT response
- * --------------------------------------------------------- */
-function irsend_passthrough($mode, $json_raw, $id = "") {
-
-  // Build POST body
-  $postdata = "mode=" . urlencode($mode);
-
-  if ($id !== "") {
-    $postdata .= "&id=" . urlencode($id);
-  }
-
-  if ($json_raw !== "") {
-    $json_raw=json_encode(json_decode($json_raw));
-    $postdata .= "&json=" . urlencode($json_raw);
-  }
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:4343");
-  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-  // Use POST, like your working curl example
-  curl_setopt($ch, CURLOPT_POST, true);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-
-  $response = curl_exec($ch);
-
-  if (curl_errno($ch)) {
-    $err = curl_error($ch);
+    $resp = curl_exec($ch);
+    if (curl_errno($ch)) {
+        echo json_encode(["success" => false, "error" => curl_error($ch)]);
+        curl_close($ch);
+        return;
+    }
     curl_close($ch);
-    echo json_encode(["success" => false, "error" => $err]);
-    return;
-  }
-
-  curl_close($ch);
-
-  // Output EXACTLY what the IR server returned
-  echo $response;
-  return;
+    echo $resp;
 }
 
-
 /* ---------------------------------------------------------
- *   MAIN REQUEST HANDLER
+ *   MAIN DISPATCHER
  * --------------------------------------------------------- */
-if (isset($_REQUEST['mode'])) {
 
-  $mode = $_REQUEST['mode'];
-  $id   = isset($_REQUEST['id']) ? $_REQUEST['id'] : "";
-  $json_raw = isset($_REQUEST['json']) ? $_REQUEST['json'] : "";
+if (!isset($_REQUEST['mode'])) {
+    echo json_encode(["success" => false, "error" => "No mode provided"]);
+    exit;
+}
 
-  /* ---- Validate mode ---- */
-  if (!in_array($mode, $allowed_modes)) {
+$mode = $_REQUEST['mode'];
+$id   = $_REQUEST['id']   ?? "";
+$raw  = $_REQUEST['json'] ?? "";
+
+$cfg = cfg($mode, $MODES, $DEFAULT);
+if ($cfg === false) {
     echo json_encode(["success" => false, "error" => "Invalid mode"]);
     exit;
-  }
-
-  /* ---- Validate JSON (if provided) ---- */
-  $json_decoded = null;
-  if ($json_raw !== "") {
-    $json_decoded = validate_json($json_raw);
-    if ($json_decoded === false) {
-      echo json_encode(["success" => false, "error" => "Invalid JSON"]);
-      exit;
-    }
-  }
-
-  /* ---- Mode-specific validation ---- */
-  if ($mode === "macro") {
-    if (!validate_macro_steps($json_decoded)) {
-      echo json_encode(["success" => false, "error" => "Macro must be a list of lists"]);
-      exit;
-    }
-  }
-
-  if ($mode === "write_macros") {
-    if (!validate_macro_file($json_decoded)) {
-      echo json_encode(["success" => false, "error" => "write_macros must be {name: [steps]}"]);
-      exit;
-    }
-  }
-
-  /* ---- Pass through to IR server ---- */
-  irsend_passthrough($mode, $json_raw, $id);
-  exit;
 }
 
-echo json_encode(["success" => false, "error" => "No mode provided"]);
+if ($cfg["needs_json"]) {
+    $decoded = decode_json($raw);
+    if ($decoded === false) {
+        echo json_encode(["success" => false, "error" => "Invalid JSON"]);
+        exit;
+    }
+
+    // Normalize + sanitize
+    $decoded = normalize($decoded);
+
+    // Validate structure
+    if (!$cfg["validator"]($decoded)) {
+        echo json_encode(["success" => false, "error" => "JSON validation failed"]);
+        exit;
+    }
+
+    // Re-encode sanitized JSON
+    $raw = json_encode($decoded);
+}
+
+passthrough($mode, $raw, $id);
 ?>

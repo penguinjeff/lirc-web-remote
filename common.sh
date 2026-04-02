@@ -41,12 +41,14 @@ msg(){
  local mask='"%s"';
  case "$1" in
  "e") severity="error"; shift;;
- "f") severity="finnished";shift;;
- "i") severity="interupted";shift;;
+ "f") severity="finished";shift;;
+ "i") severity="interrupted";shift;;
  "o") severity="info";shift;;
  "s") severity="success";shift;;
+ "n") severity="$2";shift;shift;;
  esac
  while [ -n "$1" ];do message+=("$1");mask+=',"%s"';shift; done
  printf -v wrapped '[%s]\n' "${mask}"
  printf "${wrapped}" "${severity}" "${message[@]}"
+ [ "$severity" = "interrupted" ] && msg f
 }
