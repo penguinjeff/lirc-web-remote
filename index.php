@@ -1,1 +1,529 @@
-remote.php
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<script src="js/0utils.js"></script>
+<script id="remotes" src="data/get_remotes.js"></script>
+<script id="displays" src="data/get_displays.js"></script>
+<script id="default_display" src="defaults/get_default_display.js"></script>
+<script id="activities" src="data/get_activities.js"></script>
+<script id="macros" src="data/get_macros.js"></script>
+<script id="modules" src="data/get_modules.js"></script>
+<script id="default_modules" src="defaults/get_default_modules.js?ts=2"></script>
+<script src="js/save_load_refreshv1.js"></script>
+<script src="js/execute.js"></script>
+<script>
+var remotes={};
+var default_display=get_default_display();
+var displays={};
+var activites={};
+var macros={};
+var modules={};
+var default_modules=get_default_modules();
+
+const params = new URLSearchParams(location.search);
+const scale = parseFloat(params.get("scale") || 1);
+document.documentElement.style.setProperty("--scale", scale);
+
+function edit(item)
+{
+ console.log("edit");
+ console.log(item);
+}
+
+function activity_display(activity)
+{
+ function populate_modules(activity_remotes,activity_modules)
+ {
+  function build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
+  {
+   const i=catch_all_instances.length
+   catch_all_instances.push({});
+   if(used_buttons.length>0)
+   {
+    build_catchall(
+     remote,
+     //remove all used buttons from what we send to make it easier
+     remote_buttons.filter(item => !used_buttons.includes(item)),
+     [],
+     idtag,
+     module_options);
+    return;
+   }
+   let {button_columns=5,button_rows=3,alldef="unused"}=module_options;
+   catch_all_instances[i]["remote"]=remote;
+   catch_all_instances[i]["button_map"]={};
+   catch_all_instances[i]["rows"]=button_rows;
+   catch_all_instances[i]["columns"]=button_columns;
+   catch_all_instances[i]["button_map"][""]="";
+   for(const button of remote_buttons)
+   {
+    let remote_buttons_name=button.replace(new RegExp("^KEY_","i"), "").replace(new RegExp("^BTN_","i"), "");
+    catch_all_instances[i]["button_map"][remote_buttons_name]=button;
+   }
+   display_catchall(idtag,i,0);
+  }
+  //----------------- Internalizing specialized function
+  console.log("populate_modules");
+  let location='custom';
+  // console.log(activity_modules);
+  for(const remote of activity_remotes)
+  {
+   let remote_buttons=remotes[remote];
+   let catchall_instances=[];
+   // console.log(remote_buttons)
+   let remote_custom_modules=activity_modules["remotes"][remote]["modules"];
+   let used_buttons=[];
+   for(const remote_custom_module of remote_custom_modules)
+   {
+    let module=remote_custom_module[0];
+    let idtag=remote_custom_module[1];
+    used_buttons=[...used_buttons, ...build_module(remote,remote_buttons,module,idtag,modules)];
+   }
+   let remote_default_modules=activity_modules["remotes"][remote]["default_modules"];
+   for(const remote_default_module of remote_default_modules)
+   {
+    let module=remote_default_module[0];
+    let idtag=remote_default_module[1];
+    if(module==="catchall"){catchall_instances.push([...remote_default_module]);continue;}
+    used_buttons=[...used_buttons, ...build_module(remote,remote_buttons,module,idtag,default_modules)];
+   }
+   // console.log("used_buttons:");
+   // console.log(used_buttons);
+   for(const catchall_instance of catchall_instances)
+   {
+    let module_options=catchall_instance[2];
+    let idtag=catchall_instance[1];
+    build_catchall(remote,remote_buttons,used_buttons,idtag,module_options)
+   }
+  }
+  module_types=["modules","default_modules"];
+  for(const module_type of module_types)
+  {
+   for(const activity_module of activity_modules["other"][0]["modules"])
+   {
+    //function build_module(remote_buttons,module,idtag,modules_obj)
+    let module=activity_module[0];
+    let idtag=activity_module[1];
+    build_module([],module,idtag,modules);
+   }
+  }
+ }
+ //-----------internalizing function
+ //console.log("activity_display");
+ let remote_location=createElement({"tag":"div","class":"container"});
+ var activity_modules={"remotes":[],"other":[{"default_modules":[],"modules":[]}]};
+ const {remotes:activity_remotes,display}=activity;
+ // console.log(default_modules_list);
+ for(const remote of activity_remotes)
+ {
+  activity_modules["remotes"][remote]={"default_modules":[],"modules":[]};
+ }
+ let module_rows=display["modules"];
+ let module_counter={}
+ for(const module_column of module_rows)
+ {
+  let module_row_location=createElement({"tag":"div","class":"container-1"});
+  for(const module_item of module_column)
+  {
+   let module_index=-1
+   let location="other";
+   let location_index=0;
+   let module="";
+   let module_options={};
+   let module_type="other"
+   if(module_item.length<1)
+   {module="None";
+   }
+   else
+   {
+    module=module_item[0];
+    if(!module_counter[module]){module_counter[module]=1;}else{module_counter[module]++;}
+    if(module_item.length>1 && typeof(module_item[1]==="number") && module_item[1] < activity_remotes.length)
+    {
+     location="remotes";
+     location_index=activity_remotes[module_item[1]];
+     if(module_item.length>2){module_options=module_item[2];}
+    }
+    // console.log(location+":"+location_index+":"+module);
+    module_index=default_modules_list.indexOf(module);
+    if(!(module_index===-1)){module_type="default_modules";}
+    module_index=modules_list.indexOf(module);
+    if(!(module_index===-1)){module_type="modules";}
+   }
+   let idtag=module+":"+module_counter[module]+":"+location+":"+location_index;
+   if(module_type==="default_modules"||module_type==="modules")
+   {
+    activity_modules[location][location_index][module_type].push([module,idtag,module_options]);
+   }
+   activity_modules[location][location_index]["default_modules"]
+   let theclass=module;
+   // console.log("module:"+module);
+   if(module_type==="default_modules")
+   {
+    theclass=default_modules[module]["class"];
+    //  console.log(default_modules[module])
+   }
+   if(module_type==="modules")
+   {
+    theclass=modules[module]["class"];
+    // console.log(modules[module])
+   }
+   let module_location=createElement({"tag":"div","id":idtag,"class":theclass});
+   // add module_location to row
+   module_row_location.appendChild(module_location);
+  }
+  // add row to remote_location
+  remote_location.appendChild(module_row_location);
+ }
+ let base=document.getElementById("remote_location");
+ base.innerHTML=""
+ base.appendChild(createElement({"tag":"div","class":"container"}).appendChild(remote_location))
+ // console.log(module_counter);
+ populate_modules(activity_remotes,activity_modules);
+}
+
+let catch_all_instances=[];
+
+
+function display_catchall(idtag,instance,index)
+{
+ // console.log("display_catchall");
+ const {remote,rows,columns,button_map}=catch_all_instances[instance];
+ let name_list=Object.keys(button_map);
+ let sorted=name_list.filter(str => str).sort();
+ const multiple_of_rows=Math.ceil(sorted.length/rows)*rows;
+ const padding=multiple_of_rows-sorted.length;
+ sorted=sorted.concat(Array(padding).fill(""));
+ if(sorted.length<=(rows*columns)){index=0}
+ if(index<0){index=((sorted.length/rows)-1);}
+ if(index+1>(sorted.length/rows)){index=0;}
+ const start_index=index;
+
+ let itemrows=[];
+ Array.from({ "length": (rows+1) }, () => itemrows.push(createElement({"tag":"div","class":"container-2"})));
+ let z=0;
+ for(let x=0;x<columns;x++)
+ {
+  for(let y=0;y<rows;y++)
+  {
+   let button_name=sorted[(index*rows+y)];
+   itemrows[y].appendChild(create_button(remote,button_name,button_map[button_name]));
+   z++;
+  }
+  index++;
+  if(z>=sorted.length){break;}
+  if(index+1>(sorted.length/rows)){index=0;}
+  // console.log("index:"+index);
+ }
+ if(sorted.length>(rows*columns))
+ {
+  itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index-1)+")","innerHTML":"&lt;"}));
+  for(let y=0;y<columns-2;y++){itemrows[rows].appendChild(create_button(remote,"",""));}
+  itemrows[rows].appendChild(createElement({"tag":"button","class":"button","onclick":"display_catchall('"+idtag+"',"+instance+","+(start_index+1)+")","innerHTML":"&gt;"}))
+ }
+ let common=createElement({"tag":"div","class":"common"});
+ for(itemrow of itemrows){common.appendChild(itemrow);}
+ const base=document.getElementById(idtag);
+ base.innerHTML="";
+ base.appendChild(common);
+}
+
+
+function create_button(remote="",button_name="",button="")
+{
+ function decodeHtmlEntities(str)
+ {
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = str;
+  return tempElement.textContent || tempElement.innerText;
+ }
+ if(button_name==="")
+ {
+  return createElement({"tag":"div","class":"empty"});
+ }
+ const common="('"+remote+"','"+button+"',this,event)"
+ const presshold="presshold"+common;
+ const release="release"+common;
+ return createElement({"tag":"button","class":"button","onpointerdown":presshold,"onpointerup":release,"onpointerleave":release,"innerHTML":decodeHtmlEntities(button_name)});
+}
+
+let held=false;
+let lolding=false;
+let mousedown=false;
+let holdtimer=0;
+
+function presshold(remote,button,item,event)
+{
+ function hold(remote,button)
+ {
+  if(holding)
+  {
+   held=true
+   // loop an unreasonable amount of times 1000 is unreasonable and should be cut off long before reached
+   execute('macro',[[remote,button,0,1000]])
+   console.log("remote:"+remote+" button:"+button);
+  }
+ }
+ console.log(remote+"+"+button);
+ item.setAttribute('class','button_clicked')
+ mousedown=true;
+ holding=true;
+ held=false;
+ holdtimer=setTimeout(function(){hold(remote,button); }, 700);
+ navigator.vibrate(700);
+ console.log("remote:"+remote+" button:"+button);
+ execute('macro',[[remote,button,0,1]])
+}
+
+
+let altholdtimer=0;
+function release(remote,button,item,event)
+{
+ function delayed_release(item)
+ {item.setAttribute('class','button')
+ }
+ if(event && !event['button'])
+ {
+   holding=false;
+   clearTimeout(this.holdtimer);
+   if(held){execute('stop',[]);}
+   altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
+   mousedown=false;
+   held=false;
+ }
+}
+
+
+
+function build_module(remote,remote_buttons,module_name,idtag,modules_obj)
+{
+ // console.log("build_module for "+module_name);
+ let has_needed=false;
+ let used_buttons=[];
+ let module=modules_obj[module_name];
+ if(!module||!module["needed"]){return [];}
+ 
+ if(!module['needed'].every(item => remote_buttons.includes(item))){return [];}
+ // console.log(module);
+ let itemrows=[];
+ let base=document.getElementById(idtag);
+ base.innerHTML="";
+// let common=createElement({"tag":"div"})
+ for(const row of module["buttons"])
+ {
+  let itemrow=createElement({"tag":"div","class":"container-2"});
+  console.log("row:");
+  for(const column of row)
+  {
+   // console.log("column:");
+   // console.log(column);
+   let button_name=column[0];
+   let button_type=column[1];
+   let type_item=column[2];
+   // console.log("remote_buttons:");
+   // console.log(remote_buttons);
+   switch(button_type)
+   {
+    case "ircode":
+     if(remote_buttons.indexOf(type_item)>-1)
+     {
+      used_buttons.push(type_item);
+      itemrow.appendChild(create_button(remote,button_name,type_item));
+     }
+     else
+     {
+      if(!module["skip"])
+      {
+       itemrow.appendChild(create_button());
+      }
+     }
+    break;
+    case "macro":
+     if(macros[type_item])
+     {
+      itemrow.appendChild(create_macro_button(type_item,button_name));
+     }
+     else
+     {
+      if(!module["skip"])
+      {
+       itemrow.appendChild(create_button());
+      }
+     }
+    break;
+   }
+  }
+  base.appendChild(itemrow)
+ }
+ // console.log("used_buttons:")
+ // console.log(used_buttons)
+ return used_buttons;
+}
+
+function create_macro_button(macro,button_name)
+{
+
+}
+
+
+function display(item,subitem)
+{
+ // console.log("item");
+ // console.log(item);
+ if(subitem=="None"){return}
+ // console.log("subitem");
+ console.log(subitem);
+ let activity={};
+ switch(item)
+ {case "Remotes":
+  {
+   activity={remotes:[subitem],display:default_display};
+  }
+  break;
+  case "Activities":
+  {
+   activitiy=activities[subitem];
+  }
+  break;
+  case "Edit":
+  {
+   edit(subitem);
+   return;
+  }
+  break;
+  default:
+  {
+   console.log(item+" not known");
+  }
+ } 
+ activity_display(activity);
+}
+
+
+var remotes_list=["None"];
+var displays_list=["None"];
+var activities_list=["None"];
+var macros_list=["None"];
+var modules_list=["None"];
+var default_modules_list=["None"];
+
+var prev=-1;
+var prevsub=-1
+const protocol = window.location.protocol;
+//console.log(protocol);
+var menu="";
+var submenu="";
+
+const url = new URL(window.location.href);
+menu = url.searchParams.get("menu");
+submenu = url.searchParams.get("submenu");
+ts = url.searchParams.get("ts");
+// console.log("menu:"+menu);
+// console.log("submenu:"+submenu);
+
+function setoption(selectbox,requested_option_name)
+{
+ let index=Array.from(selectbox.options).map(option => option.value).indexOf(requested_option_name);
+ if(index===-1){return;}
+ selectbox.selectedIndex=index;
+ selectbox.dispatchEvent(new Event("change"));
+}
+
+// var count=0;
+var preinit=true;
+var menu_set=false;
+var submenu_set=false;
+function nav()
+{
+ let remote_kocation=document.getElementById("remote_location");
+ remote_location.innerHTML=""; 
+ // console.log("count:"+(count++));
+ if(preinit)
+ {
+  preinit=false;
+  // console.log("Preinit");
+  return;
+ }
+ const navigator=document.getElementById("navigator");
+ if(!menu_set)
+ {
+  // console.log("initializing menu");
+  menu_set=true;
+  if(menu){setoption(navigator,menu);}
+  else
+  {
+   if(Object.keys(activities).length === 0){setoption(navigator,"Remotes");}
+   else{setoption(navigator,"Activities");}
+  }
+  return;
+ }
+ const item=navigator.nextElementSibling;
+ if(!submenu_set)
+ {
+  // console.log("initializing submenu");
+  submenu_set=true;
+  if(submenu){setoption(navigator.nextElementSibling,submenu);}
+  else{setoption(navigator.nextElementSibling,Array.from(item.options).map(option => option.value)[0]);}
+  return;
+ }
+ if(navigator.value=="refresh")
+ {
+  // console.log("refresh");
+  menu_set=false;
+  submenu_set=false;
+  menu=prev;
+  submenu=prevsub;
+  setoption(navigator,menu);
+  return;
+ }
+ prev=navigator.value
+ prevsub=item.value;
+ display(prev,prevsub);
+}
+
+
+function refresh()
+{
+ load();
+ refresh_list("remotes");
+ refresh_list("displays");
+ refresh_list("activities");
+ refresh_list("macros");
+ refresh_list("modules");
+ refresh_list("default_modules");
+ create_navigator();
+}
+
+function refresh_list(item)
+{window[item+"_list"]=Object.keys(window[item]);
+if(window[item+"_list"].length===0){window[item+"_list"]=["None"];}
+}
+
+function create_navigator()
+{
+ let navigator_location=document.getElementById("navigator_location");
+ let navigator=document.getElementById("navigator");
+ if(navigator){navigator.remove};
+ let edits=["Activites","Macros","Modules","Displays"];
+ let navigate={"select":{"Activities":activities_list,"Remotes":remotes_list,"Edit":edits,"refresh":["None"]},id:"navigator",onchange:"nav()"};
+ let elem=createElement(navigate);
+ navigator_location.appendChild(elem);
+ nav();
+}
+
+var navigator_location=createElement({"tag":"div","id":"navigator_location"});
+var remote_location=createElement({"tag":"div","id":"remote_location"});
+window.addEventListener("load", function () {
+ var bodyElement = document.body;
+ bodyElement.appendChild(navigator_location);
+ bodyElement.appendChild(remote_location);
+ refresh()
+})
+
+</script>
+<link rel="stylesheet" href="/lirc-web-remote/css/remote.css?ts=1">
+</head>
+<body style="width:100%,height:100%">
+</body>
+</html>

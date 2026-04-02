@@ -8,23 +8,31 @@
 # This project requires lircd to be setup correctly.
 # This project requires netcat (nc) to be installed for the irsend service I created.
 
+Prereques
+Install lirc add your lirc remotes
+make sure your lirc remotes have proper button names my interface expects this
+irrecord -l show most proper button names I know I saw a lot without proper name when I was downloading some
+
+
 # move this directory to /var/www/html/lirc-web-remote/
 sudo cp -r . /var/www/html/lirc-web-remote
-sudo chmod a+x /var/www/html/lirc-web-remote/irsend.sh
+sudo chmod a+x /var/www/html/lirc-web-remote/irsend_mult.sh
+sudo chmod a+x /var/www/html/lirc-web-remote/macro.sh
+sudo chmod a+x /var/www/html/lirc-web-remote/refresh_remotes.sh
 # To install irsend service
+adduser irsend
+add irsend to lirc group
 sudo cp irsend_mult.service /etc/systemd/system/irsend_mult.service
 sudo systemctl daemon-reload
 sudo systemctl start irsend_mult
 sudo systemctl enable irsend_mult
+sudo chown -R irsend: /var/www/html/lirc-web-remote/data/
+/var/www/html/lirc-web-remote/refresh_remotes.sh
 
-##### Warning this part may be Dangerous ######
-# I set this directory writable by all for the first save
-sudo chmod a+w /var/www/html/lirc-web-remote/data/
-# use the web page to save data in the Edit section
-# Set the owner to the webserver user that should have written the file
-sudo chown -R $(ls -l /var/www/html/lirc-web-remote/data/|grep "saved-data-"|awk '{print $3}') /var/www/html/lirc-web-remote/data/
-# remove write flag for all other users
-sudo chmod go-w /var/www/html/lirc-web-remote/data/
+
+#
+# my rewrite was better at the remote but still pretty crappy I am working on another rewite that will use some tricks I am working on
+#
 
 #making lots of changes
 #
@@ -32,15 +40,7 @@ sudo chmod go-w /var/www/html/lirc-web-remote/data/
 #
 
 #
-# I will soon implement an indicator to let you know it sent a command
-#
-
-#
-# Finnished moving from running a single command to multiple
-#
-
-#
-# Finnished macros 
+# Everything is a macro I want a better macro editor
 #
 
 #
