@@ -3,22 +3,13 @@
 <head>
     <meta charset="UTF-8">
 <script src="js/0utils.js"></script>
-<script id="remotes" src="data/get_remotes.js"></script>
-<script id="displays" src="data/get_displays.js"></script>
 <script id="default_display" src="defaults/get_default_display.js"></script>
-<script id="activities" src="data/get_activities.js"></script>
-<script id="macros" src="data/get_macros.js"></script>
-<script id="modules" src="data/get_modules.js"></script>
 <script id="default_modules" src="defaults/get_default_modules.js?ts=2"></script>
-<script src="js/save_load_refreshv1.js"></script>
+<script src="js/refresh.js"></script>
+<!--<script src="js/save_load_refreshv1.js"></script>-->
 <script src="js/execute.js"></script>
 <script>
-var remotes={};
 var default_display=get_default_display();
-var displays={};
-var activites={};
-var macros={};
-var modules={};
 var default_modules=get_default_modules();
 
 const params = new URLSearchParams(location.search);
@@ -406,7 +397,7 @@ var displays_list=["None"];
 var activities_list=["None"];
 var macros_list=["None"];
 var modules_list=["None"];
-var default_modules_list=["None"];
+var default_modules_list=Object.keys(default_modules);
 
 var prev=-1;
 var prevsub=-1
@@ -469,7 +460,7 @@ function nav()
  }
  if(navigator.value=="refresh")
  {
-  // console.log("refresh");
+  console.log("refresh");
   menu_set=false;
   submenu_set=false;
   menu=prev;
@@ -483,25 +474,15 @@ function nav()
 }
 
 
-function refresh()
+function refresh_list()
 {
- load();
- refresh_list("remotes");
- refresh_list("displays");
- refresh_list("activities");
- refresh_list("macros");
- refresh_list("modules");
- refresh_list("default_modules");
- create_navigator();
+ let list=["remotes","displays","activities","macros","modules"];
+ refresh(list,run_after_refresh);
 }
 
-function refresh_list(item)
-{window[item+"_list"]=Object.keys(window[item]);
-if(window[item+"_list"].length===0){window[item+"_list"]=["None"];}
-}
-
-function create_navigator()
+function run_after_refresh(list,variables)
 {
+ let remotes_list=Object.keys(remotes);
  let navigator_location=document.getElementById("navigator_location");
  let navigator=document.getElementById("navigator");
  if(navigator){navigator.remove};
@@ -518,11 +499,11 @@ window.addEventListener("load", function () {
  var bodyElement = document.body;
  bodyElement.appendChild(navigator_location);
  bodyElement.appendChild(remote_location);
- refresh()
+ refresh_list()
 })
 
 </script>
-<link rel="stylesheet" href="/lirc-web-remote/css/remote.css?ts=1">
+<link rel="stylesheet" href="css/remote.css">
 </head>
 <body style="width:100%,height:100%">
 </body>
