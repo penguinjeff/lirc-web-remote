@@ -1,6 +1,24 @@
+/* Default module definitions
+ *
+ * Each module entry contains:
+ *   - "buttons": a 2D array of button definitions OR "REST" for catchall
+ *   - "needed": list of required IR codes for this module to be considered usable
+ *   - "class": CSS/HTML class name for rendering
+ *   - "skip": if true, module is optional and only used if needed buttons exist
+ *
+ * Button format:
+ *   ["label", "type", "ircode"]
+ *
+ * Selection rule:
+ *   When a layout column contains multiple module options,
+ *   the system should choose the FIRST module whose "needed"
+ *   IR codes are all available for the current remote.
+ */
+
 function get_default_modules()
 {
 	return {
+
 		"numbers":
 		{
 			"buttons":
@@ -14,79 +32,87 @@ function get_default_modules()
 			"class":"numbers",
 			"skip":false
 		},
+
 		"directions":
 		{
 			"buttons":
 			[
-				[[],["&amp;#9652;","ircode","KEY_UP"],[]],
-				[["&amp;#9666;","ircode","KEY_LEFT"],["OK","ircode","KEY_OK"],["&amp;#9656;","ircode","KEY_RIGHT"]],
-				[[],["&amp;#9662;","ircode","KEY_DOWN"],[]]
+				[[],["&#9652;","ircode","KEY_UP"],[]],
+				[["&#9666;","ircode","KEY_LEFT"],["OK","ircode","KEY_OK"],["&#9656;","ircode","KEY_RIGHT"]],
+				[[],["&#9662;","ircode","KEY_DOWN"],[]]
 			],
 			"needed":["KEY_UP","KEY_DOWN","KEY_LEFT","KEY_RIGHT"],
 			"class":"directions",
 			"skip":false
 		},
-		"navigator":
+
+		"navigator_playpause":
 		{
 			"buttons":
 			[
-				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ED;","ircode","KEY_NEXT"]],
-				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
+				[["&#x219E;","ircode","KEY_FASTREWIND"],["&#x23ef;","ircode","KEY_PLAYPAUSE"],["&#x21A0;","ircode","KEY_FASTFORWARD"]],
+				[["&#x23EE;","ircode","KEY_PREVIOUS"],[],["&#x23ED;","ircode","KEY_NEXT"]],
+				[["&#x23FA;","ircode","KEY_RECORD"],[],["&#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAYPAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"class":"navigator",
 			"skip":false
 		},
-		"navigator2":
+
+		"navigator_play_pause":
 		{
 			"buttons":
 			[
-				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23f5;","ircode","KEY_PLAY"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x23ED;","ircode","KEY_NEXT"]],
-				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23F9;","ircode","KEY_STOP"]]
+				[["&#x219E;","ircode","KEY_FASTREWIND"],["&#x23f5;","ircode","KEY_PLAY"],["&#x21A0;","ircode","KEY_FASTFORWARD"]],
+				[["&#x23EE;","ircode","KEY_PREVIOUS"],["&#x23F8;","ircode","KEY_PAUSE"],["&#x23ED;","ircode","KEY_NEXT"]],
+				[["&#x23FA;","ircode","KEY_RECORD"],[],["&#x23F9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_PLAY","KEY_PAUSE","KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"class":"navigator",
 			"skip":false
 		},
+
 		"navigator3":
 		{
 			"buttons":
 			[
-				[["&amp;#x219E;","ircode","KEY_FASTREWIND"],["&amp;#x23ef;","ircode","KEY_PLAYPAUSE"],["&amp;#x23b6;","ircode","KEY_PLAY"],["&amp;#x23F8;","ircode","KEY_PAUSE"],["&amp;#x21A0;","ircode","KEY_FASTFORWARD"]],
-				[["&amp;#x23EE;","ircode","KEY_PREVIOUS"],[],["&amp;#x23ed;","ircode","KEY_NEXT"]],
-				[["&amp;#x23FA;","ircode","KEY_RECORD"],[],["&amp;#x23f9;","ircode","KEY_STOP"]]
+				[["&#x219E;","ircode","KEY_FASTREWIND"],["&#x23ef;","ircode","KEY_PLAYPAUSE"],["&#x23b6;","ircode","KEY_PLAY"],["&#x23F8;","ircode","KEY_PAUSE"],["&#x21A0;","ircode","KEY_FASTFORWARD"]],
+				[["&#x23EE;","ircode","KEY_PREVIOUS"],[],["&#x23ed;","ircode","KEY_NEXT"]],
+				[["&#x23FA;","ircode","KEY_RECORD"],[],["&#x23f9;","ircode","KEY_STOP"]]
 			],
 			"needed":["KEY_FASTREWIND","KEY_FASTFORWARD"],
 			"class":"navigator",
 			"skip":true
 		},
+
 		"channels":
 		{
 			"buttons":
 			[
 				[["Ch+","ircode","KEY_CHANNELUP"]],
-				[["Ch"]],[["Ch-","ircode","KEY_CHANNELDOWN"]],
-				[["Ch&amp;#x21BA;","ircode","KEY_CHANNELPREVIOUS"]]
+				[["Ch"]],
+				[["Ch-","ircode","KEY_CHANNELDOWN"]],
+				[["Ch&#x21BA;","ircode","KEY_CHANNELPREVIOUS"]]
 			],
 			"needed":["KEY_CHANNELUP","KEY_CHANNELDOWN"],
 			"class":"channels",
 			"skip":true
 		},
+
 		"volume":
 		{
 			"buttons":
 			[
-				[["&amp;#x1F50A;+","ircode","KEY_VOLUMEUP"]],
-				[["&amp;#x1F50A;Vol"]],
-				[["&amp;#x1F50A;-","ircode","KEY_VOLUMEDOWN"]],
-				[["&amp;#x1F507;","ircode","KEY_MUTE"]]
+				[["&#x1F50A;+","ircode","KEY_VOLUMEUP"]],
+				[["&#x1F50A;Vol"]],
+				[["&#x1F50A;-","ircode","KEY_VOLUMEDOWN"]],
+				[["&#x1F507;","ircode","KEY_MUTE"]]
 			],
 			"needed":["KEY_VOLUMEUP","KEY_VOLUMEDOWN"],
 			"class":"volume",
 			"skip":true
 		},
+
 		"common":
 		{
 			"buttons":
@@ -96,23 +122,24 @@ function get_default_modules()
 			"needed":[],
 			"class":"common",
 			"skip":true
-
 		},
+
 		"colors":
 		{
 			"buttons":
 			[
 				[
-					["&lt;font color=&quot;red&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_RED"],
-					["&lt;font color=&quot;green&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_GREEN"],
-					["&lt;font color=&quot;yellow&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_YELLOW"],
-					["&lt;font color=&quot;#0000FF&quote;&gt;&#x25A0;&lt;/font&gt;","ircode","KEY_BLUE"]
+					["<font color=\"red\">■</font>","ircode","KEY_RED"],
+					["<font color=\"green\">■</font>","ircode","KEY_GREEN"],
+					["<font color=\"yellow\">■</font>","ircode","KEY_YELLOW"],
+					["<font color=\"#0000FF\">■</font>","ircode","KEY_BLUE"]
 				]
 			],
 			"needed":[],
 			"class":"colors",
 			"skip":true
 		},
+
 		"power":
 		{
 			"buttons":
@@ -123,13 +150,15 @@ function get_default_modules()
 			"class":"power",
 			"skip":true
 		},
-		"numberpads":
+
+		"onefiller":
 		{
 			"buttons":[],
 			"needed":[],
-			"class":"numberpads",
+			"class":"onefiller",
 			"skip":true
 		},
+
 		"navigatorpads":
 		{
 			"buttons":[],
@@ -137,6 +166,7 @@ function get_default_modules()
 			"class":"navigatorpads",
 			"skip":true
 		},
+
 		"catchall":
 		{
 			"buttons":"REST",

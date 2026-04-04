@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
 <script src="js/0utils.js"></script>
-<script id="default_display" src="defaults/get_default_display_old.js"></script>
-<script id="default_modules" src="defaults/get_default_modules.js?ts=2"></script>
+<script id="default_display" src="defaults/get_default_display_old.js?ts=6"></script>
+<script id="default_modules" src="defaults/get_default_modules.js?ts=6"></script>
 <script src="js/refresh.js"></script>
 <!--<script src="js/save_load_refreshv1.js"></script>-->
 <script src="js/execute.js"></script>
 <script>
-var default_display=get_default_display();
+var default_display=get_default_display_old();
 var default_modules=get_default_modules();
 
 const params = new URLSearchParams(location.search);
@@ -503,7 +503,7 @@ window.addEventListener("load", function () {
 })
 
 </script>
-<link rel="stylesheet" href="css/remote.css">
+<link rel="stylesheet" href="css/remote.css?ts=6">
 </head>
 <body style="width:100%,height:100%">
 </body>

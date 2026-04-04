@@ -46,5 +46,9 @@ function get_default_classes() { return {
     "numberpads": {
       "width": "calc(70px * var(--scale))",
       "background-color": "#878787"
+    },
+    "onefiller": {
+      "width": "calc(70px * var(--scale))",
+      "background-color": "#878787"
     }
 };}

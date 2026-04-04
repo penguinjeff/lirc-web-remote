@@ -1,4 +1,4 @@
-function get_default_display()
+function get_default_display_old()
 {
   return {
     "modules":[
@@ -7,9 +7,9 @@ function get_default_display()
       [["common",0]],
       [["colors",0]],
       [["volume",0],["directions",0],["channels",0]],
-      [["navigatorpads"],["navigator",0],["navigatorpads"]],
-      [["navigatorpads"],["navigator2",0],["navigatorpads"]],
-      [["numberpads"],["numbers",0],["numberpads"]]
+      [["onefiller"],["navigator_playpause",0], ["onefiller"]],
+      [["onefiller"],["navigator_play_pause",0],["onefiller"]],
+      [["onefiller"],["numbers",0],             ["onefiller"]]
     ]
   };
 }

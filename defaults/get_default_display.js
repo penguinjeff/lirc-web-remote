@@ -35,37 +35,37 @@ function get_default_display()
         /* Row 6: Three columns → volume / directions / channels */
         [
             /* Column 1: volume or fallback filler */
-            [["volume",0],["1button_horizantal_filler"]],
+            [["volume",0],["onefiller"]],
 
             /* Column 2: directions or fallback filler */
             [["directions",0],["directions_horizantal_filler"]],
 
             /* Column 3: channels or fallback filler */
-            [["channels",0],["1button_horizantal_filler"]],
+            [["channels",0],["onefiller"]],
         ],
 
         /* Row 7: Three columns → centered pause/play */
         [
             /* Column 1: filler */
-            [["1button_horizantal_filler"]],
+            [["onefiller"]],
 
             /* Column 2: pause/play (two possible modules) */
             [["navigator_pause_play",0],["navigator_pauseplay",0]],
 
             /* Column 3: filler */
-            [["1button_horizantal_filler"]],
+            [["onefiller"]],
         ],
 
         /* Row 8: Three columns → centered numbers */
         [
             /* Column 1: filler */
-            [["1button_horizantal_filler"]],
+            [["onefiller"]],
 
             /* Column 2: numbers module */
             [["numbers",0]],
 
             /* Column 3: filler */
-            [["1button_horizantal_filler"]],
+            [["onefiller"]],
         ],
     ];
 }

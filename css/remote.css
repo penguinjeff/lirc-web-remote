@@ -105,6 +105,11 @@ select {
     background-color:#878787;
 }
 
+.onefiller {
+    width: calc(70px * var(--scale));
+    background-color:#878787;
+}
+
 /* Empty placeholder cell */
 .empty {
     height: calc(42px * var(--scale));
