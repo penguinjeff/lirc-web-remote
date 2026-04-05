@@ -31,7 +31,7 @@ wait_delay()
   while [ "$((delay-diff))" -gt "0" ];do
     time-microseconds $start now diff
     read file_time <"${time_start_file}"
-    [ "${file_time}" != "${time_start}" ] && msg i >> "$idfile" && return 1;
+    [ "${file_time}" != "${time_start}" ] && { msg i >> "$idfile"; return 1;}
     sleep .0001
   done
   msg o "$now" "woke up" >> "$idfile"
@@ -63,7 +63,7 @@ macro()
   json-listOfLists2arrayOfLists "${json}" arrayOfLists
   for row in "${arrayOfLists[@]}"; do
     read file_time <"${time_start_file}"
-    [ "${file_time}" != "${time_start}" ] && msg i >> "${idlocation}/${id}.jsonl" && return 1;
+    [ "${file_time}" != "${time_start}" ] && {msg i >> "${idlocation}/${id}.jsonl"; return 1;}
     json-list2array "$row" array 4
     remote="${array[0]}"
     ircode="${array[1]}"
@@ -77,7 +77,7 @@ macro()
       process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
       ((loops--))
       read file_time <"${time_start_file}"
-      [ "${file_time}" != "${time_start}" ] && msg i >> "${idlocation}/${id}.jsonl" && return 1;
+      [ "${file_time}" != "${time_start}" ] && {msg i >> "${idlocation}/${id}.jsonl" && return 1;}
     done
   done
   msg f >> "${idlocation}/${id}.jsonl"
