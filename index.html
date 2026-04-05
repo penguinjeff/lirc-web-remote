@@ -275,7 +275,7 @@ function release(remote,button,item,event)
   {item.setAttribute('class','button')
   }
   holding=false;
-  clearTimeout(this.holdtimer);
+  clearTimeout(holdtimer);
   if(held){execute('stop',[]);}
   altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
   mousedown=false;
