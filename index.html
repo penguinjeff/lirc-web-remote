@@ -271,18 +271,15 @@ function presshold(remote,button,item,event)
 let altholdtimer=0;
 function release(remote,button,item,event)
 {
- function delayed_release(item)
- {item.setAttribute('class','button')
- }
- if(event && !event['button'])
- {
-   holding=false;
-   clearTimeout(this.holdtimer);
-   if(held){execute('stop',[]);}
-   altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
-   mousedown=false;
-   held=false;
- }
+  function delayed_release(item)
+  {item.setAttribute('class','button')
+  }
+  holding=false;
+  clearTimeout(this.holdtimer);
+  if(held){execute('stop',[]);}
+  altholdtimer=setTimeout(function(){ delayed_release(item); }, 100);
+  mousedown=false;
+  held=false;
 }
 
 
