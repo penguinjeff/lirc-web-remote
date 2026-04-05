@@ -74,7 +74,8 @@ macro()
     #time-realtime current
     while [ "${loops}" -gt "0" ];do
       wait_delay "${delay}" "${idlocation}/${id}.jsonl" || return 1;
-      process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl"
+      process "${remote}" "${ircode}" "${delay}" "${loops}" "${idlocation}/${id}.jsonl" &
+      sleep .0001
       ((loops--))
       read file_time <"${time_start_file}"
       [ "${file_time}" != "${time_start}" ] && msg i >> "${idlocation}/${id}.jsonl" && return 1;
