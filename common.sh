@@ -51,4 +51,5 @@ msg(){
  printf -v wrapped '[%s]\n' "${mask}"
  printf "${wrapped}" "${severity}" "${message[@]}"
  [ "$severity" = "interrupted" ] && msg f
+ return 0;
 }
