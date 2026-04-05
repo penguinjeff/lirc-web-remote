@@ -47,7 +47,7 @@ function get_default_classes() { return {
       "width": "calc(70px * var(--scale))",
       "background-color": "#878787"
     },
-    "onefiller": {
+    "one_filler": {
       "width": "calc(70px * var(--scale))",
       "background-color": "#878787"
     }

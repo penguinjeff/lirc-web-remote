@@ -7,9 +7,9 @@ function get_default_display_old()
       [["common",0]],
       [["colors",0]],
       [["volume",0],["directions",0],["channels",0]],
-      [["onefiller"],["navigator_playpause",0], ["onefiller"]],
-      [["onefiller"],["navigator_play_pause",0],["onefiller"]],
-      [["onefiller"],["numbers",0],             ["onefiller"]]
+      [["one_filler"],["navigator_playpause",0], ["one_filler"]],
+      [["one_filler"],["navigator_play_pause",0],["one_filler"]],
+      [["one_filler"],["numbers",0],             ["one_filler"]]
     ]
   };
 }
