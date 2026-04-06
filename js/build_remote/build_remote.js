@@ -10,8 +10,30 @@ function build_remote(db,activity)
  * a remote has remote codes for a particular device
  *
  */
+let remote_list=activity[0];
+let display=activity[1];
 
-
+let remote_dom=document.createElement("div");
+remote_dom.className="container"
+for (row in display){
+  row_dom=document.createElement("div")
+  row_dom.className="container-1";
+  for (column in row){
+    column_dom=document.createElement("div")
+    column_dom.className="container-2"
+    for (module_pair in colum){
+      let state={
+        module_name:module_pair[0],
+        remote_index:module_pair[1],
+        used_buttons:used_buttons[module_pair[1]],
+        dom: document.createElement("div"),
+      }
+      if(build_module(db,state)){column.appendChild(state.dom);break;}
+    }
+    row_dom.appendChild();
+  }
+  remote_dom.appendChild(row_dom);
+}
 
 /*
 will replace:

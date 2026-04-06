@@ -1,8 +1,8 @@
 import { build_button } from "./build_buttom.js";
 import { build_macro_button } from "./build_macro_button.js";
 
-export function build_module(db, name, state) {
-  const module =
+export function build_module(db,state) {
+  const module = db["modules"][state["module_name"]]
   db.modules[name] ||
   db.default_modules[name];
 
