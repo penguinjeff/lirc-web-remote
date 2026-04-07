@@ -1,6 +1,6 @@
+/*js/build_remote/build_remote.js*/
 import { build_module } from "./build_module.js"
 import { get_default_display } from "./get_default_display.js";
-
 
 function build_remote(db, activity) {
   /*

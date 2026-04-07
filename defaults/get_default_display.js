@@ -13,7 +13,7 @@
  *
  * Comments are for documentation only and do not affect output.
  */
-function get_default_display()
+export function get_default_display()
 {
     return [
 

@@ -2,12 +2,21 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <script src="./js/build_remote/build_remote.js"></script>
-  <script src="./js/build_remote/build_edit.js"></script>
+  <script type="module" src="js/build_remote/build_remote.js?ts=4"></script>
+  <!--  <script src="./js/build_edit/build_edit.js"></script>n -->
   <script src="./js/refresh.js"></script>
   <script>
-function refresh_db()
-{
+
+ /* testing version */
+function build_edit(db,item) {
+ console.log("build_edit")
+ console.log(item);
+ let dom=document.createElement("div");
+ dom.innerHTML=JSON.stringify(item)
+ return dom;
+}
+  
+function refresh_db() {
  let list=["remotes","displays","activities","macros","modules"];
  refresh(list,run_after_refresh);
 }
@@ -24,7 +33,7 @@ function options_from_keys(selector, json) {
     opt.disabled = true;
     opt.selected = true;
     selector.appendChild(opt);
-    return;
+    return false;
   }
 
   keys.forEach(key => {
@@ -33,31 +42,72 @@ function options_from_keys(selector, json) {
     opt.value = key;
     selector.appendChild(opt);
   });
+  return true;
 }
 
+let last_selected="";
+function show_selected(sel) {
+  // hide all
+  Activities_selector.classList.add("hidden");
+  Remotes_selector.classList.add("hidden");
+  Edit_selector.classList.add("hidden");
+
+  Activities_display.classList.add("hidden");
+  Remotes_display.classList.add("hidden");
+  Edit_display.classList.add("hidden");
+
+  // show selected
+  if (sel.value === "Refresh") {
+    refresh_db();
+    selector.value = last_selected;   // restore previous selection
+    show_selected(selector);          // show that panel again
+    return;
+  }
+  last_selected=sel.value;
+  window[sel.value + "_selector"].classList.remove("hidden");
+  window[sel.value + "_display"].classList.remove("hidden");
+}
 
 function run_after_refresh(list,db)
 {
+  let select="Activities"
   window.db=db
-  options_from_keys(Remotes_selector,db["remotes"]);
-  options_from_keys(Activities_selector,db["activities"]);
+  if(!(options_from_keys(Activities_selector,db["activities"]))){select="Remotes"}
+  if(!(options_from_keys(Remotes_selector,db["remotes"]))){select="Edit"}
+  if(last_selected!=""){select=last_selected;}
+  selector.value=select;
+  groups.forEach((item)=>{load(window[item+"_selector"])})
+  show_selected(selector);
 }
 
-function load(selector)
-{activity_display.innerHTML=""
- activity_display.appendChild(build_remote(selector.value));
-}
+function load(__selector) {
+  const type = __selector.id.replace("_selector", "");
+  const display_dom = window[type + "_display"];
 
-let groups=["Activites","Remotes"];
-let activity_display=null;
-window.addEventListener("load", function () {
- var bodyElement = document.body;
- bodyElement.appendChild(navigator_location);
- bodyElement.appendChild(remote_location);
- groups.forEach((item)=>{fg(item,"_selector")})
- groups.forEach((item)=>{fg(item,"_display")})
- refresh_list()
-})
+  display_dom.replaceChildren();
+
+  let activity;
+
+  switch (type) {
+    case "Edit":
+      display_dom.appendChild(build_edit(db, __selector.value));
+      return;
+
+    case "Activities":
+      activity = db[__selector.value] || { remotes: [], display: "" };
+      break;
+
+    case "Remotes":
+      activity = { remotes: [__selector.value], display: "default_display" };
+      break;
+
+    default:
+      console.warn("Unknown selector type:", type);
+      return;
+  }
+
+  display_dom.appendChild(build_remote(db, activity));
+}
 
 
 /*find and globalize*/
@@ -73,7 +123,21 @@ function fg(name, post = "") {
   window[id] = el;
   return el;
 }
+
+
+let groups=["Activities","Remotes","Edit"];
+let activity_display=null;
+window.addEventListener("load", function () {
+ var bodyElement = document.body;
+ groups.forEach((item)=>{fg(item,"_selector")})
+ groups.forEach((item)=>{fg(item,"_display")})
+ fg("selector");
+ refresh_db()
+});
+
+
 </script>
+<link rel="stylesheet" href="css/remote.css?ts=8">
 </head>
 <body>
 <div>
@@ -83,17 +147,17 @@ function fg(name, post = "") {
     <option value="Edit">Edit</option>
     <option value="Refresh">refresh</option>
   </select>
-  <select class="hidden" id="Activity_selector" onchange="load"></select>
-  <select class="hidden" id="Remote_selector" onchange="load"></select>
-  <select class="hidden" id="Edit_selector" onchange="load">
-    <option value="Activites">Activites</option>
+  <select class="hidden" id="Activities_selector" onchange="load(this)"></select>
+  <select class="hidden" id="Remotes_selector" onchange="load(this)"></select>
+  <select class="hidden" id="Edit_selector" onchange="load(this)">
+    <option value="Activities">Activities</option>
     <option value="Macros">Macros</option>
     <option value="Modules">Modules</option>
     <option value="Displays">Displays</option>
   </select>
 </div><br>
-<div class="hidden" id="Activity_display"></div>
-<div class="hidden" id="Remote_display"></div>
+<div class="hidden" id="Activities_display"></div>
+<div class="hidden" id="Remotes_display"></div>
 <div class="hidden" id="Edit_display"></div>
 </body>
 </html>
