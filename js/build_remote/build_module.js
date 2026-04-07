@@ -1,6 +1,10 @@
-import { build_button } from "./build_buttom.js";
+import { build_button } from "./build_button.js";
 import { build_macro_button } from "./build_macro_button.js";
 
+export function build_module(db,state) {
+console.log(state)
+}
+/*
 export function build_module(db,state) {
   const module = db["modules"][state["module_name"]] ||
   db["default_modules"][state["module_name"]];
@@ -59,3 +63,4 @@ export function build_module(db,state) {
 
   return true;
 }
+*/

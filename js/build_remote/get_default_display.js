@@ -1,0 +1,71 @@
+/* Default display layout structure
+ *
+ * Layout format:
+ *   display[row][column][module_option]
+ *
+ * Module option format:
+ *   ["module_name", index, optional_params]
+ *
+ * Selection rule:
+ *   When a column contains multiple module options,
+ *   the system should use the FIRST module option
+ *   that has all required buttons available.
+ *
+ * Comments are for documentation only and do not affect output.
+ */
+export function get_default_display()
+{
+    return [
+
+        /* Row 1: One column → remotename module for remote 0 */
+        [[["remotename",0]]],
+
+        /* Row 2: One column → power module */
+        [[["power",0]]],
+
+        /* Row 3: One column → catchall module with 5×3 grid */
+        [[["catchall",0,{'button_columns':5,'button_rows':3,'alldef':'unused'}]]],
+
+        /* Row 4: One column → common module */
+        [[["common",0]]],
+
+        /* Row 5: One column → colors module */
+        [[["colors",0]]],
+
+        /* Row 6: Three columns → volume / directions / channels */
+        [
+            /* Column 1: volume or fallback filler */
+            [["volume",0],["onefiller"]],
+
+            /* Column 2: directions or fallback filler */
+            [["directions",0],["directions_horizantal_filler"]],
+
+            /* Column 3: channels or fallback filler */
+            [["channels",0],["onefiller"]],
+        ],
+
+        /* Row 7: Three columns → centered pause/play */
+        [
+            /* Column 1: filler */
+            [["onefiller"]],
+
+            /* Column 2: pause/play (two possible modules) */
+            [["navigator_pause_play",0],["navigator_pauseplay",0]],
+
+            /* Column 3: filler */
+            [["onefiller"]],
+        ],
+
+        /* Row 8: Three columns → centered numbers */
+        [
+            /* Column 1: filler */
+            [["onefiller"]],
+
+            /* Column 2: numbers module */
+            [["numbers",0]],
+
+            /* Column 3: filler */
+            [["onefiller"]],
+        ],
+    ];
+}

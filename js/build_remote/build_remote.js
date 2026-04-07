@@ -1,4 +1,6 @@
 import { build_module } from "./build_module.js"
+import { get_default_display } from "./get_default_display.js";
+
 
 function build_remote(db, activity) {
   /*
@@ -6,10 +8,15 @@ function build_remote(db, activity) {
    * activity[1] = display layout (rows → columns → module pairs)
    */
 
-  const remote_list = activity[0];
-  const used_buttons = remote_list.map(() => []); // one array per remote
+  const remote_list = activity["remotes"];
+  const display = db["displays"][activity["display"]]||get_default_display();
 
-  const display = activity[1];
+  if(remote_list.length===0){
+    let dom=document.createElement("div");
+    dom.innerHTML=JSON.stringify(activity)
+    return dom;
+  }
+  const used_buttons = remote_list.map(() => []); // one array per remote
 
   const remote_dom = document.createElement("div");
   remote_dom.className = "container";
