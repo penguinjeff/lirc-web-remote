@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-
   <script src="./js/build_remote/build_remote.js"></script>
+  <script src="./js/build_remote/build_edit.js"></script>
   <script src="./js/refresh.js"></script>
   <script>
 function refresh_db()
@@ -12,10 +12,35 @@ function refresh_db()
  refresh(list,run_after_refresh);
 }
 
+function options_from_keys(selector, json) {
+  selector.replaceChildren(); // clear existing options
+
+  const keys = Object.keys(json);
+
+  if (keys.length === 0) {
+    const opt = document.createElement("option");
+    opt.textContent = "None";
+    opt.value = "";
+    opt.disabled = true;
+    opt.selected = true;
+    selector.appendChild(opt);
+    return;
+  }
+
+  keys.forEach(key => {
+    const opt = document.createElement("option");
+    opt.textContent = key;
+    opt.value = key;
+    selector.appendChild(opt);
+  });
+}
+
+
 function run_after_refresh(list,db)
 {
-  window.db=db;
-
+  window.db=db
+  options_from_keys(Remotes_selector,db["remotes"]);
+  options_from_keys(Activities_selector,db["activities"]);
 }
 
 function load(selector)
@@ -33,11 +58,22 @@ window.addEventListener("load", function () {
  groups.forEach((item)=>{fg(item,"_display")})
  refresh_list()
 })
+
+
 /*find and globalize*/
-function fg(name,post=""){
-  window[name+post]=document.getElementById(name+post);
+function fg(name, post = "") {
+  const id = name + post;
+  const el = document.getElementById(id);
+
+  if (!el) {
+    console.warn(`fg: No element found with id="${id}"`);
+    return null;
+  }
+
+  window[id] = el;
+  return el;
 }
-  </script>
+</script>
 </head>
 <body>
 <div>
@@ -47,14 +83,17 @@ function fg(name,post=""){
     <option value="Edit">Edit</option>
     <option value="Refresh">refresh</option>
   </select>
-  <select id="Activity_selector" onchange="load"></select>
-  <select id="Remote_selector" onchange="load"></select>
-  <select id="Edit_selector" onchange="load">
+  <select class="hidden" id="Activity_selector" onchange="load"></select>
+  <select class="hidden" id="Remote_selector" onchange="load"></select>
+  <select class="hidden" id="Edit_selector" onchange="load">
     <option value="Activites">Activites</option>
     <option value="Macros">Macros</option>
     <option value="Modules">Modules</option>
     <option value="Displays">Displays</option>
   </select>
-</div>
+</div><br>
+<div class="hidden" id="Activity_display"></div>
+<div class="hidden" id="Remote_display"></div>
+<div class="hidden" id="Edit_display"></div>
 </body>
 </html>
