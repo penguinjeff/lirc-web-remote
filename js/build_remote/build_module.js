@@ -2,21 +2,20 @@ import { build_button } from "./build_buttom.js";
 import { build_macro_button } from "./build_macro_button.js";
 
 export function build_module(db,state) {
-  const module = db["modules"][state["module_name"]]
-  db.modules[name] ||
-  db.default_modules[name];
+  const module = db["modules"][state["module_name"]] ||
+  db["default_modules"][state["module_name"]];
 
-  if (!module || !module.needed) return [];
+  if (!module || !module.needed) return false;
 
   const remote = db.remote;
   const remote_buttons = db.remote_buttons;
 
   // Must have all needed buttons
   if (!module.needed.every(item => remote_buttons.includes(item))) {
-    return [];
+    return false;
   }
 
-  const used_buttons = [];
+  let used_buttons = [];
 
   // Clear the container
   state.dom.innerHTML = "";
@@ -58,5 +57,5 @@ export function build_module(db,state) {
   // Merge used buttons into state
   state.used_buttons = [...state.used_buttons, ...used_buttons];
 
-  return used_buttons;
+  return true;
 }

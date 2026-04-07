@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+
+  <script src="./js/build_remote/build_remote.js"></script>
+  <script src="./js/refresh.js"></script>
+  <script>
+function refresh_db()
+{
+ let list=["remotes","displays","activities","macros","modules"];
+ refresh(list,run_after_refresh);
+}
+
+function run_after_refresh(list,db)
+{
+  window.db=db;
+
+}
+
+function load(selector)
+{activity_display.innerHTML=""
+ activity_display.appendChild(build_remote(selector.value));
+}
+
+let groups=["Activites","Remotes"];
+let activity_display=null;
+window.addEventListener("load", function () {
+ var bodyElement = document.body;
+ bodyElement.appendChild(navigator_location);
+ bodyElement.appendChild(remote_location);
+ groups.forEach((item)=>{fg(item,"_selector")})
+ groups.forEach((item)=>{fg(item,"_display")})
+ refresh_list()
+})
+/*find and globalize*/
+function fg(name,post=""){
+  window[name+post]=document.getElementById(name+post);
+}
+  </script>
+</head>
+<body>
+<div>
+  <select id="selector" onchange="show_selected(this)">
+    <option value="Activities">Activities</option>
+    <option value="Remotes">Remotes</option>
+    <option value="Edit">Edit</option>
+    <option value="Refresh">refresh</option>
+  </select>
+  <select id="Activity_selector" onchange="load"></select>
+  <select id="Remote_selector" onchange="load"></select>
+  <select id="Edit_selector" onchange="load">
+    <option value="Activites">Activites</option>
+    <option value="Macros">Macros</option>
+    <option value="Modules">Modules</option>
+    <option value="Displays">Displays</option>
+  </select>
+</div>
+</body>
+</html>
