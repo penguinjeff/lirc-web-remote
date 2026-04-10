@@ -1,0 +1,221 @@
+
+<!-- saved from url=(0031)http://127.0.0.1/jeff/hill.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function encrypt()
+{
+ const a=char2int(document.getElementById('a').value);
+ const b=char2int(document.getElementById('b').value);
+ const c=char2int(document.getElementById('c').value);
+ const d=char2int(document.getElementById('d').value);
+ let inphrase=char2int(document.getElementById('phrase').value);
+ let encrypted=document.getElementById('encrypted').value
+ if(encrypted.length>0)
+ {
+  alert("There is text in the encrypted area.");
+  return;
+ }
+ if(!(inphrase.length%2 === 0))
+ {
+  inphrase.push(char2int("X"));
+ }
+ document.getElementById('phrase').value=int2char(inphrase);
+ const phrase=inphrase;
+ for(let x=0;x<phrase.length;x+=2)
+ {
+  encrypted+=int2char(phrase[x]*a+phrase[(x+1)]*b);
+  encrypted+=int2char(phrase[x]*c+phrase[(x+1)]*d);
+  document.getElementById('encrypted').value=encrypted; 
+ }
+}
+function decrypt()
+{
+ const a=char2int(document.getElementById('a').value);
+ const b=char2int(document.getElementById('b').value);
+ const c=char2int(document.getElementById('c').value);
+ const d=char2int(document.getElementById('d').value);
+ let phrase=document.getElementById('phrase').value
+ const encrypted=char2int(document.getElementById('encrypted').value)
+ if(phrase.length>0)
+ {
+  alert("There is text in the phrase area.");
+  return;
+ }
+ let work=document.getElementById('phrase');
+ const adjoint_a=d;
+ const adjoint_b=26-b;
+ const adjoint_c=26-c;
+ const adjoint_d=a;
+ const determinant=a*d-b*c; 
+ modulo=modulo_of_reciprical(determinant);
+ if(modulo===0)
+ {
+  alert("modulo is not calculatable");
+  return;
+ }
+ const key_inverse_a=((modulo*adjoint_a)%26)
+ const key_inverse_b=((modulo*adjoint_b)%26)
+ const key_inverse_c=((modulo*adjoint_c)%26)
+ const key_inverse_d=((modulo*adjoint_d)%26)
+ console.log("key_inverse")
+ console.log(key_inverse_a+" "+key_inverse_b)
+ console.log(key_inverse_c+" "+key_inverse_d)
+ for(let x=0;x<encrypted.length;x+=2)
+ {
+  phrase+=int2char(encrypted[x]*key_inverse_a+encrypted[(x+1)]*key_inverse_b);
+  phrase+=int2char(encrypted[x]*key_inverse_c+encrypted[(x+1)]*key_inverse_d);
+  document.getElementById('phrase').value=phrase; 
+ }
+}
+
+let steps=[];
+function modulo_of_reciprical(determinant)
+{steps=[];
+ while(determinant<0){determinant+=26;}
+ let modulo=step(26,determinant%26);
+ if(modulo>0)
+ {
+  console.log("1/"+determinant+" mod 26 ="+modulo);
+  return modulo;
+ }
+ console.log("1/"+determinant+" mod 26 has no answer")
+ return 0;
+}
+
+function step(equals,num)
+{let mult=Math.floor(equals/num);
+ let add=equals-mult*num;
+ console.log(equals+"="+num+"*("+mult+")+"+add);
+ steps.push({"equals":equals,"num":num,"mult":mult,"add":add});
+ if(add===1){return reverse();}
+ if(add===0){return 0;}
+ return step(num,add);
+}
+
+function reverse()
+{
+ return reverse_step(steps.length-1,1,steps[steps.length-1]["mult"]);
+}
+
+function reverse_step(step,mult1,mult2)
+{
+ let {equals:old_old_equals,num:old_old_num,mult:old_old_mult,add:old_old_add}=steps[step];
+ console.log(1+"=("+mult1+")*"+old_old_equals+"+("+(0-mult2)+")*"+old_old_num);
+ if(step<1)
+ {
+  console.log("1/"+old_old_num+" mod 26 ="+(0-mult2));
+  while(mult2>0){mult2-=26;}
+  return (0-mult2);
+ }
+ const{equals:old_equals,num:old_num,mult:old_mult,add:old_add}=steps[step-1];
+ console.log("sub "+old_add+"="+old_equals+"+("+(0-old_mult)+")*"+old_num);
+ console.log(1+"=("+mult1+")*"+old_old_equals+"+("+(0-mult2)+")*("+old_equals+"+("+(0-old_mult)+")*"+old_num+")");
+ console.log(1+"=("+mult1+")*"+old_old_equals+"+("+(0-mult2)+")*"+old_equals+"+("+((0-mult2)*(0-old_mult))+")*"+old_num);
+ let new_mult=(mult1+((0-mult2)*(0-old_mult)));
+ console.log(1+"=("+new_mult+")*"+old_old_equals+"+("+(0-mult2)+")*"+old_equals);
+ console.log("step:"+step); 
+ if(step<2)
+ {
+  console.log("1/"+old_old_equals+" mod 26 ="+new_mult);
+  while(new_mult<0){new_mult+=26;}
+  return new_mult;  
+ }
+ const{equals,num,mult,add}=steps[step-2];
+ console.log("sub "+add+"="+equals+"+("+(0-mult)+")*"+num);
+ console.log(1+"=("+new_mult+")*("+equals+"+("+(0-mult)+")*"+num+")+("+(0-mult2)+")*"+old_equals);
+ console.log(1+"=("+new_mult+")*"+equals+"+("+(new_mult*(0-mult))+")*"+num+"+("+(0-mult2)+")*"+old_equals); 
+ return reverse_step(step-2,new_mult,(0-((new_mult*(0-mult))+(0-mult2)))); 
+}
+
+function brute()
+{
+ const a=char2int(document.getElementById('a').value);
+ const b=char2int(document.getElementById('b').value);
+ const c=char2int(document.getElementById('c').value);
+ const d=char2int(document.getElementById('d').value);
+ let phrase=document.getElementById('phrase').value
+ const encrypted=char2int(document.getElementById('encrypted').value)
+ if(!(encrypted.length%2===0)){alert("Needs to be even amount of letters")}
+ if(phrase.length>0)
+ {
+  alert("There is text in the phrase area.");
+  return;
+ }
+ console.log(encrypted);
+ for(let x=0;x<encrypted.length;x+=2)
+ {
+  let found=false;
+  for(let y=0;y<26;y++)
+  {
+   const trya=y;
+   for(let z=0;z<26;z++)
+   {
+    const tryb=z;
+    console.log("trya tryb:"+int2char(trya)+" "+int2char(tryb));
+    console.log("Encrypted trya tryb:"+int2char(trya*a+tryb*b)      +" "+int2char(trya*c+tryb*d));
+    console.log("Compare to         :"+int2char(encrypted[x])+" "+int2char(encrypted[(x+1)]));
+    if(encrypted[x]===((trya*a+tryb*b)%26) && encrypted[(x+1)]===((trya*c+tryb*d)%26))
+    {
+     console.log("found trya tryb:"+(trya+"A".charCodeAt(0))+" "+(tryb+"A".charCodeAt(0)));
+     phrase+=int2char(trya);
+     phrase+=int2char(tryb);
+     found=true;
+     document.getElementById('phrase').value=phrase;
+    }
+   }
+   if(found){break;}
+  }
+ }
+}
+
+function char2int(mychar)
+{
+ if(mychar.length > 1)
+ {let intarray=[];
+  for(const letter of mychar)
+  {
+   intarray.push(char2int(letter));
+  }
+  return intarray
+ }
+ return mychar.charCodeAt(0)-"A".charCodeAt(0);
+}
+function int2char(myint)
+{if(Array.isArray(myint))
+ {let mystring=""
+  for(const number of myint)
+  {
+   mystring+=int2char(number);
+  }
+  return mystring;
+ }
+ return String.fromCharCode((myint%26)+"A".charCodeAt(0))
+}
+function calc()
+{
+modulo_of_reciprical(document.getElementById('determinant').value)
+}
+</script>
+</head>
+<body>
+KEY<br>
+<input id="a" type="text" maxlength="1" value="A" pattern="[A-Z]+" title="Only letters are allowed">
+<input id="b" type="text" maxlength="1" value="R" pattern="[A-Z]+" title="Only letters are allowed"><br>
+<input id="c" type="text" maxlength="1" value="T" pattern="[A-Z]+" title="Only letters are allowed">
+<input id="d" type="text" maxlength="1" value="S" pattern="[A-Z]+" title="Only letters are allowed"><br>
+Phrase to encrypt<br>
+<input id="phrase" type="text" pattern="[A-Z]+" inputmode="text" title="Only letters are allowed">
+Encrypted Phrase
+<input id="encrypted" type="text" value="AZGLNYQGQWDUEWLULINGUK" pattern="[A-Z]+" inputmode="text" title="Only letters are allowed">
+<button onclick="encrypt()">encrypt</button>
+<button onclick="decrypt()">decrypt</button>
+<button onclick="brute()">brute</button>
+TOUT<br>
+GLCNAGOHYBDKMSPUPANCDGKJ
+<div id="work"></div><br>
+Determinent
+<input id="determinant" type="number" step="1" min="0">
+<button onclick="calc()">calc</button>
+
+
+</body></html>

@@ -1,0 +1,118 @@
+// js/build_catchall/build_catchall.js
+window.build_catchall = function(remote_name, button_list, state) {
+
+function getDisplayName(rawName) {
+  if (rawName.startsWith("KEY_")) return rawName.substring(4);
+  if (rawName.startsWith("BTN_")) return rawName.substring(4);
+  return rawName;
+}
+
+  const {dom,button_columns,button_rows} = state;
+
+  dom.innerHTML = "";
+
+  // Build columns
+  const cols = [];
+  let index = 0;
+
+  const pairs = button_list
+  .map(name => [name, getDisplayName(name)])   // build pairs
+  .sort((a, b) => a[1].localeCompare(b[1])); // sort by label
+
+
+  while (index < pairs.length) {
+    const col = [];
+    for (let r = 0; r < button_rows; r++) {
+      if (index < pairs.length) {
+        col.push(pairs[index++]);
+      }
+	  else{
+		col.push(["",""]);
+	  }
+    }
+    cols.push(col);
+  }
+
+  if(cols.length > button_columns){
+    //copy button_columns-1 coloumns from the end to the beggining
+    const count = button_columns - 1;
+
+    // Copy (not remove) the last N columns
+    const toCopy = cols.slice(-count);
+
+    // Prepend them to the beginning
+    cols.unshift(...toCopy);	 
+  }
+
+
+  // Print structure
+  console.log("=== COLUMN STRUCTURE ===");
+  cols.forEach((col, i) => {
+      console.log(`Column ${i}:`, JSON.stringify(col[1]));
+  });
+  console.log("========================");
+
+  const grid=document.createElement('div');
+  grid.className = "container-1";
+  cols.forEach((col,i) => {
+    const col_dom = document.createElement('div');
+    if(cols.length <= button_columns || ( i > (button_columns-2) && i < (2*button_columns-1)))
+	{
+	  col_dom.className="onewide"
+	}else{
+	  col_dom.className="hidden"
+	}
+	col.forEach(name => {
+	  const cb=document.createElement('div');
+	  cb.className="container-2";
+      const btn = build_button(remote_name, name[0], name[1]);
+	  cb.appendChild(btn);
+	  col_dom.appendChild(cb);
+    });
+	grid.appendChild(col_dom);
+  });
+
+  // Ensure st exists and is an array
+  if (!Array.isArray(window.st)) {
+    window.st = [];
+  }
+
+  // Add a new item with its own offset
+  window.st.push({
+    offset: button_columns - 1
+  });
+
+  // Use the newly added item
+  const current = window.st[window.st.length - 1];
+  const wrapper=document.createElement('div');
+  wrapper.className="container-2"
+  wrapper.appendChild(grid)
+  dom.appendChild(wrapper);
+
+  if(cols.length > button_columns){
+    // Add navigator using this specific offset object
+    const nav = document.createElement("div");
+    nav.classList.add("container-2");
+
+    const left = document.createElement("button");
+    left.classList.add("button");
+    left.textContent = "<";
+
+    left.onclick = function () {
+        catchall_move(this, "l",button_columns);
+    };
+
+    const right = document.createElement("button");
+    right.classList.add("button");
+    right.textContent = ">";
+
+    right.onclick = function () {
+        catchall_move(this, "r",button_columns);
+    };
+
+    nav.appendChild(left);
+    nav.appendChild(right);
+    dom.appendChild(nav);
+  }
+
+};

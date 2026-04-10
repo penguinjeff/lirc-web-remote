@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Catchall Test Page</title>
+
+  <!-- Disable caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Your stylesheet -->
+  <link rel="stylesheet" href="css/remote.css">
+</head>
+
+<body>
+
+  <h2>Catchall Test Page</h2>
+
+  <!-- Simulated remote layout -->
+  <div class="container">
+    <div class="container-1">
+      <div class="catchall" id="catchall_test">
+        <!-- build_catchall will fill THIS .common div -->
+        <div class="common" id="catchall_root"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load your builder + dependencies -->
+  <script src="js/execute.js"></script>
+  <script src="js/presshold.js"></script>
+  <script src="js/build_button.js"></script>
+
+  <!-- Catchall builder modules -->
+<script src="js/build_catchall/buildNavigationRow.js.txt"></script>
+<script src="js/build_catchall/build_catchall.js.txt"></script>
+
+  <script>
+    // ------------------------------------------------------------
+    // 1. Generate test button list: KEY_A through KEY_Z
+    // ------------------------------------------------------------
+    const testButtons = [];
+    for (let i = 0; i < 26; i++) {
+      const letter = String.fromCharCode(65 + i); // A-Z
+      testButtons.push("KEY_" + letter);
+    }
+
+    // ------------------------------------------------------------
+    // 2. Create the state object expected by build_catchall
+    // ------------------------------------------------------------
+    const state = {
+      dom: document.getElementById("catchall_root"),
+      button_columns: 6,   // visible columns
+      button_rows: 3,      // rows per column
+      offset: 0,
+      realCount: 0,
+      strip: null
+    };
+    // ------------------------------------------------------------
+    // 3. Call your builder
+    // ------------------------------------------------------------
+	
+    build_catchall("TestRemote", testButtons, state);
+  </script>
+
+</body>
+</html>

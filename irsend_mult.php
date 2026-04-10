@@ -4,14 +4,6 @@ ignore_user_abort(true);
 set_time_limit(0);
 
 /* ---------------------------------------------------------
- * Validate any json
- * --------------------------------------------------------- */
-
-function validate_any_json($data) {
-    return true;
-}
-
-/* ---------------------------------------------------------
  *   JSON HELPERS
  * --------------------------------------------------------- */
 
@@ -115,7 +107,7 @@ function validate_macro_file($obj) {
  *   MODE DEFINITIONS
  * --------------------------------------------------------- */
 
-$DEFAULT = ["needs_json" => true, "validator" => "validate_bash_json", "normalize" => true];
+$DEFAULT = ["needs_json" => true, "validator" => "validate_bash_json"];
 
 $MODES = [
     "macro"            => ["validator" => "validate_macro_steps"],
@@ -123,9 +115,9 @@ $MODES = [
     "status"           => [],
     "stop"             => ["needs_json" => false],
     "write_macros"     => ["validator" => "validate_macro_file"],
-    "write_displays"   => ["validator" => "validate_any_json", "normalize" => false],
-    "write_activities" => ["validator" => "validate_any_json", "normalize" => false],
-    "write_modules"    => ["validator" => "validate_any_json", "normalize" => false]
+    "write_displays"   => [],
+    "write_activities" => [],
+    "write_modules"    => []
 ];
 
 function cfg($mode, $MODES, $DEFAULT) {
@@ -186,9 +178,8 @@ if ($cfg["needs_json"]) {
     }
 
     // Normalize + sanitize
-    if ($cfg["normalize"]) {
-      $decoded = normalize($decoded);
-    }
+    $decoded = normalize($decoded);
+
     // Validate structure
     if (!$cfg["validator"]($decoded)) {
         echo json_encode(["success" => false, "error" => "JSON validation failed"]);

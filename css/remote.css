@@ -151,10 +151,6 @@ select {
     user-select:none;
 }
 
-.hidden {
-    display: none;
-}
-
 select {
   font-size: calc(14px * var(--scale));
 }
