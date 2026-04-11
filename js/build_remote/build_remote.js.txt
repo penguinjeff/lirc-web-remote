@@ -140,5 +140,14 @@ function build_macro_button(button_name,button_display) {
     build_catchall(state);
   });
 
-  return remote_dom;
+  let w1=document.createElement('div');
+  w1.className="container";
+  let w2=document.createElement('div');
+  w2.className="container-1";
+  let w3=document.createElement('div');
+  w3.className="common";
+  w3.appendChild(remote_dom);
+  w2.appendChild(w3);
+  w1.appendChild(w2)
+  return w1;
 }

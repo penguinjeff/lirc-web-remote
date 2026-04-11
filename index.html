@@ -479,7 +479,10 @@ function refresh_list()
 
 function run_after_refresh(list,variables)
 {
- let remotes_list=Object.keys(remotes);
+window.remotes=variables.remotes;
+window.activities=variables.activities;
+ let remotes_list=Object.keys(variables.remotes);
+ let activities_list=Object.keys(variables.activities);
  let navigator_location=document.getElementById("navigator_location");
  let navigator=document.getElementById("navigator");
  if(navigator){navigator.remove};
