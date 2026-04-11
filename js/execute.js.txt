@@ -3,7 +3,8 @@ let activeMacros = {};   // macro_id → { skip, polling }
 function execute(mode, json_obj = []) {
   const ts = Math.round(Date.now() / 1000);
   const json = encodeURIComponent(JSON.stringify(json_obj));
-
+  console.log("execute");
+  console.log(json);
   return fetch('irsend_mult.php?ts=' + ts, {
     method: 'POST',
     headers: {
