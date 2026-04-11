@@ -50,7 +50,7 @@ function get_default_display()
             [["onefiller"]],
 
             /* Column 2: pause/play (two possible modules) */
-            [["navigator_pause_play",0],["navigator_pauseplay",0]],
+            [["navigator_play_pause",0],["navigator_playpause",0]],
 
             /* Column 3: filler */
             [["onefiller"]],

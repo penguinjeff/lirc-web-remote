@@ -21,8 +21,14 @@ const db=JSON.parse(JSON.stringify(db_in));
     dom.innerHTML=JSON.stringify(activity)
     return dom;
   }
-  const unused_buttons = remote_list.map((remote_name) => JSON.parse(JSON.stringify(remotes[remote_name]))); // one array per remote
-
+  console.log("remotes");
+  let unused_buttons = remote_list.map((remote_name) => {
+    if(remote_name!==""){
+      return JSON.parse(JSON.stringify(db.remotes[remote_name]));
+    }else{
+      return [];
+    }
+  });
 
   for (const row of display) {
     const row_dom = document.createElement("div");
