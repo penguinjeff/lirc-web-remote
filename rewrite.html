@@ -29,7 +29,7 @@ function build_edit(db,item) {
   
 function refresh_db() {
  let list=["remotes","displays","activities","macros","modules"];
- refresh(list,run_after_refresh);
+ refresh(list,run_after_refresh,{});
 }
 
 function options_from_keys(selector, json) {

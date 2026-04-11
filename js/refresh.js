@@ -1,11 +1,7 @@
 
-function refresh(refresh_list, fun2run, targetObj) {
+function refresh(refresh_list, fun2run) {
 
-    // If no object is provided, default to window (global)
-    const target = (typeof targetObj === "object" && targetObj !== null)
-        ? targetObj
-        : window;
-
+    let target={};
     // Track which modules are still loading
     const refreshing = {};
     refresh_list.forEach(name => refreshing[name] = true);
