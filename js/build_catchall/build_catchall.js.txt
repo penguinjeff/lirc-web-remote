@@ -1,14 +1,19 @@
 // js/build_catchall/build_catchall.js
-window.build_catchall = function(remote_name, button_list, state) {
+window.build_catchall = function(state) {
 
 function getDisplayName(rawName) {
   if (rawName.startsWith("KEY_")) return rawName.substring(4);
   if (rawName.startsWith("BTN_")) return rawName.substring(4);
   return rawName;
 }
-
-  const {dom,button_columns,button_rows} = state;
-
+  let button_list=[];
+  const {remote_name,dom,unused_buttons,remote_buttons,extra={}} = state;
+  const {button_columns=5,button_rows=3,alldef=""}=extra;
+  if(alldef==="unused"){
+    button_list=unused_buttons;
+  }else{
+    button_list=remote_buttons;
+  }
   dom.innerHTML = "";
 
   // Build columns
@@ -53,9 +58,11 @@ function getDisplayName(rawName) {
   console.log("========================");
 
   const grid=document.createElement('div');
-  grid.className = "container-1";
+  grid.className = "container-2";
+  grid.setAttribute("name", "grid");
   cols.forEach((col,i) => {
     const col_dom = document.createElement('div');
+	col_dom.setAttribute("name", "column");
     if(cols.length <= button_columns || ( i > (button_columns-2) && i < (2*button_columns-1)))
 	{
 	  col_dom.className="onewide"
@@ -84,16 +91,13 @@ function getDisplayName(rawName) {
 
   // Use the newly added item
   const current = window.st[window.st.length - 1];
-  const wrapper=document.createElement('div');
-  wrapper.className="container-2"
-  wrapper.appendChild(grid)
-  dom.appendChild(wrapper);
+  dom.appendChild(grid);
 
   if(cols.length > button_columns){
     // Add navigator using this specific offset object
     const nav = document.createElement("div");
     nav.classList.add("container-2");
-
+    nav.setAttribute("name","Navigator")
     const left = document.createElement("button");
     left.classList.add("button");
     left.textContent = "<";

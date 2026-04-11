@@ -1,0 +1,82 @@
+// js/build_catchall/buildNavigationRow.js
+window.catchall_move = function(item, direction, button_columns) {
+
+  //get to Navigator
+  let parent = item.parentElement;
+  while (parent && !(parent.getAttribute("name")==="Navigator")) {
+    parent=parent.parentElement
+  }
+  if(!parent){
+    console.error("missing Navigator");
+    return;
+  }
+  //get to outside wrapper of columns
+  const wrapper = parent.previousElementSibling;
+  //console.log(wrapper.className)
+
+  //get to parent of first column
+  let first_column=wrapper.firstElementChild
+  //console.log(first_column.className)
+  while (first_column && !(first_column.className==="hidden" || first_column.className==="onewide")) {
+    first_column=first_column.firstElementChild
+  }
+  const columns_parent=first_column.parentElement;
+  //console.log("found colomns parent")
+  const first=columns_parent.querySelector(".onewide")
+ 
+  function hide_prev_and_show_block(start, direction) {
+    let current_hide = first;
+    let current_show = start;
+    for (let i = 0; i < button_columns; i++) {
+      current_hide.className = "hidden";
+      current_hide = current_hide.nextElementSibling;
+	  
+      current_show.className = "onewide";
+
+      if (direction === "b") {
+        current_show = current_show.previousElementSibling;
+      } else {
+        current_show = current_show.nextElementSibling;
+      }
+    }
+  }
+
+  // Last visible column
+  let last = first;
+  for (let i = 1; i < button_columns; i++) {
+    last = last.nextElementSibling;
+  }
+
+  // Hidden neighbors
+  const pref  = first.previousElementSibling; // hidden before visible
+  const postl = last.nextElementSibling;     // hidden after visible
+
+  if (direction === "l") {
+    if (pref) {
+      //console.log("pref:", pref.className);
+
+      // Make pre first visible and hide the last
+      pref.className = "onewide";
+      last.className = "hidden";
+
+    } else {
+      //console.log("already at first");
+	  
+      hide_prev_and_show_block(columns_parent.lastElementChild, "b")
+    }
+  } else {
+    if (postl) {
+      //console.log("postl:", postl.className);
+
+      // Make post last visible and hide the first
+      postl.className = "onewide";
+      first.className = "hidden";
+
+    } else {
+      //console.log("already at last");
+
+      hide_prev_and_show_block(columns_parent.firstElementChild, "f")
+    }
+  }
+};
+

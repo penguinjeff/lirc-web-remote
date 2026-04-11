@@ -22,29 +22,6 @@ function build_macro_button(button_name,button_display) {
     return dom;
 }
 
-function build_button(remote_name = "", button_name = "", button_display = "") {
-    // Empty placeholder cell
-    if (button_name === "") {
-        const dom = document.createElement("div");
-        dom.className = "empty";
-        return dom;
-    }
-
-    const dom = document.createElement("button");
-    dom.className = "button";
-    dom.innerHTML = button_display;
-
-    const common="('"+remote_name+"','"+button_name+"',this,event)"
-    const presshold="presshold"+common;
-    const release="release"+common;
-    // Inline HTML event attributes (exactly as you requested)
-    dom.setAttribute("onpointerdown", presshold);
-    dom.setAttribute("onpointerup", release);
-    dom.setAttribute("onpointerleave", release);
-
-    return dom;
-}
-
 
   console.log(state)
   const remote_buttons = db.remotes[state.remote_name] || [];
@@ -56,8 +33,6 @@ function build_button(remote_name = "", button_name = "", button_display = "") {
     return false;
   }
 
-  let used_buttons = [];
-
   // Clear the container
   state.dom.innerHTML = "";
 
@@ -67,14 +42,17 @@ function build_button(remote_name = "", button_name = "", button_display = "") {
 	itemrow.className="container-2";
 
     for (const column of row) {
-      const [button_display, button_type, button_name] = column;
+      const [button_display, button_type, button_name,button_title=button_display] = column;
 
       switch (button_type) {
         case "ircode":
           if (remote_buttons.includes(button_name)) {
-            used_buttons.push(button_name);
+            const index = state.unused_buttons.indexOf(button_name);
+            if (index !== -1) {
+			  state.unused_buttons.splice(index, 1);
+            }
             itemrow.appendChild(
-              build_button(state.remote_name, button_name, button_display)
+              build_button(state.remote_name, button_name, button_display, button_title)
             );
           } else if (!module.skip) {
             itemrow.appendChild(build_button());
@@ -96,30 +74,29 @@ function build_button(remote_name = "", button_name = "", button_display = "") {
     state.dom.appendChild(itemrow);
   }
 
-  // Merge used buttons into state
-  state.used_buttons = [...state.used_buttons, ...used_buttons];
-
   return true;
 }
 
+  const remote_dom = document.createElement("div");
+  remote_dom.className = "container";
 
-  /*
-   * activity[0] = remote_list
-   * activity[1] = display layout (rows → columns → module pairs)
-   */
-  console.log(activity)
-  const remote_list = [...activity["remotes"],""]
-  const display = db["displays"][activity["display"]]||get_default_display();
+  console.log(activity);
+  let {remotes=[],display_name=""} = activity;
+
+  if(display_name===""){return remote_dom;}
+
+  let catchalls=[];
+ 
+  const remote_list = [...remotes,""]
+  const display = db["displays"][display_name]||get_default_display();
 
   if(remote_list.length===0){
     let dom=document.createElement("div");
     dom.innerHTML=JSON.stringify(activity)
     return dom;
   }
-  const used_buttons = remote_list.map(() => []); // one array per remote
+  const unused_buttons = remote_list.map((remote_name) => db.remotes[remote_name]); // one array per remote
 
-  const remote_dom = document.createElement("div");
-  remote_dom.className = "container";
 
   for (const row of display) {
     const row_dom = document.createElement("div");
@@ -130,14 +107,20 @@ function build_button(remote_name = "", button_name = "", button_display = "") {
       column_dom.className = "container-2";
 
       for (const module_pair of column) {
-		let [module_name,remote_index=(remote_list.length-1)]=module_pair;
+		let [module_name,remote_index=(remote_list.length-1),extra=""]=module_pair;
         const state = {
-          module_name: module_pair[0],
+          module_name: module_name,
           remote_name: remote_list[remote_index],
-          used_buttons: used_buttons[remote_index],
+		  remote_buttons: db.remotes[remote_list[remote_index]],
+          unused_buttons: unused_buttons[remote_index],
           dom: document.createElement("div"),
+		  extra:extra,
         };
-
+        if(module_name==="catchall"){
+		  catchalls.push(state);
+		  row_dom.appendChild(state.dom);
+		  continue;
+		}
         // If module builds successfully, append and stop trying other modules
         if (build_module(db, state)) {
           column_dom.appendChild(state.dom);
@@ -150,6 +133,12 @@ function build_button(remote_name = "", button_name = "", button_display = "") {
 
     remote_dom.appendChild(row_dom);
   }
+  catchalls.forEach(state=>{
+    console.log(activity);
+    console.log("state");
+    console.log(state);
+    build_catchall(state);
+  });
 
   return remote_dom;
 }
