@@ -151,11 +151,11 @@ function get_default_modules()
 			"skip":true
 		},
 
-		"one_filler":
+		"onefiller":
 		{
 			"buttons":[],
 			"needed":[],
-			"class":"one_filler",
+			"class":"onefiller",
 			"skip":true
 		},
 

@@ -1,0 +1,74 @@
+function build_module(db,state) {
+
+function build_macro_button(button_name,button_display) {
+    // Empty placeholder cell
+    if (button_name === "") {
+        const dom = document.createElement("div");
+        dom.className = "empty";
+        return dom;
+    }
+
+    const dom = document.createElement("button");
+    dom.className = "button";
+    dom.innerHTML = button_display;
+
+    // Inline HTML event attribute (exactly as you requested)
+    dom.setAttribute("onpointerdown", "macro_press('"+button_name+"')");
+
+    return dom;
+}
+
+
+  console.log(state)
+  const remote_buttons = db.remotes[state.remote_name] || [];
+  const module = db.modules[state.module_name] || get_default_modules()[state.module_name];
+  if (!module) return false;
+
+  // Must have all needed buttons
+  if (!module.needed.every(item => remote_buttons.includes(item))) {
+    return false;
+  }
+
+  // Clear the container
+  state.dom.innerHTML = "";
+
+  // Build rows
+  for (const row of module.buttons) {
+    const itemrow = document.createElement("div");
+	itemrow.className="container-2";
+
+    for (const column of row) {
+      const [button_display, button_type, button_name,button_title=button_display] = column;
+
+      switch (button_type) {
+        case "ircode":
+          if (remote_buttons.includes(button_name)) {
+            const index = state.unused_buttons.indexOf(button_name);
+            if (index !== -1) {
+			  state.unused_buttons.splice(index, 1);
+            }
+            itemrow.appendChild(
+              build_button(state.remote_name, button_name, button_display, button_title)
+            );
+          } else if (!module.skip) {
+            itemrow.appendChild(build_button());
+          }
+          break;
+
+        case "macro":
+          if (db["macros"][button_name]) {
+            itemrow.appendChild(
+              build_macro_button(button_name, button_display)
+            );
+          } else if (!module.skip) {
+            itemrow.appendChild(build_button());
+          }
+          break;
+      }
+    }
+
+    state.dom.appendChild(itemrow);
+  }
+
+  return true;
+}
