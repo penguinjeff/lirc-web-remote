@@ -1,0 +1,34 @@
+
+function build_button(remote = "", button_name = "", button_display = "",title=button_display) {
+    function decodeHtmlEntities(str) {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = str;
+        return tempElement.textContent || tempElement.innerText;
+    }
+
+    if (button_name === "") {
+        const dom = document.createElement('div');
+        dom.className = "empty";
+        return dom;
+    }
+    console.log(button_display)
+    const common = "('" + remote + "','" + button_display + "',this,event)";
+    const presshold = "presshold" + common;
+    const release = "release" + common;
+
+    const dom = document.createElement('button');
+    dom.className = "button";
+
+    // Tooltip text (full display text)
+    dom.title = decodeHtmlEntities(title);
+
+    // Event handlers
+    dom.onpointerdown = presshold;
+    dom.onpointerup = release;
+    dom.onpointerleave = release;
+
+    // Visible label
+    dom.innerHTML = button_display;
+
+    return dom;
+}

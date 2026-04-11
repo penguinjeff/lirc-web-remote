@@ -110,6 +110,9 @@ select {
     background-color:#878787;
 }
 
+.hidden { display:none; }
+
+
 /* Empty placeholder cell */
 .empty {
     height: calc(42px * var(--scale));
@@ -154,3 +157,4 @@ select {
 select {
   font-size: calc(14px * var(--scale));
 }
+
