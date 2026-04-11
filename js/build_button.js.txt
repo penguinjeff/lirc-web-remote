@@ -23,9 +23,11 @@ function build_button(remote = "", button_name = "", button_display = "",title=b
     dom.title = decodeHtmlEntities(title);
 
     // Event handlers
-    dom.onpointerdown = presshold;
-    dom.onpointerup = release;
-    dom.onpointerleave = release;
+    dom.setAttribute("onpointerdown", presshold)
+    dom.setAttribute("onpointerup", release)
+    dom.setAttribute("onpointerleave", release)
+    dom.setAttribute("title", title)
+
 
     // Visible label
     dom.innerHTML = button_display;
