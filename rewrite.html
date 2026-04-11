@@ -11,6 +11,7 @@
   <script src="defaults/get_default_display.js.txt?ts=12"></script>
   <script src="defaults/get_default_modules.js.txt?ts=13"></script>
   <script src="js/build_button.js.txt"></script>
+  <script src="js/presshold.js.txt"></script>
   <script src="js/build_remote/build_remote.js.txt?ts=14"></script>
   <script src="js/build_remote/build_module.js.txt?ts=14"></script>
   <script src="js/build_catchall/catchall_move.js.txt"></script>
@@ -150,27 +151,27 @@ window.addEventListener("load", function () {
 
 
 </script>
-<link rel="stylesheet" href="css/remote.css?ts=9">
+<link rel="stylesheet" href="css/remote.css?ts=10">
 </head>
 <body>
-<div>
-  <select id="selector" onchange="show_selected(this)">
-    <option value="Activities">Activities</option>
-    <option value="Remotes">Remotes</option>
-    <option value="Edit">Edit</option>
-    <option value="Refresh">refresh</option>
-  </select>
-  <select class="hidden" id="Activities_selector" onchange="load(this)"></select>
-  <select class="hidden" id="Remotes_selector" onchange="load(this)"></select>
-  <select class="hidden" id="Edit_selector" onchange="load(this)">
-    <option value="Activities">Activities</option>
-    <option value="Macros">Macros</option>
-    <option value="Modules">Modules</option>
-    <option value="Displays">Displays</option>
-  </select>
-</div><br>
-<div class="hidden" id="Activities_display"></div>
-<div class="hidden" id="Remotes_display"></div>
-<div class="hidden" id="Edit_display"></div>
+ <div><!--
+--><select id="selector" onchange="show_selected(this)">
+     <option value="Activities">Activities</option>
+     <option value="Remotes">Remotes</option>
+     <option value="Edit">Edit</option>
+     <option value="Refresh">refresh</option>
+   </select><!--
+--><select class="hidden" id="Activities_selector" onchange="load(this)"></select><!--
+--><select class="hidden" id="Remotes_selector" onchange="load(this)"></select><!--
+--><select class="hidden" id="Edit_selector" onchange="load(this)">
+     <option value="Activities">Activities</option>
+     <option value="Macros">Macros</option>
+     <option value="Modules">Modules</option>
+     <option value="Displays">Displays</option>
+   </select>
+ </div>
+ <div class="hidden" id="Activities_display"></div>
+ <div class="hidden" id="Remotes_display"></div>
+ <div class="hidden" id="Edit_display"></div>
 </body>
 </html>

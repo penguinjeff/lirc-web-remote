@@ -46,7 +46,7 @@ const db=JSON.parse(JSON.stringify(db_in));
         if(module_name==="catchall"){
 		  catchalls.push(state);
 		  row_dom.appendChild(state.dom);
-		  continue;
+		  break;
 		}
         // If module builds successfully, append and stop trying other modules
         if (build_module(db, state)) {
