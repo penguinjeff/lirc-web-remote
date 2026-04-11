@@ -1,7 +1,7 @@
 /*js/build_remote/build_remote.js*/
 
-function build_remote(db, activity) {
-
+function build_remote(db_in, activity) {
+db=JSON.parse(JSON.stringify(db_in));
 function build_module(db,state) {
 
 function build_macro_button(button_name,button_display) {
