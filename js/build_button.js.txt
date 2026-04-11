@@ -12,7 +12,7 @@ function build_button(remote = "", button_name = "", button_display = "",title=b
         return dom;
     }
     console.log(button_display)
-    const common = "('" + remote + "','" + button_display + "',this,event)";
+    const common = "('" + remote + "','" + button_name + "',this,event)";
     const presshold = "presshold" + common;
     const release = "release" + common;
 
