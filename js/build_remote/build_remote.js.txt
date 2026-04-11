@@ -48,7 +48,7 @@ const db=JSON.parse(JSON.stringify(db_in));
           dom: document.createElement("div"),
 		  extra:extra,
         };
-        state.dom.className = module_name;
+        state.dom.className = db.modules[module_name].class;
         if(module_name==="catchall"){
 		  catchalls.push(state);
 		  row_dom.appendChild(state.dom);
