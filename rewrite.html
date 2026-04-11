@@ -79,8 +79,9 @@ function show_selected(sel) {
   window[sel.value + "_display"].classList.remove("hidden");
 }
 
-function run_after_refresh(list,db)
+function run_after_refresh(list,db_in)
 {
+  const db=JSON.parse(JSON.stringify(db_in));
   let select="Activities"
   window.db=db
   if(!(options_from_keys(Activities_selector,db["activities"]))){select="Remotes"}
