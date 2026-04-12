@@ -19,7 +19,7 @@ function refresh(refresh_list, fun2run) {
         script.onload = () => {
             const fn = window["get_" + name];
             target[name] = fn();   // <-- store in target object
-            console.log(name, "loaded:", target[name]);
+            // console.log(name, "loaded:", target[name]);
 
             refreshing[name] = false;
 

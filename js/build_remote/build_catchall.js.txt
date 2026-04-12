@@ -21,7 +21,7 @@ function getDisplayName(rawName) {
   const cols = [];
   let index = 0;
 
-  console.log("better sort")
+  // console.log("better sort")
   const pairs = button_list
   .map(name => [name, getDisplayName(name)])   // build pairs
   .sort((a, b) => a[1].localeCompare(b[1], undefined, { numeric: true })); // sort by label
@@ -41,7 +41,7 @@ function getDisplayName(rawName) {
   }
 
   if(cols.length > button_columns){
-    //copy button_columns-1 coloumns from the end to the beggining
+    // copy button_columns-1 coloumns from the end to the beggining
     const count = button_columns - 1;
 
     // Copy (not remove) the last N columns
@@ -53,12 +53,14 @@ function getDisplayName(rawName) {
 
 
   // Print structure
+/*
   console.log("=== COLUMN STRUCTURE ===");
+
   cols.forEach((col, i) => {
-      console.log(`Column ${i}:`, JSON.stringify(col[1]));
+    console.log(`Column ${i}:`, JSON.stringify(col[1]));
   });
   console.log("========================");
-
+*/
   const grid=document.createElement('div');
   grid.className = "container-2";
   grid.setAttribute("name", "grid");

@@ -13,16 +13,16 @@ window.catchall_move = function(item, direction, button_columns) {
   }
   //get to outside wrapper of columns
   const wrapper = parent.previousElementSibling;
-  //console.log(wrapper.className)
+  // console.log(wrapper.className)
 
   //get to parent of first column
   let first_column=wrapper.firstElementChild
-  //console.log(first_column.className)
+  // console.log(first_column.className)
   while (first_column && !(first_column.className==="hidden" || first_column.className==="onewide")) {
     first_column=first_column.firstElementChild
   }
   const columns_parent=first_column.parentElement;
-  //console.log("found colomns parent")
+  // console.log("found colomns parent")
   const first=columns_parent.querySelector(".onewide")
  
   function hide_prev_and_show_block(start, direction) {
@@ -54,27 +54,27 @@ window.catchall_move = function(item, direction, button_columns) {
 
   if (direction === "l") {
     if (pref) {
-      //console.log("pref:", pref.className);
+      // console.log("pref:", pref.className);
 
       // Make pre first visible and hide the last
       pref.className = "onewide";
       last.className = "hidden";
 
     } else {
-      //console.log("already at first");
+      // console.log("already at first");
 	  
       hide_prev_and_show_block(columns_parent.lastElementChild, "b")
     }
   } else {
     if (postl) {
-      //console.log("postl:", postl.className);
+      // console.log("postl:", postl.className);
 
       // Make post last visible and hide the first
       postl.className = "onewide";
       first.className = "hidden";
 
     } else {
-      //console.log("already at last");
+      // console.log("already at last");
 
       hide_prev_and_show_block(columns_parent.firstElementChild, "f")
     }
