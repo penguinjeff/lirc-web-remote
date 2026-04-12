@@ -48,7 +48,13 @@ const db=JSON.parse(JSON.stringify(db_in));
           dom: document.createElement("div"),
 		  extra:extra,
         };
-        state.dom.className = db.modules[module_name].class;
+        console.log("all_modules")
+        console.log(db_in.all_modules);
+        if(!db.all_modules[module_name]){
+          console.log("Module "+module_name+" not found")
+          continue;
+        }
+        state.dom.className = db.all_modules[module_name].class;
         if(module_name==="catchall"){
 		  catchalls.push(state);
 		  row_dom.appendChild(state.dom);
