@@ -1,3 +1,5 @@
+/* js/build_remote/build_module.js.txt */
+
 function build_module(db,state) {
 
 function build_macro_button(button_name,button_display) {

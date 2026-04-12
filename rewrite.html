@@ -10,13 +10,13 @@
 
   <script src="defaults/get_default_display.js.txt"></script>
   <script src="defaults/get_default_modules.js.txt"></script>
-  <script src="js/build_button.js.txt?ts=1"></script>
   <script src="js/presshold.js.txt"></script>
   <script src="js/execute.js.txt"></script>
+  <script src="js/build_remote/build_button.js.txt?ts=1"></script>
   <script src="js/build_remote/build_remote.js.txt?ts=2"></script>
   <script src="js/build_remote/build_module.js.txt"></script>
-  <script src="js/build_catchall/catchall_move.js.txt"></script>
-  <script src="js/build_catchall/build_catchall.js.txt"></script>
+  <script src="js/build_remote/catchall_move.js.txt"></script>
+  <script src="js/build_remote/build_catchall.js.txt"></script>
   <!--  <script src="./js/build_edit/build_edit.js"></script>n -->
   <script src="./js/refresh.js"></script>
   <script>
@@ -135,16 +135,13 @@ function load(__selector) {
 function fg(name, post = "") {
   const id = name + post;
   const el = document.getElementById(id);
-
   if (!el) {
     console.warn(`fg: No element found with id="${id}"`);
     return null;
   }
-
   window[id] = el;
   return el;
 }
-
 
 let groups=["Activities","Remotes","Edit"];
 let activity_display=null;
@@ -155,7 +152,6 @@ window.addEventListener("load", function () {
  fg("selector");
  refresh_db()
 });
-
 
 </script>
 <link rel="stylesheet" href="css/remote.css?ts=1">

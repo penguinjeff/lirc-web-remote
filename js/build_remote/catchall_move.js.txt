@@ -1,4 +1,5 @@
-// js/build_catchall/buildNavigationRow.js
+/* js/build_remote/catchall_move.js.txt */
+
 window.catchall_move = function(item, direction, button_columns) {
 
   //get to Navigator

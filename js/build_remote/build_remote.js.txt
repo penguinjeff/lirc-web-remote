@@ -1,4 +1,4 @@
-/*js/build_remote/build_remote.js*/
+/*js/build_remote/build_remote.js.txt*/
 
 function build_remote(db_in, activity) {
 const db=JSON.parse(JSON.stringify(db_in));

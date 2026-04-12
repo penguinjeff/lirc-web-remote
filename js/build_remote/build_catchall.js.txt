@@ -1,4 +1,5 @@
-// js/build_catchall/build_catchall.js
+/* js/build_remote/build_catchall.js.txt */
+
 window.build_catchall = function(state) {
 
 function getDisplayName(rawName) {

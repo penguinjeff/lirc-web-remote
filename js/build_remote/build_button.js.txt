@@ -1,3 +1,4 @@
+/* js/build_remote/build_button.js.txt */
 
 function build_button(remote = "", button_name = "", button_display = "",title=button_display) {
     function decodeHtmlEntities(str) {
