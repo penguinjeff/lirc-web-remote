@@ -151,6 +151,14 @@ function get_default_modules()
 			"skip":true
 		},
 
+		"directions_horizantal_filler":
+		{
+			"buttons":[],
+			"needed":[],
+			"class":"directions",
+			"skip":true
+		}
+
 		"onefiller":
 		{
 			"buttons":[],
