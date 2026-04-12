@@ -3,6 +3,7 @@
 function build_module(db,state) {
 
 function build_macro_button(button_name,button_display) {
+    console.log("here")
     // Empty placeholder cell
     if (button_name === "") {
         const dom = document.createElement("div");
@@ -21,7 +22,6 @@ function build_macro_button(button_name,button_display) {
 }
 
 
-  console.log(state)
   const remote_buttons = db.remotes[state.remote_name] || [];
   const module = db.all_modules[state.module_name];
   if (!module) return false;

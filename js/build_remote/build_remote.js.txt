@@ -6,7 +6,6 @@ const db=JSON.parse(JSON.stringify(db_in));
   const remote_dom = document.createElement("div");
   remote_dom.className = "container";
 
-  // console.log(activity);
   let {remotes=[],display_name=""} = activity;
 
   if(display_name===""){return remote_dom;}
@@ -21,7 +20,7 @@ const db=JSON.parse(JSON.stringify(db_in));
     dom.innerHTML=JSON.stringify(activity)
     return dom;
   }
-  // console.log("remotes");
+
   let unused_buttons = remote_list.map((remote_name) => {
     if(remote_name!==""){
       return JSON.parse(JSON.stringify(db.remotes[remote_name]));
