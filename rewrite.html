@@ -88,8 +88,6 @@ function run_after_refresh(list,db_in)
     ...db_in.modules,
     ...get_default_modules()
   };
-  // console.log("all_modules")
-  // console.log(db_in.all_modules);
   const db=JSON.parse(JSON.stringify(db_in));
   let select="Activities"
   window.db=db

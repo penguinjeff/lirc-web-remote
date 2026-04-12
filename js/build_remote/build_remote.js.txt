@@ -48,8 +48,7 @@ const db=JSON.parse(JSON.stringify(db_in));
           dom: document.createElement("div"),
 		  extra:extra,
         };
-        // console.log("all_modules")
-        // console.log(db_in.all_modules);
+
         if(!db.all_modules[module_name]){
           console.log("Module "+module_name+" not found")
           continue;
@@ -73,9 +72,6 @@ const db=JSON.parse(JSON.stringify(db_in));
     remote_dom.appendChild(row_dom);
   }
   catchalls.forEach(state=>{
-    console.log(activity);
-    console.log("state");
-    console.log(state);
     build_catchall(state);
   });
 

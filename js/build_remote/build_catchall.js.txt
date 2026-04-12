@@ -21,7 +21,6 @@ function getDisplayName(rawName) {
   const cols = [];
   let index = 0;
 
-  // console.log("better sort")
   const pairs = button_list
   .map(name => [name, getDisplayName(name)])   // build pairs
   .sort((a, b) => a[1].localeCompare(b[1], undefined, { numeric: true })); // sort by label
@@ -51,16 +50,6 @@ function getDisplayName(rawName) {
     cols.unshift(...toCopy);	 
   }
 
-
-  // Print structure
-/*
-  console.log("=== COLUMN STRUCTURE ===");
-
-  cols.forEach((col, i) => {
-    console.log(`Column ${i}:`, JSON.stringify(col[1]));
-  });
-  console.log("========================");
-*/
   const grid=document.createElement('div');
   grid.className = "container-2";
   grid.setAttribute("name", "grid");
