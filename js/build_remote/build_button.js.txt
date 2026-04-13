@@ -1,6 +1,6 @@
 /* js/build_remote/build_button.js.txt */
 
-function build_button(remote = "", button_name = "", button_display = "",title=button_display) {
+function build_button(remote = "", button_name = "", button_display = "", title = button_display) {
     function decodeHtmlEntities(str) {
         const tempElement = document.createElement('div');
         tempElement.innerHTML = str;
@@ -12,23 +12,23 @@ function build_button(remote = "", button_name = "", button_display = "",title=b
         dom.className = "empty";
         return dom;
     }
+
+    // Build inline event strings
     const common = "('" + remote + "','" + button_name + "',this,event)";
-    const presshold = presshold;
-    const release = "release" + common;
+    const presshold_str = "presshold" + common;
+    const release_str   = "release"   + common;
 
     const dom = document.createElement('button');
     dom.className = "button";
-    dom.setAttribute("name",remote+" "+button_name);
+    dom.setAttribute("name", remote + " " + button_name);
 
-    // Tooltip text (full display text)
+    // Tooltip
     dom.title = decodeHtmlEntities(title);
 
-    // Event handlers
-    dom.onpointerdown=presshold;
-    dom.onpointerup=release;
-    dom.onpointerleave=release;
-    dom.setAttribute("title", title)
-
+    // Inline event attributes (string form)
+    dom.setAttribute("onpointerdown", presshold_str);
+    dom.setAttribute("onpointerup",   release_str);
+    dom.setAttribute("onpointerleave", release_str);
 
     // Visible label
     dom.innerHTML = button_display;
