@@ -1,0 +1,3 @@
+function build_activities(db){
+  console.log("build_activities")
+}

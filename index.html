@@ -2,8 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
+	  <title>Lirc Web Remote</title>
+  <!-- Disable caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
 <script src="js/0utils.js"></script>
-<script id="default_display" src="defaults/get_default_display_old.js"></script>
+<script id="default_display" src="defaults/get_default_display_old.js?ts=7"></script>
 <script id="default_modules" src="defaults/get_default_modules.js.txt"></script>
 <script src="js/refresh.js"></script>
 <!--<script src="js/save_load_refreshv1.js"></script>-->
@@ -479,10 +485,7 @@ function refresh_list()
 
 function run_after_refresh(list,variables)
 {
-window.remotes=variables.remotes;
-window.activities=variables.activities;
- let remotes_list=Object.keys(variables.remotes);
- let activities_list=Object.keys(variables.activities);
+ let remotes_list=Object.keys(remotes);
  let navigator_location=document.getElementById("navigator_location");
  let navigator=document.getElementById("navigator");
  if(navigator){navigator.remove};

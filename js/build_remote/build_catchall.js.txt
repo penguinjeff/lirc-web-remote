@@ -55,12 +55,10 @@ function getDisplayName(rawName) {
   grid.setAttribute("name", "grid");
   cols.forEach((col,i) => {
     const col_dom = document.createElement('div');
-	col_dom.setAttribute("name", "column");
-    if(cols.length <= button_columns || ( i > (button_columns-2) && i < (2*button_columns-1)))
-	{
-	  col_dom.className="onewide"
-	}else{
-	  col_dom.className="hidden"
+	col_dom.setAttribute("name", "Column");
+	col_dom.classList.add("onewide")
+    if(!(cols.length <= button_columns || ( i > (button_columns-2) && i < (2*button_columns-1)))){
+	  col_dom.classList.add("hidden")
 	}
 	col.forEach(name => {
 	  const cb=document.createElement('div');
@@ -72,18 +70,6 @@ function getDisplayName(rawName) {
 	grid.appendChild(col_dom);
   });
 
-  // Ensure st exists and is an array
-  if (!Array.isArray(window.st)) {
-    window.st = [];
-  }
-
-  // Add a new item with its own offset
-  window.st.push({
-    offset: button_columns - 1
-  });
-
-  // Use the newly added item
-  const current = window.st[window.st.length - 1];
   dom.appendChild(grid);
 
   if(cols.length > button_columns){
@@ -93,19 +79,17 @@ function getDisplayName(rawName) {
     nav.setAttribute("name","Navigator")
     const left = document.createElement("button");
     left.classList.add("button");
+	left.setAttribute("name","Left")
     left.textContent = "<";
 
-    left.onclick = function () {
-        catchall_move(this, "l",button_columns);
-    };
+    left.onclick = catchall_move;
 
     const right = document.createElement("button");
     right.classList.add("button");
+	right.setAttribute("name","Right")
     right.textContent = ">";
 
-    right.onclick = function () {
-        catchall_move(this, "r",button_columns);
-    };
+    right.onclick = catchall_move;
 
     nav.appendChild(left);
     nav.appendChild(right);

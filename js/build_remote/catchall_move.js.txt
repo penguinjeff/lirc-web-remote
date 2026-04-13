@@ -1,83 +1,78 @@
 /* js/build_remote/catchall_move.js.txt */
-
-window.catchall_move = function(item, direction, button_columns) {
-
+window.catchall_move = function(event) {
+  const item = event.currentTarget;   // ← the button that was clicked
+  const direction=item.getAttribute("name")
   //get to Navigator
   let parent = item.parentElement;
-  while (parent && !(parent.getAttribute("name")==="Navigator")) {
-    parent=parent.parentElement
+  while (parent && parent.getAttribute("name")!=="Navigator") {
+    parent = parent.parentElement;
   }
-  if(!parent){
+  if (!parent) {
     console.error("missing Navigator");
     return;
   }
+
   //get to outside wrapper of columns
   const wrapper = parent.previousElementSibling;
-  // console.log(wrapper.className)
 
-  //get to parent of first column
-  let first_column=wrapper.firstElementChild
-  // console.log(first_column.className)
-  while (first_column && !(first_column.className==="hidden" || first_column.className==="onewide")) {
-    first_column=first_column.firstElementChild
+  //get to first column
+  let first_column = wrapper.firstElementChild;
+  while (first_column && first_column.getAttribute("name")!=="Column") {
+    first_column = first_column.firstElementChild;
   }
-  const columns_parent=first_column.parentElement;
-  // console.log("found colomns parent")
-  const first=columns_parent.querySelector(".onewide")
- 
-  function hide_prev_and_show_block(start, direction) {
-    let current_hide = first;
-    let current_show = start;
-    for (let i = 0; i < button_columns; i++) {
-      current_hide.className = "hidden";
-      current_hide = current_hide.nextElementSibling;
-	  
-      current_show.className = "onewide";
 
-      if (direction === "b") {
-        current_show = current_show.previousElementSibling;
-      } else {
-        current_show = current_show.nextElementSibling;
-      }
-    }
+  const columns_parent = first_column.parentElement;
+  const first_visable = columns_parent.querySelector(".onewide:not(.hidden)");
+
+  const button_columns = columns_parent.querySelectorAll(".onewide:not(.hidden)").length;
+
+  if (!first_visable) {
+    console.error("no visible columns found");
+    return;
   }
 
   // Last visible column
-  let last = first;
+  let last_visable = first_visable;
   for (let i = 1; i < button_columns; i++) {
-    last = last.nextElementSibling;
+    last_visable = last_visable.nextElementSibling;
   }
+  
+/***************************
+ * Found all refernces onto the logic
+ ***************************/  
 
-  // Hidden neighbors
-  const pref  = first.previousElementSibling; // hidden before visible
-  const postl = last.nextElementSibling;     // hidden after visible
-
-  if (direction === "l") {
-    if (pref) {
-      // console.log("pref:", pref.className);
-
-      // Make pre first visible and hide the last
-      pref.className = "onewide";
-      last.className = "hidden";
-
-    } else {
-      // console.log("already at first");
-	  
-      hide_prev_and_show_block(columns_parent.lastElementChild, "b")
-    }
+  let hidden_edge;
+  let visable_edge;
+  let wrapping_edge;
+  // LEFT movement
+  if (direction === "Left") {
+    hidden_edge = first_visable.previousElementSibling;
+    visable_edge = last_visable;
+    wrapping_edge = columns_parent.lastElementChild
+  // RIGHT movement
   } else {
-    if (postl) {
-      // console.log("postl:", postl.className);
+    hidden_edge = last_visable.nextElementSibling;
+    visable_edge = first_visable;
+    wrapping_edge = columns_parent.firstElementChild
+  }
+  if (hidden_edge) {
 
-      // Make post last visible and hide the first
-      postl.className = "onewide";
-      first.className = "hidden";
+    hidden_edge.classList.remove("hidden");
+    visable_edge.classList.add("hidden");
 
-    } else {
-      // console.log("already at last");
+  } else {
+    let current_hide = first_visable;
+    for (let i = 0; i < button_columns; i++) {
 
-      hide_prev_and_show_block(columns_parent.firstElementChild, "f")
+      wrapping_edge.classList.remove("hidden");
+      current_hide.classList.add("hidden");
+
+      current_hide = current_hide.nextElementSibling;
+      if (direction === "Left") {
+        wrapping_edge = wrapping_edge.previousElementSibling;
+      } else {
+        wrapping_edge = wrapping_edge.nextElementSibling;
+      }
     }
   }
 };
-

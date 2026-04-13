@@ -1,0 +1,25 @@
+function options_from_keys(selector, json) {
+  return options_from_list(selector, Object.keys(json));
+}
+
+function options_from_list(selector, list) {
+  selector.replaceChildren(); // clear existing options
+
+  if (list.length === 0) {
+    const opt = document.createElement("option");
+    opt.textContent = "None";
+    opt.value = "";
+    opt.disabled = true;
+    opt.selected = true;
+    selector.appendChild(opt);
+    return false;
+  }
+
+  list.forEach(item => {
+    const opt = document.createElement("option");
+    opt.textContent = item;
+    opt.value = item;
+    selector.appendChild(opt);
+  });
+  return true;
+}

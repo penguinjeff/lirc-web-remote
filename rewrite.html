@@ -7,172 +7,158 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-
-  <script src="defaults/get_default_display.js.txt"></script>
-  <script src="defaults/get_default_modules.js.txt"></script>
-  <script src="js/presshold.js.txt"></script>
-  <script src="js/execute.js.txt"></script>
-  <script src="js/build_remote/build_button.js.txt?ts=1"></script>
-  <script src="js/build_remote/build_remote.js.txt?ts=2"></script>
-  <script src="js/build_remote/build_module.js.txt"></script>
-  <script src="js/build_remote/catchall_move.js.txt"></script>
-  <script src="js/build_remote/build_catchall.js.txt"></script>
-  <!--  <script src="./js/build_edit/build_edit.js"></script>n -->
-  <script src="./js/refresh.js?ts=1"></script>
   <script>
 
- /* testing version */
-function build_edit(db,item) {
- console.log("build_edit")
- console.log(item);
- let dom=document.createElement("div");
- dom.innerHTML=JSON.stringify(item)
- return dom;
+function loadScript(src) {
+  return new Promise(resolve => {
+    const s = document.createElement("script");
+    s.src = src + "?ts=" + Date.now();   // ← add timestamp
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
 }
+
+async function loadAllScripts() {
   
+  await loadScript("defaults/get_default_display.js.txt");
+  await loadScript("defaults/get_default_modules.js.txt");
+  await loadScript("js/presshold.js.txt");
+  await loadScript("js/execute.js.txt");
+  await loadScript("js/refresh.js.txt");
+  await loadScript("js/options.js.txt");
+  
+  // files needed for build_remote
+  let rp="js/build_remote/"
+  await loadScript(rp + "build_button.js.txt");
+  await loadScript(rp + "build_remote.js.txt");
+  await loadScript(rp + "build_module.js.txt");
+  await loadScript(rp + "catchall_move.js.txt");
+  await loadScript(rp + "build_catchall.js.txt");
+  
+  // files needed for build_edit
+  let ep="js/build_edit/"
+  await loadScript(ep + "build_activities.js.txt");
+  await loadScript(ep + "build_macros.js.txt");
+  await loadScript(ep + "build_modules.js.txt");
+  await loadScript(ep + "build_displays.js.txt");
+  await loadScript(ep + "build_edit.js.txt");
+}
+
 function refresh_db() {
  let list=["remotes","displays","activities","macros","modules"];
  refresh(list,run_after_refresh,{});
 }
 
-function options_from_keys(selector, json) {
-  selector.replaceChildren(); // clear existing options
-
-  const keys = Object.keys(json);
-
-  if (keys.length === 0) {
-    const opt = document.createElement("option");
-    opt.textContent = "None";
-    opt.value = "";
-    opt.disabled = true;
-    opt.selected = true;
-    selector.appendChild(opt);
-    return false;
-  }
-
-  keys.forEach(key => {
-    const opt = document.createElement("option");
-    opt.textContent = key;
-    opt.value = key;
-    selector.appendChild(opt);
-  });
-  return true;
-}
-
 let last_selected="";
 function show_selected(sel) {
   // hide all
-  Activities_selector.classList.add("hidden");
-  Remotes_selector.classList.add("hidden");
-  Edit_selector.classList.add("hidden");
-
-  Activities_display.classList.add("hidden");
-  Remotes_display.classList.add("hidden");
-  Edit_display.classList.add("hidden");
+  groups.forEach(item=> window.divs[item+"_selector"].classList.add("hidden"));
+  groups.forEach(item=> window.divs[item+"_display"].classList.add("hidden"));
 
   // show selected
   if (sel.value === "Refresh") {
     refresh_db();
-    selector.value = last_selected;   // restore previous selection
-    show_selected(selector);          // show that panel again
+    window.divs["selector"].value = last_selected;   // restore previous selection
+    show_selected(window.divs["selector"]);          // show that panel again
     return;
   }
   last_selected=sel.value;
-  window[sel.value + "_selector"].classList.remove("hidden");
-  window[sel.value + "_display"].classList.remove("hidden");
+  window.divs[sel.value + "_selector"].classList.remove("hidden");
+  window.divs[sel.value + "_display"].classList.remove("hidden");
 }
 
-function run_after_refresh(list,db_in)
+function run_after_refresh(list, db_in)
 {
   db_in.all_modules = {
     ...db_in.modules,
     ...get_default_modules()
   };
-  const db=JSON.parse(JSON.stringify(db_in));
-  let select="Activities"
-  window.db=db
-  if(!(options_from_keys(Activities_selector,db["activities"]))){select="Remotes"}
-  if(!(options_from_keys(Remotes_selector,db["remotes"]))){select="Edit"}
-  if(last_selected!=""){select=last_selected;}
-  selector.value=select;
-  groups.forEach((item)=>{load(window[item+"_selector"])})
-  show_selected(selector);
+
+  const db = JSON.parse(JSON.stringify(db_in));
+  window.db = db;
+
+  let select = "Activities";
+
+  if (!options_from_keys(window.divs["Activities_selector"], db.activities)) select = "Remotes";
+  if (!options_from_keys(window.divs["Remotes_selector"], db.remotes)) select = "Edit";
+  if (last_selected !== "") select = last_selected;
+
+  window.divs["selector"].value = select;
+  groups.forEach(item => load(window.divs[item + "_selector"]));
+  show_selected(window.divs["selector"]);
 }
 
 function load(__selector) {
   const type = __selector.id.replace("_selector", "");
-  const display_dom = window[type + "_display"];
+  const display_dom = window.divs[type + "_display"];
 
   display_dom.replaceChildren();
 
   let activity;
-
   switch (type) {
     case "Edit":
       display_dom.appendChild(build_edit(db, __selector.value));
       return;
-
     case "Activities":
       activity = db[__selector.value] || { remotes: [], display: "" };
       break;
-
     case "Remotes":
       activity = { remotes: [__selector.value], display_name: "default_display" };
       break;
-
     default:
       console.warn("Unknown selector type:", type);
       return;
   }
-
   display_dom.appendChild(build_remote(db, activity));
 }
 
 
 /*find and globalize*/
-function fg(name, post = "") {
-  const id = name + post;
+function fg(id) {
+  if(!window["divs"]){window["divs"]={};}
   const el = document.getElementById(id);
   if (!el) {
     console.warn(`fg: No element found with id="${id}"`);
     return null;
   }
-  window[id] = el;
+  window.divs[id] = el;
   return el;
 }
 
-let groups=["Activities","Remotes","Edit"];
+const groups=["Activities","Remotes","Edit"];
+const editOptions = ["Activities","Macros","Modules","Displays"];
 let activity_display=null;
-window.addEventListener("load", function () {
- var bodyElement = document.body;
- groups.forEach((item)=>{fg(item,"_selector")})
- groups.forEach((item)=>{fg(item,"_display")})
- fg("selector");
- refresh_db()
+window.addEventListener("load", async function () {
+  await loadAllScripts();
+  let bodyElement = document.body;
+  let selectors = document.createElement("div");
+  let displays = document.createElement("div");
+  let selector = document.createElement("select");
+  selector.id = "selector";
+  selector.setAttribute("onchange", "show_selected(this)");
+  selectors.appendChild(selector); 
+  groups.forEach(item => {
+    let selector = document.createElement("select");
+    selector.id = item + "_selector"
+    selector.className="hidden"
+    selector.setAttribute("onchange","load(this)")
+    selectors.appendChild(selector);
+    let display = document.createElement("div");
+    display.id = item + "_display"
+    display.className="hidden"
+    displays.appendChild(display);
+  });
+  bodyElement.appendChild(selectors);
+  bodyElement.appendChild(displays); 
+  ["selector", ...groups.flatMap(g => [g + "_selector", g + "_display"])]
+   .forEach(id => fg(id));
+  options_from_list(window.divs["selector"],[...groups,"Refresh"]);
+  options_from_list(window.divs["Edit_selector"],editOptions)
+  refresh_db()
 });
 
 </script>
 <link rel="stylesheet" href="css/remote.css?ts=1">
 </head>
-<body>
- <div><!--
---><select id="selector" onchange="show_selected(this)">
-     <option value="Activities">Activities</option>
-     <option value="Remotes">Remotes</option>
-     <option value="Edit">Edit</option>
-     <option value="Refresh">refresh</option>
-   </select><!--
---><select class="hidden" id="Activities_selector" onchange="load(this)"></select><!--
---><select class="hidden" id="Remotes_selector" onchange="load(this)"></select><!--
---><select class="hidden" id="Edit_selector" onchange="load(this)">
-     <option value="Activities">Activities</option>
-     <option value="Macros">Macros</option>
-     <option value="Modules">Modules</option>
-     <option value="Displays">Displays</option>
-   </select>
- </div>
- <div class="hidden" id="Activities_display"></div>
- <div class="hidden" id="Remotes_display"></div>
- <div class="hidden" id="Edit_display"></div>
-</body>
+<body></body>
 </html>
