@@ -11,21 +11,6 @@
 
   <!-- Your stylesheet -->
   <link rel="stylesheet" href="css/remote.css?ts=6">
-</head>
-
-<body>
-
-  <h2>Catchall Test Page</h2>
-
-  <!-- Simulated remote layout -->
-  <div class="container">
-    <div class="container-1">
-      <div class="catchall" id="catchall_test">
-        <!-- build_catchall will fill THIS .common div -->
-        <div class="common" id="catchall_root"></div>
-      </div>
-    </div>
-  </div>
   <script>
 
 function loadScript(src) {
@@ -46,6 +31,7 @@ async function loadAllScripts() {
   await loadScript(rp + "catchall_move.js.txt");
   await loadScript(rp + "build_catchall.js.txt");
 }
+window.addEventListener("load", async function () {
     // ------------------------------------------------------------
     // 1. Generate test button list: KEY_A through KEY_Z
     // ------------------------------------------------------------
@@ -77,11 +63,24 @@ async function loadAllScripts() {
     // 3. Call your builder
     // ------------------------------------------------------------
 
-window.addEventListener("load", async function () {
   await loadAllScripts();
   build_catchall(state);
 });
   </script>
+</head>
 
+<body>
+
+  <h2>Catchall Test Page</h2>
+
+  <!-- Simulated remote layout -->
+  <div class="container">
+    <div class="container-1">
+      <div class="catchall" id="catchall_test">
+        <!-- build_catchall will fill THIS .common div -->
+        <div class="common" id="catchall_root"></div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
