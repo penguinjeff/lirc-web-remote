@@ -13,19 +13,20 @@ function build_button(remote = "", button_name = "", button_display = "",title=b
         return dom;
     }
     const common = "('" + remote + "','" + button_name + "',this,event)";
-    const presshold = "presshold" + common;
+    const presshold = presshold;
     const release = "release" + common;
 
     const dom = document.createElement('button');
     dom.className = "button";
+    dom.setAttribute("name",remote+" "+button_name);
 
     // Tooltip text (full display text)
     dom.title = decodeHtmlEntities(title);
 
     // Event handlers
-    dom.setAttribute("onpointerdown", presshold)
-    dom.setAttribute("onpointerup", release)
-    dom.setAttribute("onpointerleave", release)
+    dom.onpointerdown=presshold;
+    dom.onpointerup=release;
+    dom.onpointerleave=release;
     dom.setAttribute("title", title)
 
 
