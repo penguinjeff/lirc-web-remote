@@ -26,17 +26,32 @@
       </div>
     </div>
   </div>
-
-  <!-- Load your builder + dependencies -->
-  <script src="js/execute.js"></script>
-  <script src="js/presshold.js"></script>
-  <script src="js/build_button.js.txt"></script>
-
-  <!-- Catchall builder modules -->
-<script src="js/build_catchall/catchall_move.js.txt?ts=1"></script>
-<script src="js/build_catchall/build_catchall.js.txt?ts=1"></script>
-
   <script>
+
+function loadScript(src) {
+  return new Promise(resolve => {
+    const s = document.createElement("script");
+    s.src = src + "?ts=" + Date.now();   // ← add timestamp
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
+}
+
+async function loadAllScripts() {
+
+  await loadScript("defaults/get_default_display.js.txt");
+  await loadScript("defaults/get_default_modules.js.txt");
+  await loadScript("js/presshold.js.txt");
+  await loadScript("js/execute.js.txt");
+  await loadScript("js/refresh.js.txt");
+  await loadScript("js/options.js.txt");
+
+  // files needed for build_remote
+  let rp="js/build_remote/"
+  await loadScript(rp + "build_button.js.txt");
+  await loadScript(rp + "catchall_move.js.txt");
+  await loadScript(rp + "build_catchall.js.txt");
+}
     // ------------------------------------------------------------
     // 1. Generate test button list: KEY_A through KEY_Z
     // ------------------------------------------------------------
@@ -67,8 +82,11 @@
     // ------------------------------------------------------------
     // 3. Call your builder
     // ------------------------------------------------------------
-	
-    build_catchall(state);
+
+window.addEventListener("load", async function () {
+  await loadAllScripts();
+  build_catchall(state);
+});
   </script>
 
 </body>
