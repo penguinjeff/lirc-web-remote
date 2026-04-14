@@ -111,13 +111,15 @@ $DEFAULT = ["needs_json" => true, "validator" => "validate_bash_json"];
 
 $MODES = [
     "macro"            => ["validator" => "validate_macro_steps"],
-    "list"             => ["needs_json" => false],
-    "status"           => [],
-    "stop"             => ["needs_json" => false],
-    "write_macros"     => ["validator" => "validate_macro_file"],
-    "write_displays"   => [],
-    "write_activities" => [],
-    "write_modules"    => []
+"list"             => ["needs_json" => false],
+"status"           => ["needs_json" => false],
+"stop"             => ["needs_json" => false],
+"write_macros"     => ["validator" => "validate_macro_file"],
+
+// Allow ANY JSON for these:
+"write_displays"   => ["needs_json" => true, "validator" => null],
+"write_activities" => ["needs_json" => true, "validator" => null],
+"write_modules"    => ["needs_json" => true, "validator" => null]
 ];
 
 function cfg($mode, $MODES, $DEFAULT) {
@@ -177,17 +179,18 @@ if ($cfg["needs_json"]) {
         exit;
     }
 
-    // Normalize + sanitize
-    $decoded = normalize($decoded);
-
-    // Validate structure
-    if (!$cfg["validator"]($decoded)) {
-        echo json_encode(["success" => false, "error" => "JSON validation failed"]);
-        exit;
+    if ($cfg["validator"]) {
+        // Only macros use normalize + strict validation
+        $decoded = normalize($decoded);
+        if (!$cfg["validator"]($decoded)) {
+            echo json_encode(["success" => false, "error" => "JSON validation failed"]);
+            exit;
+        }
+        $raw = json_encode($decoded);
+    } else {
+        // Raw JSON passthrough for write_<data>
+        $raw = json_encode($decoded);
     }
-
-    // Re-encode sanitized JSON
-    $raw = json_encode($decoded);
 }
 
 passthrough($mode, $raw, $id);

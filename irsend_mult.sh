@@ -51,25 +51,19 @@ write(){
   case "${extension}" in
     "remotes")
       string-trim __json
-      time-realtime ts
       message=$(
-        {
-          echo "window.getremotests=${ts};"
-          echo "function get_${extension}(){ return ${__json}; }"
-        } > "${datalocation}/get_${extension}.js" 2>&1
-      )
-      [ "$?" -ne 0 ] && status="e" && msglist+=("${message}")
-      msglist+=("${extension} updated")
-      msglist+=("ts=${ts}")
-      msglist+=("data/get_${extension}.js")
+        echo "window.getremotes=$ts" > "${datalocation}/get_${extension}.js" 2>&1;
+        printf 'function get_%s(){ return %s; }' "$extension" "$__json" \
+        >> "${datalocation}/get_${extension}.js" 2>&1)
+      [ -n "${message}" ] && status="e" && msglist+=("${message}")
+          msglist+=("writing");msglist+=("data/get_${extension}.js")
     ;;
-
     "activities"|"displays"|"macros"|"modules")
       string-trim __json
       message=$(
         echo "function get_${extension}(){ return ${__json};}" \
         > "${datalocation}/get_${extension}.js" 2>&1)
-      [ "$?" -ne 0 ] && status="e" && msglist+=("${message}")
+      [ -n "${message}" ] && status="e" && msglist+=("${message}")
           msglist+=("writing");msglist+=("data/get_${extension}.js")
     ;;
     *)
