@@ -1,6 +1,12 @@
 let activeMacros = {};   // macro_id → { skip, polling }
 
 function execute(mode, json_obj = []) {
+
+  // If running locally, redirect to local_execute()
+  if (location.protocol === "file:") {
+    return local_execute(mode, json_obj);
+  }  
+
   const ts = Math.round(Date.now() / 1000);
   const json = encodeURIComponent(JSON.stringify(json_obj));
   console.log("execute");
@@ -53,6 +59,60 @@ function execute(mode, json_obj = []) {
     console.error("execute() failed:", err);
     return { error: err.message };
   });
+}
+
+function local_execute(mode, json_obj) {
+
+  const validDatafiles = ["activities", "displays", "macros", "modules"];
+
+  // -----------------------------------------
+  // LOGGING FOR REAL MODES
+  // -----------------------------------------
+  if (mode === "macro" || mode === "status") {
+    console.log(mode + " " + JSON.stringify(json_obj));
+    return;
+  }
+  if (mode === "list") {
+    window.remotests = Date.now();   // or Math.floor(Date.now()/1000)
+  }
+  // -----------------------------------------
+  // WRITE MODES (write_<datafile>)
+  // -----------------------------------------
+  if (mode.startsWith("write_")) {
+    const df = mode.substring(6);
+
+    if (validDatafiles.includes(df)) {
+
+      const filename = `get_${df}.js`;
+
+      const fileContent =
+        `function get_${df}() {\n` +
+        `  return ${JSON.stringify(json_obj, null, 2)};\n` +
+        `}\n`;
+
+      const blob = new Blob([fileContent], { type: "application/javascript" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      URL.revokeObjectURL(url);
+
+      console.log("Saved mock backend file:", filename);
+
+      return json_obj; // optional
+    }
+  }
+
+  // -----------------------------------------
+  // UNKNOWN MODE
+  // -----------------------------------------
+  console.warn("local_execute: unknown mode", mode);
+  return null;
 }
 
 function startMacro(macro_id) {

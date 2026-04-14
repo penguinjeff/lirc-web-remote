@@ -1,3 +1,16 @@
+
 function build_macros(db){
   console.log("build_macros")
+  let dom=document.createElement("div");
+  let current=document.createElement("div");
+  current.innerHTML="<pre>"+JSON.stringify(db.macros,null,2)+"</pre>"
+  dom.appendChild(current)
+  let save_button=document.createElement("buton");
+  save_button.setAttribute("name","macros")
+  save_button.innerHTML="save";
+  save_button.classList.add("button");
+  save_button.onpointerdown=save
+  dom.appendChild(save_button);
+  return dom;
 }
+
