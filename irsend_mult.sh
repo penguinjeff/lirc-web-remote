@@ -49,12 +49,27 @@ write(){
   declare -n __json=$2
   header
   case "${extension}" in
-    "activities"|"displays"|"macros"|"modules"|"remotes")
+    "remotes")
+      string-trim __json
+      time-realtime ts
+      message=$(
+        {
+          echo "window.getremotests=${ts};"
+          echo "function get_${extension}(){ return ${__json}; }"
+        } > "${datalocation}/get_${extension}.js" 2>&1
+      )
+      [ "$?" -ne 0 ] && status="e" && msglist+=("${message}")
+      msglist+=("${extension} updated")
+      msglist+=("ts=${ts}")
+      msglist+=("data/get_${extension}.js")
+    ;;
+
+    "activities"|"displays"|"macros"|"modules")
       string-trim __json
       message=$(
         echo "function get_${extension}(){ return ${__json};}" \
         > "${datalocation}/get_${extension}.js" 2>&1)
-      [ -n "${message}" ] && status="e" && msglist+=("${message}")
+      [ "$?" -ne 0 ] && status="e" && msglist+=("${message}")
           msglist+=("writing");msglist+=("data/get_${extension}.js")
     ;;
     *)

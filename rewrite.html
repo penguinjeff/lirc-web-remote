@@ -48,6 +48,37 @@ function refresh_db() {
  refresh(list,run_after_refresh,{});
 }
 
+window.getremotests = 0;
+window.getremotests_prev = 0;
+
+function refresh_after_remotes() {
+  // Save old timestamp BEFORE refreshing
+  window.getremotests_prev = window.getremotests;
+
+  refresh(["remotes"], new_remotes_check);
+}
+
+function new_remotes_check(list_ignore, db_ignore) {
+  if (window.getremotests !== window.getremotests_prev) {
+    window.getremotests_prev = window.getremotests;
+    console.log("Remotes_loaded");
+    refresh_db();
+    return;
+  }
+
+  // Retry once after 1 second
+  setTimeout(() => {
+    refresh(["remotes"], () => {
+      if (window.getremotests !== window.getremotests_prev) {
+        window.getremotests_prev = window.getremotests;
+        refresh_db();
+      } else {
+        console.log("No change detected after retry");
+      }
+    });
+  }, 1000);
+}
+
 let last_selected="";
 function show_selected(sel) {
   // hide all
@@ -56,7 +87,8 @@ function show_selected(sel) {
 
   // show selected
   if (sel.value === "Refresh") {
-    refresh_db();
+    execute("list");
+    refresh_after_remotes()
     window.divs["selector"].value = last_selected;   // restore previous selection
     show_selected(window.divs["selector"]);          // show that panel again
     return;
