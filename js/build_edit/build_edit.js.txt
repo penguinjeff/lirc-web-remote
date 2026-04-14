@@ -1,19 +1,29 @@
+function save(event){
+  const item = event.currentTarget;
+  const name = item.getAttribute("name") || "";
+  if(name === "activities" || name === "macros" || name === "displays" || name === "modules"){
+    execute("write_"+name,db[name])
+	return;
+  }
+  console.log()
+}
+
 function build_edit(db,item) {
   console.log("build_edit")
   console.log(item);
   switch(item)
   {
     case "Activities":
-	  build_activities(db);
+	  return build_activities(db);
 	break;
     case "Macros":
-	  build_macros(db);
+	  return build_macros(db);
 	break;
     case "Displays":
-	  build_displays(db);
+	  return build_displays(db);
 	break;
     case "Modules":
-	  build_modules(db);
+	  return build_modules(db);
 	break;
     default:
 	  console.log("Unkown edit "+item)
