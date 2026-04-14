@@ -14,7 +14,7 @@ function build_button(remote = "", button_name = "", button_display = "", title 
     }
 
     // Build inline event strings
-    const common = "('" + remote + "','" + button_name + "',this,event)";
+    const common = "(event)";
     const presshold_str = "presshold" + common;
     const release_str   = "release"   + common;
 
