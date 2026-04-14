@@ -1,9 +1,20 @@
 /* js/build_remote/build_module.js.txt */
 
+function macro_press(event) {
+  const item = event.currentTarget;
+  const macro_name = item.getAttribute("name") || "";
+  const macro = db.macros[macro_name];
+
+  if (macro) {
+    execute('macro', macro);
+  }
+}
+
 function build_module(db,state) {
 
-function build_macro_button(button_name,button_display) {
-    console.log("here")
+function build_macro_button(button_name, button_display) {
+    console.log("here");
+
     // Empty placeholder cell
     if (button_name === "") {
         const dom = document.createElement("div");
@@ -13,14 +24,14 @@ function build_macro_button(button_name,button_display) {
 
     const dom = document.createElement("button");
     dom.className = "button";
+    dom.setAttribute("name",button_name);
     dom.innerHTML = button_display;
 
-    // Inline HTML event attribute (exactly as you requested)
-    dom.setAttribute("onpointerdown", "macro_press('"+button_name+"')");
+    // Direct event assignment (clean + reliable)
+    dom.onpointerdown = macro_press;
 
     return dom;
 }
-
 
   const remote_buttons = db.remotes[state.remote_name] || [];
   const module = db.all_modules[state.module_name];

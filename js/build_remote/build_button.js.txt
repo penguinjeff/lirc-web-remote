@@ -102,9 +102,6 @@ function build_button(remote = "", button_name = "", button_display = "", title 
     }
 
     // Build inline event strings
-    const common = "(event)";
-    const presshold_str = "presshold" + common;
-    const release_str   = "release"   + common;
 
     const dom = document.createElement('button');
     dom.className = "button";
@@ -118,12 +115,6 @@ function build_button(remote = "", button_name = "", button_display = "", title 
     dom.onpointerdown  = presshold;
     dom.onpointerup    = release;
     dom.onpointerleave = release;
-
-/*
-    dom.setAttribute("onpointerdown", presshold_str);
-    dom.setAttribute("onpointerup",   release_str);
-    dom.setAttribute("onpointerleave", release_str);
-*/
 
     // Visible label
     dom.innerHTML = button_display;
