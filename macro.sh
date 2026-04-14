@@ -49,7 +49,7 @@ process(){
   #echo "irsend \"send_once\" \"$remote\" \"$ircode\""
   ( [ -n "$remote" ] && [ -n "$ircode" ] )&& both=$(irsend send_once "$remote" "$ircode" 2>&1)
   remove_newlines both
-  [ -n "${both}" ] msg e "${both}" "$remote" "$ircode" "$delay" "$loops" >> "$idfile" || \
+  [ -n "${both}" ] && msg e "${both}" "$remote" "$ircode" "$delay" "$loops" >> "$idfile" || \
   msg o "$remote" "$ircode" "$delay" "$loops" >> "$idfile"
 }
 
