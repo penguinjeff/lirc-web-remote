@@ -51,6 +51,10 @@ let altholdtimer = 0;
 
 function release(event)
 {
+  if (!event || !event.currentTarget) {
+    return;   // nothing to release
+  }
+
   const item = event.currentTarget;
   const full = item.getAttribute("name") || "";
 
@@ -66,23 +70,19 @@ function release(event)
 
   function delayed_release(item)
   {
-    item.setAttribute('class', 'button');
+    item.className = "button";
   }
 
-  if (event && !event['button'])
-  {
-    holding = false;
+  // pointerleave often has no event or no button info
+  holding = false;
+  clearTimeout(holdtimer);
 
-    // FIXED: clearTimeout(this.holdtimer) was WRONG
-    clearTimeout(holdtimer);
-
-    if (held) {
-      execute('stop', []);
-    }
-
-    altholdtimer = setTimeout(function () { delayed_release(item); }, 100);
-
-    mousedown = false;
-    held = false;
+  if (held) {
+    execute('stop', []);
   }
+
+  setTimeout(() => delayed_release(item), 100);
+
+  mousedown = false;
+  held = false;
 }
