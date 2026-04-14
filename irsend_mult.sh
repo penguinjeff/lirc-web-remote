@@ -48,31 +48,39 @@ write(){
   local msglist=()
   declare -n __json=$2
   header
+
   case "${extension}" in
     "remotes")
       string-trim __json
+      time-realtime ts
       message=$(
-        echo "window.getremotes=$ts" > "${datalocation}/get_${extension}.js" 2>&1;
-        printf 'function get_%s(){ return %s; }' "$extension" "$__json" \
-        >> "${datalocation}/get_${extension}.js" 2>&1)
-      [ -n "${message}" ] && status="e" && msglist+=("${message}")
-          msglist+=("writing");msglist+=("data/get_${extension}.js")
+        {
+          printf 'window.remotests=%s\n' "$ts"
+          printf 'function get_%s(){ return %s; }' "$extension" "$__json"
+        } > "${datalocation}/get_${extension}.js" 2>&1
+      )      [ -n "${message}" ] && status="e" && msglist+=("${message}")
+      msglist+=("writing"); msglist+=("data/get_${extension}.js")
     ;;
+
     "activities"|"displays"|"macros"|"modules")
       string-trim __json
       message=$(
-        echo "function get_${extension}(){ return ${__json};}" \
-        > "${datalocation}/get_${extension}.js" 2>&1)
+        printf 'function get_%s(){ return %s; }' "$extension" "$__json" \
+        > "${datalocation}/get_${extension}.js" 2>&1
+      )
       [ -n "${message}" ] && status="e" && msglist+=("${message}")
-          msglist+=("writing");msglist+=("data/get_${extension}.js")
+      msglist+=("writing"); msglist+=("data/get_${extension}.js")
     ;;
+
     *)
-       status="e";
-           msglist+=("invalid type ${extension} to mode write")
+      status="e"
+      msglist+=("invalid type ${extension} to mode write")
     ;;
   esac
+
   msg "${status}" "${msglist[@]}"
 }
+
 
 list()
 {
@@ -169,7 +177,10 @@ sanitize() {
 main()
 {
   readinto data
+  raw_data="$data"
   sanitize data
+
+
   [ -n "$1" ] && data="$1"
 
   declare -A my_params
@@ -194,8 +205,10 @@ main()
     ;;
 
     'write_'* )
+      raw_json="${raw_data#*json=}"
       extension="${mode##*_}"
-      write "${extension}" json
+      msg "$raw_json"
+      write "${extension}" raw_json
     ;;
 
     *)

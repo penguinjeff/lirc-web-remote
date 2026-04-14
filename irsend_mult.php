@@ -188,8 +188,9 @@ if ($cfg["needs_json"]) {
         }
         $raw = json_encode($decoded);
     } else {
-        // Raw JSON passthrough for write_<data>
-        $raw = json_encode($decoded);
+        // Truly raw JSON passthrough for write_<data>
+        // Do NOT decode/re-encode; just keep what the client sent
+        // $raw stays as-is
     }
 }
 

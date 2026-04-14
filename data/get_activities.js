@@ -1,1 +1,1 @@
-function get_activities(){ return [];}
+function get_activities(){ return {}; }
