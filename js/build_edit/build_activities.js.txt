@@ -1,3 +1,10 @@
+/* js/build_edit/build_activities.js.txt */
+
+/*
+Remotes,                                 display ""=default. macros for power
+Roku:[["Logitech_Roku","Logitech_Samsung","Logitech_Denon"],"",{poweron:Roku_On,poweroff:Roku_Off}],
+*/
+
 function build_activities(db){
   const builder_for="activities";
   console.log("build_"+builder_for)

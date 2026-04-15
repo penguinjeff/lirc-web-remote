@@ -1,3 +1,5 @@
+/* js/build_edit/build_edit.js.txt */
+
 function save(event){
   const item = event.currentTarget;
   const name = item.getAttribute("name") || "";

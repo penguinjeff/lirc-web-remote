@@ -1,3 +1,22 @@
+/* js/build_edit/build_modules.js.txt */
+
+/*
+
+"numbers": {
+  "buttons": [
+     [["1","ircode","KEY_1"],["2","ircode","KEY_2"],["3","ircode","KEY_3"]],
+     [["4","ircode","KEY_4"],["5","ircode","KEY_5"],["6","ircode","KEY_6"]],
+     [["7","ircode","KEY_7"],["8","ircode","KEY_8"],["9","ircode","KEY_9"]],
+     [["-","ircode","KEY_MINUS"],["0","ircode","KEY_0"],["E","ircode","KEY_OK"]]
+  ],
+  "needed":["KEY_1","KEY_2","KEY_3","KEY_4","KEY_5","KEY_6","KEY_7","KEY_8","KEY_9","KEY_0"],
+  "class":"numbers",
+  "skip":false
+},
+
+
+*/
+
 function build_modules(db){
   const builder_for="modules";
   console.log("build_"+builder_for)

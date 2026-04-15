@@ -1,4 +1,8 @@
-
+/* js/build_edit/build_macros.js.txt */
+/*
+                  delay loop
+[["remote","ircode", 0,  1],["remote2","ircode2", 0,  1],...]
+*/
 function build_macros(db){
   const builder_for="macros";
   console.log("build_"+builder_for)
