@@ -55,7 +55,7 @@ write(){
       time-realtime ts
       message=$(
         {
-          printf 'window.remotests=%s\n' "$ts"
+          printf 'window.getremotests=%s\n' "$ts"
           printf 'function get_%s(){ return %s; }' "$extension" "$__json"
         } > "${datalocation}/get_${extension}.js" 2>&1
       )      [ -n "${message}" ] && status="e" && msglist+=("${message}")

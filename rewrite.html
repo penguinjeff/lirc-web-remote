@@ -52,13 +52,12 @@ window.getremotests = 0;
 window.getremotests_prev = 0;
 
 function refresh_after_remotes() {
-  // Save old timestamp BEFORE refreshing
-  window.getremotests_prev = window.getremotests;
-
   refresh(["remotes"], new_remotes_check);
 }
 
 function new_remotes_check(list_ignore, db_ignore) {
+  console.log("getremotests="+window.getremotests)
+  console.log("getremotests_prev="+window.getremotests_prev)
   if (window.getremotests !== window.getremotests_prev) {
     window.getremotests_prev = window.getremotests;
     console.log("Remotes_loaded");
@@ -70,7 +69,6 @@ function new_remotes_check(list_ignore, db_ignore) {
   setTimeout(() => {
     refresh(["remotes"], () => {
       if (window.getremotests !== window.getremotests_prev) {
-        window.getremotests_prev = window.getremotests;
         refresh_db();
       } else {
         console.log("No change detected after retry");
