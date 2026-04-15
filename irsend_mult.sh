@@ -77,7 +77,7 @@ write(){
       msglist+=("invalid type ${extension} to mode write")
     ;;
   esac
-
+  chmod 664 "data/get_${extension}.js"
   msg "${status}" "${msglist[@]}"
 }
 
