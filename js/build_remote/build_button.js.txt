@@ -87,8 +87,20 @@ function release(event)
   held = false;
 }
 
+function button_editor(event) {
+  const item = event.currentTarget;
+  const full = item.getAttribute("name") || "";
 
-function build_button(remote = "", button_name = "", button_display = "", title = button_display) {
+}
+
+
+function build_button({
+  remote_name = "",
+  button_name = "",
+  button_display = "",
+  button_title = button_display,
+  display_mode=""
+}) {
     function decodeHtmlEntities(str) {
         const tempElement = document.createElement('div');
         tempElement.innerHTML = str;
@@ -96,26 +108,37 @@ function build_button(remote = "", button_name = "", button_display = "", title 
     }
 
     if (button_name === "") {
-        const dom = document.createElement('div');
+	  let dom;
+	  if(display_mode==="edit"){
+        dom = document.createElement('button');
+		dom.className = "button";
+	    dom.onpointerdown  = button_editor;
+	  }else{
+	    dom = document.createElement('div');
         dom.className = "empty";
-        return dom;
+	  }
+ 	  return dom;
     }
 
     // Build inline event strings
 
     const dom = document.createElement('button');
     dom.className = "button";
-    dom.setAttribute("name", remote + " " + button_name);
+    dom.setAttribute("name", remote_name + " " + button_name);
 
     // Tooltip
-    dom.title = decodeHtmlEntities(title);
+    dom.title = decodeHtmlEntities(button_title);
 
     // Inline event attributes (string form)
-
-    dom.onpointerdown  = presshold;
-    dom.onpointerup    = release;
-    dom.onpointerleave = release;
-
+    if(display_mode!=="none"){
+      if(display_mode!=="edit"){
+        dom.onpointerdown  = presshold;
+        dom.onpointerup    = release;
+        dom.onpointerleave = release;
+      }else{	
+	    dom.onpointerdown  = button_editor;
+ 	  }
+	}
     // Visible label
     dom.innerHTML = button_display;
 

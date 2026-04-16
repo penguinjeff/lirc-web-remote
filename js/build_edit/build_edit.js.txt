@@ -10,27 +10,138 @@ function save(event){
   console.log()
 }
 
-function build_edit(db,item) {
-  console.log("build_edit")
-  console.log(item);
-  switch(item)
-  {
-    case "Activities":
-	  return build_activities(db);
-	break;
-    case "Macros":
-	  return build_macros(db);
-	break;
-    case "Displays":
-	  return build_displays(db);
-	break;
-    case "Modules":
-	  return build_modules(db);
-	break;
-    default:
-	  console.log("Unkown edit "+item)
-  }
-  let dom=document.createElement("div");
-  dom.innerHTML=JSON.stringify(item)
+function build_editor_shell({ db, section, create_fn, validate_fn = validate_generic }) {
+  let dom = document.createElement("div");
+
+  // for display just add button to copy default_display
+  // for modules have a selector to copy default_modules
+  
+  // add pickers and remove JSON
+  // picker should allow copy and load
+
+  // Show current JSON
+  let current = document.createElement("div");
+  let pre = document.createElement("pre");
+  pre.textContent = JSON.stringify(db[section], null, 2);
+  current.appendChild(pre);
+  dom.appendChild(current);
+
+  // Input for new item name
+  let name_input = document.createElement("input");
+  name_input.setAttribute("name", section + "_new_name");
+  name_input.placeholder = "New " + section.slice(0, -1) + " name";
+  dom.appendChild(name_input);
+
+  // Validation message
+  let msg = document.createElement("div");
+  msg.setAttribute("name", section + "_new_name_message");
+  dom.appendChild(msg);
+
+  // Create button (disabled by default)
+  let create_button = document.createElement("button");
+  create_button.textContent = "Create";
+  create_button.disabled = true;
+  create_button.setAttribute("name", section + "_create_button");
+  create_button.onpointerdown = () => create_fn(db);
+  dom.appendChild(create_button);
+
+  // Overwrite button (hidden by default)
+  let overwrite_button = document.createElement("button");
+  overwrite_button.textContent = "Overwrite Existing";
+  overwrite_button.classList.add("hidden");
+  overwrite_button.setAttribute("name", section + "_overwrite_button");
+  overwrite_button.onpointerdown = () => create_fn(db, { overwrite: true });
+  dom.appendChild(overwrite_button);
+
+  // Hook validator AFTER buttons exist
+  name_input.oninput = () => validate_fn(name_input.value, db, section);
+
+  // Save button
+  let save_button = document.createElement("button");
+  save_button.setAttribute("name", section);
+  save_button.textContent = "Save";
+  save_button.classList.add("button");
+  save_button.onpointerdown = save;
+  dom.appendChild(save_button);
+
   return dom;
+}
+
+
+function validate_generic(name, db, section) {
+  const msg = document.querySelector(`[name="${section}_new_name_message"]`);
+  const input = document.querySelector(`[name="${section}_new_name"]`);
+  const overwrite_btn = document.querySelector(`[name="${section}_overwrite_button"]`);
+  const create_btn = document.querySelector(`[name="${section}_create_button"]`);
+
+  name = name.trim();
+  const exists = Object.prototype.hasOwnProperty.call(db[section], name);
+
+  // Empty → reset UI, disable create
+  if (!name) {
+    msg.textContent = "";
+    input.style.color = "";
+    overwrite_btn.classList.add("hidden");
+    create_btn.disabled = true;
+    return;
+  }
+
+  // Collision → show overwrite, disable create
+  if (exists) {
+    msg.textContent = "Name exists — overwrite?";
+    msg.style.color = "orange";
+    input.style.color = "orange";
+    overwrite_btn.classList.remove("hidden");
+    create_btn.disabled = true;
+    return;
+  }
+
+  // Valid new name → enable create
+  msg.textContent = "OK";
+  msg.style.color = "green";
+  input.style.color = "green";
+  overwrite_btn.classList.add("hidden");
+  create_btn.disabled = false;
+}
+
+
+const EDITORS = {
+  Modules: {
+    section: "modules",
+    create_fn: create_new_module,
+    validate_fn: validate_module_name
+  },
+  Macros: {
+    section: "macros",
+    create_fn: create_new_macro,
+  },
+  Displays: {
+    section: "displays",
+    create_fn: create_new_display,
+  },
+  Activities: {
+    section: "activities",
+    create_fn: create_new_activity,
+  }
+};
+
+
+
+function build_edit(db, item) {
+  console.log("build_edit", item);
+
+  const config = EDITORS[item];
+  if (!config) {
+    console.log("Unknown edit " + item);
+    let dom = document.createElement("div");
+    dom.textContent = "Unknown editor: " + item;
+    return dom;
+  }
+
+  return build_editor_shell({
+    db,
+    section: config.section,
+    create_fn: config.create_fn,
+    validate_fn: config.validate_fn
+  });
 }

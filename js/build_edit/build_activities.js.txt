@@ -5,18 +5,9 @@ Remotes,                                 display ""=default. macros for power
 Roku:[["Logitech_Roku","Logitech_Samsung","Logitech_Denon"],"",{poweron:Roku_On,poweroff:Roku_Off}],
 */
 
-function build_activities(db){
-  const builder_for="activities";
-  console.log("build_"+builder_for)
-  let dom=document.createElement("div");
-  let current=document.createElement("div");
-  current.innerHTML="<pre>"+JSON.stringify(db[builder_for],null,2)+"</pre>"
-  dom.appendChild(current)
-  let save_button=document.createElement("buton");
-  save_button.setAttribute("name",builder_for)
-  save_button.innerHTML="save";
-  save_button.classList.add("button");
-  save_button.onpointerdown=save
-  dom.appendChild(save_button);
-  return dom;
+// activities.js — stubbed activity builder functions
+
+function create_new_activity(db) {
+  console.log("create_new_activity called");
+  // stub: does nothing yet
 }

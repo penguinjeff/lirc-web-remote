@@ -1,6 +1,6 @@
 /*js/build_remote/build_remote.js.txt*/
 
-function build_remote(db_in, activity) {
+function build_remote(db_in, activity,display_mode="") {
 const db=JSON.parse(JSON.stringify(db_in));
 
   const remote_dom = document.createElement("div");
@@ -45,6 +45,7 @@ const db=JSON.parse(JSON.stringify(db_in));
 		  remote_buttons: db.remotes[remote_list[remote_index]],
           unused_buttons: unused_buttons[remote_index],
           dom: document.createElement("div"),
+		  display_mode:display_mode,
 		  extra:extra,
         };
 

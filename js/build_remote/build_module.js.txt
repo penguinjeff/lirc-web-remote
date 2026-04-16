@@ -11,28 +11,40 @@ function macro_press(event) {
 }
 
 function build_module(db,state) {
-
+const display_mode = state.display_mode || "";
 function build_macro_button(button_name, button_display) {
-    console.log("here");
 
     // Empty placeholder cell
     if (button_name === "") {
-        const dom = document.createElement("div");
-        dom.className = "empty";
+        let dom;
+
+        if (display_mode === "edit") {
+            dom = document.createElement("button");
+            dom.className = "button";
+            dom.onpointerdown = button_editor;
+        } else {
+            dom = document.createElement("div");
+            dom.className = "empty";
+        }
+
         return dom;
     }
 
+    // Normal macro button
     const dom = document.createElement("button");
     dom.className = "button";
-    dom.setAttribute("name",button_name);
+    dom.setAttribute("name", button_name);
     dom.innerHTML = button_display;
 
-    // Direct event assignment (clean + reliable)
-    dom.onpointerdown = macro_press;
+    if (display_mode === "edit") {
+        dom.onpointerdown = button_editor;
+    } else {
+        dom.onpointerdown = macro_press;
+    }
 
     return dom;
 }
-
+  let common={display_mode:display_mode};
   const remote_buttons = db.remotes[state.remote_name] || [];
   const module = db.all_modules[state.module_name];
   if (!module) return false;
@@ -60,11 +72,18 @@ function build_macro_button(button_name, button_display) {
             if (index !== -1) {
 			  state.unused_buttons.splice(index, 1);
             }
+			let button_args={
+			  remote_name:state.remote_name,
+			  button_name:button_name,
+			  button_display:button_display,
+			  button_title:button_title,
+			  ... common
+			}
             itemrow.appendChild(
-              build_button(state.remote_name, button_name, button_display, button_title)
+              build_button(button_args)
             );
           } else if (!module.skip) {
-            itemrow.appendChild(build_button());
+            itemrow.appendChild(build_button(common));
           }
           break;
 
@@ -74,7 +93,7 @@ function build_macro_button(button_name, button_display) {
               build_macro_button(button_name, button_display)
             );
           } else if (!module.skip) {
-            itemrow.appendChild(build_button());
+            itemrow.appendChild(build_button(common));
           }
           break;
       }

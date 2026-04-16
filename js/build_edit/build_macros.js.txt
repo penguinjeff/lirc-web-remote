@@ -1,21 +1,14 @@
 /* js/build_edit/build_macros.js.txt */
+
 /*
                   delay loop
 [["remote","ircode", 0,  1],["remote2","ircode2", 0,  1],...]
 */
-function build_macros(db){
-  const builder_for="macros";
-  console.log("build_"+builder_for)
-  let dom=document.createElement("div");
-  let current=document.createElement("div");
-  current.innerHTML="<pre>"+JSON.stringify(db[builder_for],null,2)+"</pre>"
-  dom.appendChild(current)
-  let save_button=document.createElement("buton");
-  save_button.setAttribute("name",builder_for)
-  save_button.innerHTML="save";
-  save_button.classList.add("button");
-  save_button.onpointerdown=save
-  dom.appendChild(save_button);
-  return dom;
+
+// macros.js — stubbed macro builder functions
+
+function create_new_macro(db) {
+  console.log("create_new_macro called");
+  // stub: does nothing yet
 }
 

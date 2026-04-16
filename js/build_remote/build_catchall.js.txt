@@ -7,6 +7,9 @@ function getDisplayName(rawName) {
   if (rawName.startsWith("BTN_")) return rawName.substring(4);
   return rawName;
 }
+  let display_mode=state.display_mode;
+  if(display_mode==="edit"){display_mode="none"};
+
   let button_list=[];
   const {remote_name,dom,unused_buttons,remote_buttons,extra={}} = state;
   const {button_columns=5,button_rows=3,alldef=""}=extra;
@@ -63,7 +66,13 @@ function getDisplayName(rawName) {
 	col.forEach(name => {
 	  const cb=document.createElement('div');
 	  cb.className="container-2";
-      const btn = build_button(remote_name, name[0], name[1]);
+	  let button_args={
+	    remote_name:remote_name,
+		button_name:name[0],
+		button_display:name[1],
+        display_mode:display_mode
+	  }
+      const btn = build_button(button_args);
 	  cb.appendChild(btn);
 	  col_dom.appendChild(cb);
     });
