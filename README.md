@@ -47,7 +47,7 @@ sudo mv lirc-web-remote /var/www/html/lirc-web-remote
 sudo chmod a+x /var/www/html/lirc-web-remote/irsend_mult.sh
 sudo chmod a+x /var/www/html/lirc-web-remote/macro.sh
 
-sudo chown -R irsend /var/www/html/lirc-web-remote/data
+sudo chown -R irsend: /var/www/html/lirc-web-remote/data
 ```
 
 ---
