@@ -57,20 +57,15 @@ sudo chown -R irsend: /var/www/html/lirc-web-remote/data
 ### Creating LIRC files
 I used **IrScrutinizer** to help generate my LIRC configs.  
 It’s extremely useful for building clean, consistent remote definitions.
-
+https://appimage.github.io/IrScrutinizer/
 ---
 
 ## Macro Editor Development
 
-I’m actively building a better macro editor.
+I’m actively building a better activity, macro, module, display editors.
 
 - I have a slick idea for generating many editors automatically.
 - `build_selector` will speed up development significantly.
 - You can preview progress in **test_buildselector.html**.
 
 ---
-
-## Future Plans
-
-I’m exploring how to support **multiple modules** using **different remotes**.  
-I’ll tackle that when I implement display editing and selection.
