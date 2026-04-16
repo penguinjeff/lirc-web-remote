@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Selector Test Page</title>
+
+  <!-- Disable caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Your stylesheet -->
+  <link rel="stylesheet" href="css/remote.css?ts=6">
+  <!-- NEW: itemSelector styles -->
+  <link rel="stylesheet" href="css/itemSelector.css?ts=1">
+
+
+  <script>
+// ------------------------------------------------------------
+// Load a script with timestamp to avoid caching
+// ------------------------------------------------------------
+function loadScript(src) {
+  return new Promise(resolve => {
+    const s = document.createElement("script");
+    s.src = src + "?ts=" + Date.now();
+    s.onload = resolve;
+    document.head.appendChild(s);
+  });
+}
+
+// ------------------------------------------------------------
+// Load all scripts needed for build_selector
+// ------------------------------------------------------------
+async function loadAllScripts() {
+  await loadScript("js/build_selector.js.txt");
+}
+
+// ------------------------------------------------------------
+// Dummy function — receives only the event
+// ------------------------------------------------------------
+function dummy_action(event) {
+  const target = event.target;
+
+  // Find the selector root using your NEW class name
+  const root = target.closest(".itemSelector");
+  if (!root) {
+    console.log("No .itemSelector root found");
+    return;
+  }
+
+  const section = root.getAttribute("name");
+
+  console.log("Dummy function triggered by:", target.name || target.textContent);
+  console.log("Selector section:", section);
+
+  // Get all checkboxes inside this selector
+  const checkboxes = root.querySelectorAll(".itemSelector_checkbox");
+
+  // Collect selected items
+  const selected = [...checkboxes]
+    .filter(cb => cb.checked)
+    .map(cb => cb.value);
+
+  // Pretty output
+  console.log("====================================");
+  console.log(" Selected items:", selected.length);
+  selected.forEach(item => console.log("  •", item));
+  console.log("====================================");
+}
+
+
+// ------------------------------------------------------------
+// On page load, build the selector
+// ------------------------------------------------------------
+window.addEventListener("load", async function () {
+
+  await loadAllScripts();
+
+  // ------------------------------------------------------------
+  // Test item list (realistic + long enough to scroll)
+  // ------------------------------------------------------------
+  const testItems = {
+    Alpha:{}, Beta:{}, Gamma:{}, Delta:{}, Echo:{}, Foxtrot:{}, Golf:{}, Hotel:{},
+    India:{}, Juliet:{}, Kilo:{}, Lima:{}, Mike:{}, November:{}, Oscar:{}, Papa:{},
+    Quebec:{}, Romeo:{}, Sierra:{}, Tango:{}, Uniform:{}, Victor:{}, Whiskey:{},
+    Xray:{}, Yankee:{}, Zulu:{},
+
+    LightSwitch:{}, Thermostat:{}, GarageDoor:{}, SprinklerZone1:{}, SprinklerZone2:{},
+    LivingRoomTV:{}, BedroomLamp:{}, KitchenLights:{}, FrontDoorLock:{}, BackDoorLock:{},
+    MotionSensorHall:{}, MotionSensorGarage:{}, TemperatureSensorBasement:{},
+    TemperatureSensorAttic:{}, FanHigh:{}, FanLow:{}, FanAuto:{},
+    SceneMorning:{}, SceneEvening:{}, SceneAway:{}, SceneSleep:{}
+  };
+  
+  const namespaces = {
+   alt1:{
+     keys:['Alpha1','foo','bar','baz'],
+	 msg: "Collision from alt1 namespace"
+   }
+  };
+  
+  function send(obj)
+  {
+   console.log(obj);
+  }
+
+  // ------------------------------------------------------------
+  // Build selector
+  // ------------------------------------------------------------
+  const selector = build_selector(
+    {
+      section: "TestSection",
+      validator: dummy_action,
+      items: testItems,
+	  rows: 10,
+	  edit: true, // besides copy(always shown unselectable if name collision) show replace (unselectable if namespace collision) 
+	  namespaces:namespaces,
+	  action:dummy_action,
+	  send:send // create a button behind each selectable item and when clicked call said function 
+    }
+  );
+
+  // ------------------------------------------------------------
+  // Mount it
+  // ------------------------------------------------------------
+  const mount = document.getElementById("selector_root");
+  mount.innerHTML = "";
+  mount.appendChild(selector);
+});
+  </script>
+</head>
+
+<body>
+
+  <h2>Selector Test Page</h2>
+
+  <div class="container">
+    <div class="container-1">
+      <div class="selector_test" id="selector_test">
+        <div class="common" id="selector_root"></div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
