@@ -1,47 +1,76 @@
-# lirc-web-remote
-# Written by Jeff Sadowski
-# I give no warrenty of any kind.
-# This is a Free and open source project and it under the Apache 2 license feel free to use the code in any way useful to you.
-# I am developing this to use as a remote to my devices at home.
-# I have a fairly good start better than anything I have seen as a lirc interface.
+# lirc‑web‑remote
 
-# This project requires lircd to be setup correctly.
-# This project requires netcat (nc) to be installed for the irsend service I created.
+Written by **Jeff Sadowski**  
+*Free and open source under the Apache 2.0 license.*  
+I give no warranty of any kind.
 
-Prereques
-Install lirc add your lirc remotes
-make sure your lirc remotes have proper button names my interface expects this
-irrecord -l show most proper button names I know I saw a lot without proper name when I was downloading some
+This project is a web‑based remote interface for LIRC.  
+It’s already more capable than any LIRC interface I’ve seen, and I’m actively improving it.
 
-# To install irsend service
+---
+
+## Requirements
+
+### LIRC
+- Install `lircd`
+- Add your LIRC remote configuration files
+- Ensure your remotes use proper button names  
+  (`irrecord -l` shows valid names — many downloaded configs use invalid ones)
+
+### irsend service
+This project requires **netcat (nc)** for the custom `irsend_mult` service.
+
+---
+
+## Install the irsend service
+
+```bash
 adduser irsend
-add irsend to lirc group
+adduser irsend lirc
+
 sudo cp irsend_mult.service /etc/systemd/system/irsend_mult.service
 sudo systemctl daemon-reload
 sudo systemctl start irsend_mult
 sudo systemctl enable irsend_mult
+
 sudo chown -R irsend: /var/www/html/lirc-web-remote/data/
 /var/www/html/lirc-web-remote/refresh_remotes.sh
+```
 
-# move this directory to /var/www/html/lirc-web-remote/
+---
+
+## Install the web interface
+
+```bash
 sudo mv lirc-web-remote /var/www/html/lirc-web-remote
+
 sudo chmod a+x /var/www/html/lirc-web-remote/irsend_mult.sh
 sudo chmod a+x /var/www/html/lirc-web-remote/macro.sh
-chown -R irsend /var/www/html/lirc-web-remote/data
 
+sudo chown -R irsend /var/www/html/lirc-web-remote/data
+```
 
-#
-# I used irscrutinizer to help create my lirc files.
-#
+---
 
-#
-# Working on a better macro editor
-# I am making lots of progress I have a slick idea on how to build many of the editors all at once.
-# I have a build_selector that will help significatly you can check out the test_buildselector.html to see it's progress
-# It will allow me to build the editors a lot faster
+## Notes
 
+### Creating LIRC files
+I used **IrScrutinizer** to help generate my LIRC configs.  
+It’s extremely useful for building clean, consistent remote definitions.
 
-#
-# I was trying to think how to add more that one of a module with different remotes.
-# I have some ideas I'll work on that when I implement editing and selecting displays
-#
+---
+
+## Macro Editor Development
+
+I’m actively building a better macro editor.
+
+- I have a slick idea for generating many editors automatically.
+- `build_selector` will speed up development significantly.
+- You can preview progress in **test_buildselector.html**.
+
+---
+
+## Future Plans
+
+I’m exploring how to support **multiple modules** using **different remotes**.  
+I’ll tackle that when I implement display editing and selection.
