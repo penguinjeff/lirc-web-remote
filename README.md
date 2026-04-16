@@ -55,6 +55,10 @@ sudo chown -R irsend: /var/www/html/lirc-web-remote/data
 ## Notes
 
 ### Creating LIRC files
+I use iguanair usb tranciever to send with irsend and to record irsignals.
+https://iguanaworks.net/
+(oh no they shutdown I was just about to give them a whole new stream of users please help me find a good replacement)
+
 I used **IrScrutinizer** to help generate my LIRC configs.  
 It’s extremely useful for building clean, consistent remote definitions.  
 https://appimage.github.io/IrScrutinizer/
