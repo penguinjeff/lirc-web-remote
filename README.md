@@ -13,12 +13,6 @@ Install lirc add your lirc remotes
 make sure your lirc remotes have proper button names my interface expects this
 irrecord -l show most proper button names I know I saw a lot without proper name when I was downloading some
 
-
-# move this directory to /var/www/html/lirc-web-remote/
-sudo cp -r . /var/www/html/lirc-web-remote
-sudo chmod a+x /var/www/html/lirc-web-remote/irsend_mult.sh
-sudo chmod a+x /var/www/html/lirc-web-remote/macro.sh
-sudo chmod a+x /var/www/html/lirc-web-remote/refresh_remotes.sh
 # To install irsend service
 adduser irsend
 add irsend to lirc group
@@ -29,27 +23,23 @@ sudo systemctl enable irsend_mult
 sudo chown -R irsend: /var/www/html/lirc-web-remote/data/
 /var/www/html/lirc-web-remote/refresh_remotes.sh
 
+# move this directory to /var/www/html/lirc-web-remote/
+sudo mv lirc-web-remote /var/www/html/lirc-web-remote
+sudo chmod a+x /var/www/html/lirc-web-remote/irsend_mult.sh
+sudo chmod a+x /var/www/html/lirc-web-remote/macro.sh
+chown -R irsend /var/www/html/lirc-web-remote/data
 
-#
-# my rewrite was better at the remote but still pretty crappy I am working on another rewite that will use some tricks I am working on
-#
 
-#making lots of changes
 #
 # I used irscrutinizer to help create my lirc files.
 #
 
 #
-# Everything is a macro I want a better macro editor
-#
+# Working on a better macro editor
+# I am making lots of progress I have a slick idea on how to build many of the editors all at once.
+# I have a build_selector that will help significatly you can check out the test_buildselector.html to see it's progress
+# It will allow me to build the editors a lot faster
 
-#
-# Next I will work on modules so that I can add macros to modules
-#
-
-#
-# After that I can work on Activities so that I can add the modules to activites
-#
 
 #
 # I was trying to think how to add more that one of a module with different remotes.
