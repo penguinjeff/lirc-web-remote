@@ -1,0 +1,57 @@
+function itemSelectorSearch(event) {
+    const root = event.target.closest(".itemSelector");
+    if (!root) return;
+
+    const searchInput = root.querySelector(".itemSelector_searchInput");
+    const searchText = searchInput.value.trim().toLowerCase();
+    const mode = root.querySelector('input[name="searchMode"]:checked')?.value || "contains";
+
+    const rows = root.querySelectorAll(".itemSelector_row");
+
+    rows.forEach(row => {
+        const label = row.querySelector(".itemSelector_label").textContent.toLowerCase();
+        const checkbox = row.querySelector(".itemSelector_checkbox");
+
+        let match = false;
+
+        // ------------------------------------------------------------
+        // If search is empty → show all rows and DO NOT uncheck anything
+        // ------------------------------------------------------------
+        if (searchText === "") {
+            row.style.display = "";
+            return;
+        }
+
+        // ------------------------------------------------------------
+        // Apply search mode
+        // ------------------------------------------------------------
+        switch (mode) {
+            case "contains":
+                match = label.includes(searchText);
+                break;
+
+            case "begins":
+                match = label.startsWith(searchText);
+                break;
+
+            case "ends":
+                match = label.endsWith(searchText);
+                break;
+
+            case "exact":
+                match = label === searchText;
+                break;
+        }
+
+        // ------------------------------------------------------------
+        // Hide or show row
+        // ------------------------------------------------------------
+        if (match) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+            checkbox.checked = false;   // ← unselect hidden items
+        }
+    });
+	// ------------------------------------------------------------
+}

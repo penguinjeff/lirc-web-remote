@@ -1,0 +1,122 @@
+
+function itemSelectorCollisionDetection({
+    root,
+    sectionObj,
+    collisionLog,
+    prefixVal,
+    postfixVal,
+    nameMode,
+    customVal
+}) {
+    const { items, namespaces } = sectionObj;
+
+    // ------------------------------------------------------------
+    // 1. Gather all selected items
+    // ------------------------------------------------------------
+    const selected = [...root.querySelectorAll(".itemSelector_checkbox:checked")];
+    const selectedNames = selected.map(cb => cb.value);
+
+    if (selectedNames.length === 0) {
+        collisionLog.innerHTML = "";
+        collisionLog.style.display = "none";
+        return {
+            anyCollision: false,
+            canCopy: false,
+            canReplace: false
+        };
+    }
+
+    // ------------------------------------------------------------
+    // 2. Build final names using passed-in prefix/postfix/custom
+    // ------------------------------------------------------------
+    const finalNames = selectedNames.map(name => {
+        let base = "";
+
+        switch (nameMode) {
+            case "current":
+                base = name;
+                break;
+            case "custom":
+                base = customVal;
+                break;
+            default:
+                base = name;
+        }
+
+        return prefixVal + base + postfixVal;
+    });
+
+    // ------------------------------------------------------------
+    // 3. Check collisions
+    // ------------------------------------------------------------
+    collisionLog.innerHTML = "";
+
+    let totalNameCollisions = 0;
+    let totalNamespaceCollisions = 0;
+    let totalEmptyCollisions = 0;
+
+    finalNames.forEach(finalName => {
+
+        // Empty name check
+        const isEmpty = !finalName || finalName.trim() === "";
+        if (isEmpty) {
+            const div = document.createElement("div");
+            div.textContent = `Invalid name: name cannot be empty`;
+            collisionLog.appendChild(div);
+            totalEmptyCollisions++;
+            return;
+        }
+
+        // Name collision
+        const nameCollision = items.hasOwnProperty(finalName);
+
+        // Namespace collision
+        let namespaceCollision = false;
+        let namespaceSource = null;
+        let namespaceMsg = null;
+
+        for (const ns in namespaces) {
+            if (namespaces[ns].keys.includes(finalName)) {
+                namespaceCollision = true;
+                namespaceSource = ns;
+                namespaceMsg = namespaces[ns].msg;
+                break;
+            }
+        }
+
+        if (nameCollision) {
+            const div = document.createElement("div");
+            div.textContent = `Name collision: "${finalName}" already exists in this section`;
+            collisionLog.appendChild(div);
+            totalNameCollisions++;
+        }
+
+        if (namespaceCollision) {
+            const div = document.createElement("div");
+            div.textContent = `Namespace collision (${namespaceSource}): ${namespaceMsg}`;
+            collisionLog.appendChild(div);
+            totalNamespaceCollisions++;
+        }
+    });
+
+    const total =
+        totalNameCollisions +
+        totalNamespaceCollisions +
+        totalEmptyCollisions;
+
+    collisionLog.style.display = total > 0 ? "block" : "none";
+
+    return {
+        finalNames,
+        totalNameCollisions,
+        totalNamespaceCollisions,
+        totalEmptyCollisions,
+        anyCollision: total > 0,
+        canCopy:
+            totalNameCollisions === 0 &&
+            totalEmptyCollisions === 0,
+        canReplace:
+            totalNamespaceCollisions === 0 &&
+            totalEmptyCollisions === 0
+    };
+}
