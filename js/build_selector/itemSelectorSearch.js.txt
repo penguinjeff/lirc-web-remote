@@ -1,6 +1,7 @@
 function itemSelectorSearch(event) {
     const root = event.target.closest(".itemSelector");
     if (!root) return;
+    //const formSearch = root.querySelector("form[name='search']");
 
     const searchInput = root.querySelector(".itemSelector_searchInput");
     const searchText = searchInput.value.trim().toLowerCase();
