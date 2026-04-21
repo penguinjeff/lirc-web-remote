@@ -22,19 +22,30 @@ window.catchall_move = function(event) {
   }
 
   const columns_parent = first_column.parentElement;
-  const first_visable = columns_parent.querySelector(".onewide:not(.hidden)");
+  
+  const allColumns = columns_parent.querySelectorAll(".onewide");
 
-  const button_columns = columns_parent.querySelectorAll(".onewide:not(.hidden)").length;
+//classless start
+  const visibleColumns = [...allColumns].filter(col =>
+    col.style.display !== "none"
+  );
 
-  if (!first_visable) {
+  const first_visible = visibleColumns[0];
+  const button_columns = visibleColumns.length;
+//classless end
+  
+//  const first_visible = columns_parent.querySelector(".onewide:not(.hidden)");
+//  const button_columns = columns_parent.querySelectorAll(".onewide:not(.hidden)").length;
+
+  if (!first_visible) {
     console.error("no visible columns found");
     return;
   }
 
   // Last visible column
-  let last_visable = first_visable;
+  let last_visible = first_visible;
   for (let i = 1; i < button_columns; i++) {
-    last_visable = last_visable.nextElementSibling;
+    last_visible = last_visible.nextElementSibling;
   }
   
 /***************************
@@ -42,30 +53,34 @@ window.catchall_move = function(event) {
  ***************************/  
 
   let hidden_edge;
-  let visable_edge;
+  let visible_edge;
   let wrapping_edge;
   // LEFT movement
   if (direction === "Left") {
-    hidden_edge = first_visable.previousElementSibling;
-    visable_edge = last_visable;
+    hidden_edge = first_visible.previousElementSibling;
+    visible_edge = last_visible;
     wrapping_edge = columns_parent.lastElementChild
   // RIGHT movement
   } else {
-    hidden_edge = last_visable.nextElementSibling;
-    visable_edge = first_visable;
+    hidden_edge = last_visible.nextElementSibling;
+    visible_edge = first_visible;
     wrapping_edge = columns_parent.firstElementChild
   }
   if (hidden_edge) {
 
-    hidden_edge.classList.remove("hidden");
-    visable_edge.classList.add("hidden");
+//  hidden_edge.classList.remove("hidden");
+    hidden_edge.style.display = "";      // show
+    visible_edge.style.display = "none"; // hide
+//  visible_edge.classList.add("hidden");
 
   } else {
-    let current_hide = first_visable;
+    let current_hide = first_visible;
     for (let i = 0; i < button_columns; i++) {
 
-      wrapping_edge.classList.remove("hidden");
-      current_hide.classList.add("hidden");
+//    wrapping_edge.classList.remove("hidden");
+      wrapping_edge.style.display = "";     // show
+      current_hide.style.display = "none";  // hide
+//    current_hide.classList.add("hidden");
 
       current_hide = current_hide.nextElementSibling;
       if (direction === "Left") {

@@ -19,20 +19,140 @@
 // ------------------------------------------------------------
 // Load a script with timestamp to avoid caching
 // ------------------------------------------------------------
-function loadScript(src) {
+
+/*=====================================*
+ * example1:
+  await include("build_item_directory",".js.txt",["subfn1","subfn2"]
+ 
+  should be the same as
+  await include("build_item_directory/subfn1.js.txt")
+  await include("build_item_directory/subfn2.js.txt")
+  
+  
+  example 2:
+  
+  const tree = {
+    utils: {
+      math: { add:{}, subtract:{} },
+      string: { trim:{}, split:{} }
+    },
+    components: {
+      button:{}, slider:{}
+    }
+  };
+
+  alternately
+
+  const tree = {
+    utils: {
+      math: [ "dd", "subtract" ],
+      string: [ "trim" , "split" ]
+    },
+    components: [ "button" , "slider" ]
+  };
+
+  await include("js", ".js", tree);
+
+  should be the same as
+  
+  await include("js/utils/math/add.js")
+  await include("js/utils/math/subtract.js")
+  await include("js/utils/string/trim.js")
+  await include("js/utils/string/split.js")
+  await include("js/components/button.js")
+  await include("js/components/slider.js")
+
+future planning ideas
+ - duplicate‑load prevention
+ - debug logging
+ - parallel loading mode
+ - extension auto‑detection
+ - plugin injection
+ - lazy loading
+ - hot reload support
+
+ *=====================================*/
+async function include(src, extension = "", multiple = []) {
+
+  // ------------------------------------------------------------
+  // CASE 1: multiple is an ARRAY → list of files
+  // ------------------------------------------------------------
+  if (Array.isArray(multiple) && multiple.length > 0) {
+    for (const item of multiple) {
+      console.log(src + "/" + item + extension);
+      await include(src + "/" + item, extension);
+    }
+    return;
+  }
+
+  // ------------------------------------------------------------
+  // CASE 2: multiple is a NON-EMPTY OBJECT → directory tree
+  // ------------------------------------------------------------
+  if (
+    multiple &&
+    typeof multiple === "object" &&
+    !Array.isArray(multiple) &&
+    Object.keys(multiple).length > 0
+  ) {
+    for (const key of Object.keys(multiple)) {
+      const value = multiple[key];
+
+      // Array → list of files
+      if (Array.isArray(value)) {
+        await include(src + "/" + key, extension, value);
+      }
+
+      // Non-empty object → directory
+      else if (value && typeof value === "object" && Object.keys(value).length > 0) {
+        await include(src + "/" + key, extension, value);
+      }
+
+      // Empty object → file
+      else {
+        await include(src + "/" + key, extension, null);
+      }
+    }
+    return;
+  }
+
+  // ------------------------------------------------------------
+  // CASE 3: single file include
+  // ------------------------------------------------------------
+  
   return new Promise(resolve => {
     const s = document.createElement("script");
-    s.src = src + "?ts=" + Date.now();
+    s.src = src + extension + "?ts=" + Date.now();
     s.onload = resolve;
     document.head.appendChild(s);
   });
 }
 
+
 // ------------------------------------------------------------
 // Load all scripts needed for build_selector
 // ------------------------------------------------------------
-async function loadAllScripts() {
-  await loadScript("js/build_selector.js.txt");
+async function includes() {
+
+/*
+const tree = {
+  build_selector: [
+    "build_selector",
+    "itemSelectorCollisionDetection",
+    "itemSelectorSearch"
+  ]
+};
+*/
+const tree = {
+  build_selector: {
+    build_selector:{},
+    itemSelectorCollisionDetection:{},
+    itemSelectorSearch:{}
+  }
+};
+
+
+await include("js", ".js.txt", tree);
+//  await include("js/build_selector.js.txt"); //older non split version
 }
 
 // ------------------------------------------------------------
@@ -74,7 +194,7 @@ function dummy_action(event) {
 // ------------------------------------------------------------
 window.addEventListener("load", async function () {
 
-  await loadAllScripts();
+  await includes();
 
   // ------------------------------------------------------------
   // Test item list (realistic + long enough to scroll)

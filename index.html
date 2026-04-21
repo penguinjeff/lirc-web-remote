@@ -56,8 +56,8 @@ function refresh_after_remotes() {
 }
 
 function new_remotes_check(list_ignore, db_ignore) {
-  console.log(window.getremotests)
-  console.log(window.getremotests_prev)
+  console.log("getremotests="+window.getremotests)
+  console.log("getremotests_prev="+window.getremotests_prev)
   if (window.getremotests !== window.getremotests_prev) {
     window.getremotests_prev = window.getremotests;
     console.log("Remotes_loaded");
@@ -80,8 +80,8 @@ function new_remotes_check(list_ignore, db_ignore) {
 let last_selected="";
 function show_selected(sel) {
   // hide all
-  groups.forEach(item=> window.divs[item+"_selector"].classList.add("hidden"));
-  groups.forEach(item=> window.divs[item+"_display"].classList.add("hidden"));
+  groups.forEach(item=> window.divs[item+"_selector"].style.display = "none");
+  groups.forEach(item=> window.divs[item+"_display"].style.display = "none");
 
   // show selected
   if (sel.value === "Refresh") {
@@ -92,8 +92,8 @@ function show_selected(sel) {
     return;
   }
   last_selected=sel.value;
-  window.divs[sel.value + "_selector"].classList.remove("hidden");
-  window.divs[sel.value + "_display"].classList.remove("hidden");
+  window.divs[sel.value + "_selector"].style.display = "";
+  window.divs[sel.value + "_display"].style.display = "";
 }
 
 function run_after_refresh(list, db_in)
@@ -168,13 +168,13 @@ window.addEventListener("load", async function () {
   selectors.appendChild(selector); 
   groups.forEach(item => {
     let selector = document.createElement("select");
-    selector.id = item + "_selector"
-    selector.className="hidden"
+    selector.id = item + "_selector";
+    selector.style.display = "none";
     selector.setAttribute("onchange","load(this)")
     selectors.appendChild(selector);
     let display = document.createElement("div");
-    display.id = item + "_display"
-    display.className="hidden"
+    display.id = item + "_display";
+    display.style.display = "none";
     displays.appendChild(display);
   });
   bodyElement.appendChild(selectors);

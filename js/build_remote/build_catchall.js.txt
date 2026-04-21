@@ -61,7 +61,8 @@ function getDisplayName(rawName) {
 	col_dom.setAttribute("name", "Column");
 	col_dom.classList.add("onewide")
     if(!(cols.length <= button_columns || ( i > (button_columns-2) && i < (2*button_columns-1)))){
-	  col_dom.classList.add("hidden")
+	  col_dom.style.display="none";
+//	  col_dom.classList.add("hidden")
 	}
 	col.forEach(name => {
 	  const cb=document.createElement('div');

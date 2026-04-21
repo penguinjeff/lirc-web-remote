@@ -74,6 +74,7 @@ function local_execute(mode, json_obj) {
   }
   if (mode === "list") {
     window.remotests = Date.now();   // or Math.floor(Date.now()/1000)
+	return;
   }
   // -----------------------------------------
   // WRITE MODES (write_<datafile>)
