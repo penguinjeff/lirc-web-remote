@@ -19,7 +19,9 @@ function getDisplayName(rawName) {
     button_list=remote_buttons;
   }
   dom.innerHTML = "";
-
+  dom.classList.add("CatchAll");
+  dom.unit=".onewide"
+  dom.wrap = state.wrap ?? true;
   // Build columns
   const cols = [];
   let index = 0;
@@ -42,7 +44,7 @@ function getDisplayName(rawName) {
     cols.push(col);
   }
 
-  if(cols.length > button_columns){
+  if(cols.length > button_columns && dom.wrap){
     // copy button_columns-1 coloumns from the end to the beggining
     const count = button_columns - 1;
 
@@ -89,14 +91,13 @@ function getDisplayName(rawName) {
     nav.setAttribute("name","Navigator")
     const left = document.createElement("button");
     left.classList.add("button");
-	left.setAttribute("name","Left")
+	left.reverse=true;
     left.textContent = "<";
 
     left.onclick = catchall_move;
 
     const right = document.createElement("button");
     right.classList.add("button");
-	right.setAttribute("name","Right")
     right.textContent = ">";
 
     right.onclick = catchall_move;

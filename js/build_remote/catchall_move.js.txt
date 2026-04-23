@@ -1,93 +1,149 @@
 /* js/build_remote/catchall_move.js.txt */
+
+/*
+things to think about:
+
+smooth sliding animations
+
+fade transitions
+
+swipe gestures
+
+keyboard navigation
+
+autoplay
+
+pause on hover
+
+CSS transform‑based sliding (instead of toggling display)
+
+a reusable class‑based API
+
+a MutationObserver to auto‑init sliders
+
+*/
+
+
 window.catchall_move = function(event) {
-  const item = event.currentTarget;   // ← the button that was clicked
-  const direction=item.getAttribute("name")
-  //get to Navigator
-  let parent = item.parentElement;
-  while (parent && parent.getAttribute("name")!=="Navigator") {
-    parent = parent.parentElement;
-  }
-  if (!parent) {
-    console.error("missing Navigator");
-    return;
-  }
 
-  //get to outside wrapper of columns
-  const wrapper = parent.previousElementSibling;
+  // **************************
+  // * Helper: Swap display values between two elements or element lists
+  // **************************
 
-  //get to first column
-  let first_column = wrapper.firstElementChild;
-  while (first_column && first_column.getAttribute("name")!=="Column") {
-    first_column = first_column.firstElementChild;
-  }
+  function swapDisplays(first, second, isList = false) {
 
-  const columns_parent = first_column.parentElement;
-  
-  const allColumns = columns_parent.querySelectorAll(".onewide");
+    // **************************
+    // * Helper: Return the first element.
+    // **************************
+    function getFirst(target, isList) {
+      let first;
 
-//classless start
-  const visibleColumns = [...allColumns].filter(col =>
-    col.style.display !== "none"
-  );
-
-  const first_visible = visibleColumns[0];
-  const button_columns = visibleColumns.length;
-//classless end
-  
-//  const first_visible = columns_parent.querySelector(".onewide:not(.hidden)");
-//  const button_columns = columns_parent.querySelectorAll(".onewide:not(.hidden)").length;
-
-  if (!first_visible) {
-    console.error("no visible columns found");
-    return;
-  }
-
-  // Last visible column
-  let last_visible = first_visible;
-  for (let i = 1; i < button_columns; i++) {
-    last_visible = last_visible.nextElementSibling;
-  }
-  
-/***************************
- * Found all refernces onto the logic
- ***************************/  
-
-  let hidden_edge;
-  let visible_edge;
-  let wrapping_edge;
-  // LEFT movement
-  if (direction === "Left") {
-    hidden_edge = first_visible.previousElementSibling;
-    visible_edge = last_visible;
-    wrapping_edge = columns_parent.lastElementChild
-  // RIGHT movement
-  } else {
-    hidden_edge = last_visible.nextElementSibling;
-    visible_edge = first_visible;
-    wrapping_edge = columns_parent.firstElementChild
-  }
-  if (hidden_edge) {
-
-//  hidden_edge.classList.remove("hidden");
-    hidden_edge.style.display = "";      // show
-    visible_edge.style.display = "none"; // hide
-//  visible_edge.classList.add("hidden");
-
-  } else {
-    let current_hide = first_visible;
-    for (let i = 0; i < button_columns; i++) {
-
-//    wrapping_edge.classList.remove("hidden");
-      wrapping_edge.style.display = "";     // show
-      current_hide.style.display = "none";  // hide
-//    current_hide.classList.add("hidden");
-
-      current_hide = current_hide.nextElementSibling;
-      if (direction === "Left") {
-        wrapping_edge = wrapping_edge.previousElementSibling;
+      if (isList) {
+        first = target[0];
       } else {
-        wrapping_edge = wrapping_edge.nextElementSibling;
+        first = target;
       }
+
+      return first;
+    }
+
+    const firstEl = getFirst(first, isList);
+    const secondEl = getFirst(second, isLists);
+
+    const first_display  = firstEl.style.display;
+    const second_display = secondEl.style.display;
+
+    if (areLists) {
+      first.forEach(el => el.style.display = second_display);
+      second.forEach(el => el.style.display = first_display);
+    } else {
+      first.style.display = second_display;
+      second.style.display = first_display;
     }
   }
+
+  // **************************
+  // * End of helper functions
+  // **************************
+
+  const root = event.target.closest('.CatchAll');
+  if (!root) { return; }
+
+  const isReverse = !!event.target.reverse;
+
+  // All elements inside the component
+  const allElements = root.querySelectorAll(root.unit);
+
+  // Visible window (contiguous; guaranteed by the builder)
+  // allElements is a NodeList, not a real array. Spreading it creates a true array,
+  // which allows us to use array methods like slice(), filter(), and indexing safely.
+  // Spread NodeList → Array (needed for slice/filter)
+  const visible_window = [...allElements].filter(element =>
+    element.style.display !== "none"
+  );
+
+  const first_visible = visible_window[0];
+  const last_visible  = visible_window[visible_window.length - 1];
+
+  // ***************************
+  // * Determine sliding edges
+  // ***************************
+
+  // Default: moving forward
+  let hidden_edge  = last_visible.nextElementSibling;
+  let visible_edge = first_visible;
+
+  // Reverse direction
+  if (isReverse) {
+    hidden_edge  = first_visible.previousElementSibling;
+    visible_edge = last_visible;
+  }
+
+  // ***************************
+  // * Case 1: Normal slide (no wrap)
+  // ***************************
+  if (hidden_edge) {
+    swapDisplays(hidden_edge, visible_edge);
+
+    if (!root.wrap) {
+      const nav = root.querySelector('[name="Navigator"]');
+      const leftBtn  = [...nav.querySelectorAll("button")].find(b => b.reverse === true);
+      const rightBtn = [...nav.querySelectorAll("button")].find(b => b.reverse !== true);
+
+      rightBtn.disabled = false;
+      leftBtn.disabled = false;
+      if (isReverse) {
+        // moving left
+          if (!first_visible.previousElementSibling) {
+            leftBtn.disabled = true;
+          } else {
+            leftBtn.disabled = false;
+          }
+          rightBtn.disabled = false;
+      } else {
+        // moving right
+        if (!last_visible.nextElementSibling) {
+          rightBtn.disabled = true;
+        } else {
+          rightBtn.disabled = false;
+        }
+          leftBtn.disabled = false;
+        }
+    }
+
+    return;
+  }
+  // ***************************
+  // * Case 2: Wrap slide
+  // ***************************
+
+  let hidden_window;
+
+  if (isReverse) {
+    hidden_window = [...allElements].slice(-visible_window.length);
+  } else {
+    hidden_window = [...allElements].slice(0, visible_window.length);
+  }
+
+  swapDisplays(hidden_window, visible_window, true);
 };
