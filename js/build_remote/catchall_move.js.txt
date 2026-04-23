@@ -48,12 +48,12 @@ window.catchall_move = function(event) {
     }
 
     const firstEl = getFirst(first, isList);
-    const secondEl = getFirst(second, isLists);
+    const secondEl = getFirst(second, isList);
 
     const first_display  = firstEl.style.display;
     const second_display = secondEl.style.display;
 
-    if (areLists) {
+    if (isList) {
       first.forEach(el => el.style.display = second_display);
       second.forEach(el => el.style.display = first_display);
     } else {
@@ -116,19 +116,13 @@ window.catchall_move = function(event) {
         // moving left
           if (!first_visible.previousElementSibling) {
             leftBtn.disabled = true;
-          } else {
-            leftBtn.disabled = false;
           }
-          rightBtn.disabled = false;
       } else {
         // moving right
         if (!last_visible.nextElementSibling) {
           rightBtn.disabled = true;
-        } else {
-          rightBtn.disabled = false;
         }
-          leftBtn.disabled = false;
-        }
+      }
     }
 
     return;
