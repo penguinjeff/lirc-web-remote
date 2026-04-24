@@ -1,541 +1,246 @@
-//function build_selector(sectionObj, buttonObj) {
+// js/build_selector/build_selector.js.txt
+
 function build_selector(sectionObj) {
-    const { section, validator, items, rows, action, edit } = sectionObj;
-    let send=sectionObj.send;
-
-    // ------------------------------------------------------------
-    // Root container
-    // ------------------------------------------------------------
-    const root = document.createElement("div");
-    root.classList.add("itemSelector");
-    root.setAttribute("name", section);
-
-    // ------------------------------------------------------------
-    // Header
-    // ------------------------------------------------------------
-    const header = document.createElement("div");
-    header.className = "itemSelector_header";
-    header.textContent = section;
-    root.appendChild(header);
-
-    // ------------------------------------------------------------
-    // Search bar
-    // ------------------------------------------------------------
-    const searchWrap = document.createElement("div");
-    searchWrap.className = "itemSelector_search";
-
-    const searchInput = document.createElement("input");
-    searchInput.type = "text";
-    searchInput.placeholder = "search...";
-    searchInput.className = "itemSelector_searchInput";
-    searchInput.addEventListener("input", itemSelectorSearch);
-
-    searchWrap.appendChild(searchInput);
-    root.appendChild(searchWrap);
 
   // ------------------------------------------------------------
-  // Search mode radio buttons
+  // Helper utilities (scoped to builder)
   // ------------------------------------------------------------
-  const searchModes = document.createElement("div");
-  searchModes.className = "itemSelector_searchModes";
+  function el(tag, className, props = {}) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    Object.assign(node, props);
+    return node;
+  }
 
+  function on(node, event, handler) {
+    node.addEventListener(event, handler);
+    return node;
+  }
+
+  function append(parent, ...children) {
+    children.forEach(c => parent.appendChild(c));
+    return parent;
+  }
+
+  function debounce(fn, delay = 300) {
+    let timer = null;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  function gatherfacts(event) {
+    const root = event.target.closest(".itemSelector");
+    if (!root) return;
+    root.state.prefix = root.querySelector(".itemSelector_prefix").value.trim();
+    root.state.postfix = root.querySelector(".itemSelector_postfix").value.trim();
+    itemSelectorCollisionDetection(event);
+  }
+
+  const debouncedCollisionCheck = debounce(gatherfacts, 300);
+
+  // ------------------------------------------------------------
+  // Root container + state
+  // ------------------------------------------------------------
+  const { section, items, rows, action, edit, namespaces, send } = sectionObj;
+
+  const root = el("div", "itemSelector", { name: section });
+  root.state = {
+    items,
+    namespaces,
+    prefix: "",
+    postfix: ""
+  };
+
+  // ------------------------------------------------------------
+  // Header
+  // ------------------------------------------------------------
+  append(root, el("div", "itemSelector_header", { textContent: section }));
+
+  // ------------------------------------------------------------
+  // Search bar
+  // ------------------------------------------------------------
+  const searchInput = el("input", "itemSelector_searchInput", {
+    type: "text",
+    placeholder: "search..."
+  });
+
+  append(root,
+    append(el("div", "itemSelector_search"), searchInput)
+  );
+
+  on(searchInput, "input", itemSelectorSearch);
+
+  // ------------------------------------------------------------
+  // Search modes
+  // ------------------------------------------------------------
+  const searchModes = el("div", "itemSelector_searchModes");
   const modes = [
     { value: "contains", label: "Contains" },
-    { value: "begins",   label: "Begins" },
-    { value: "ends",     label: "Ends" },
-    { value: "exact",    label: "Exact" }
+    { value: "begins", label: "Begins" },
+    { value: "ends", label: "Ends" },
+    { value: "exact", label: "Exact" }
   ];
 
   modes.forEach(mode => {
-    const wrap = document.createElement("label");
-    wrap.className = "itemSelector_radioWrap";
+    const rb = el("input", null, {
+      type: "radio",
+      name: "searchMode",
+      value: mode.value,
+      checked: mode.value === "contains"
+    });
 
-    const rb = document.createElement("input");
-    rb.type = "radio";
-    rb.name = "searchMode";
-    rb.value = mode.value;
+    on(rb, "change", itemSelectorSearch);
 
-    // Default mode
-    if (mode.value === "contains") rb.checked = true;
-
-    // Run search when mode changes
-    rb.addEventListener("change", itemSelectorSearch);
-
-    const text = document.createElement("span");
-    text.textContent = mode.label;
-
-    wrap.appendChild(rb);
-    wrap.appendChild(text);
-    searchModes.appendChild(wrap);
+    append(searchModes,
+      append(el("label", "itemSelector_radioWrap"), rb, el("span", null, { textContent: mode.label }))
+    );
   });
 
-  root.appendChild(searchModes);
+  append(root, searchModes);
 
-// ------------------------------------------------------------
-// Name tools (prefix / name / postfix) with checkboxes for prefix & postfix
-// ------------------------------------------------------------
-const nameTools = document.createElement("div");
-nameTools.className = "itemSelector_nameTools";
+  // ------------------------------------------------------------
+  // Name tools (prefix/postfix)
+  // ------------------------------------------------------------
+  const nameTools = el("div", "itemSelector_nameTools");
 
-// ------------------------------------------------------------
-// PREFIX
-// ------------------------------------------------------------
-const prefixWrap = document.createElement("div");
-prefixWrap.className = "itemSelector_nameBlock";
+  function buildNameField(className, placeholder, stateKey) {
+    const wrap = el("div", "itemSelector_nameBlock");
 
-const prefixCheck = document.createElement("input");
-prefixCheck.type = "checkbox";
-prefixCheck.checked = false;
-
-const prefix = document.createElement("input");
-prefix.type = "text";
-prefix.placeholder = "prefix";
-prefix.className = "itemSelector_prefix";
-prefix.disabled = true; // disabled until checkbox is checked
-
-prefixCheck.addEventListener("change", () => {
-    prefix.disabled = !prefixCheck.checked;
-});
-
-prefixWrap.appendChild(prefixCheck);
-prefixWrap.appendChild(prefix);
-nameTools.appendChild(prefixWrap);
-
-// ------------------------------------------------------------
-// NAME (radio: existing/custom)
-// ------------------------------------------------------------
-const nameWrap = document.createElement("div");
-nameWrap.className = "itemSelector_nameBlock";
-
-// Radio: use existing name
-const rbCurrent = document.createElement("input");
-rbCurrent.type = "radio";
-rbCurrent.name = "nameMode";
-rbCurrent.value = "current";
-rbCurrent.checked = true;
-
-const rbCurrentLabel = document.createElement("label");
-rbCurrentLabel.textContent = "existing";
-
-// Radio: use custom name
-const rbCustom = document.createElement("input");
-rbCustom.type = "radio";
-rbCustom.name = "nameMode";
-rbCustom.value = "custom";
-
-const rbCustomLabel = document.createElement("label");
-rbCustomLabel.textContent = "custom";
-
-// Name field
-const nameField = document.createElement("input");
-nameField.type = "text";
-nameField.placeholder = "name";
-nameField.className = "itemSelector_name";
-nameField.disabled = true; // disabled until custom is selected
-
-// Radio logic
-rbCurrent.addEventListener("change", () => {
-    nameField.disabled = true;
-});
-
-rbCustom.addEventListener("change", () => {
-    nameField.disabled = false;
-    nameField.focus();
-});
-
-nameWrap.appendChild(rbCurrent);
-nameWrap.appendChild(rbCurrentLabel);
-nameWrap.appendChild(rbCustom);
-nameWrap.appendChild(rbCustomLabel);
-nameWrap.appendChild(nameField);
-
-nameTools.appendChild(nameWrap);
-
-// ------------------------------------------------------------
-// POSTFIX
-// ------------------------------------------------------------
-const postfixWrap = document.createElement("div");
-postfixWrap.className = "itemSelector_nameBlock";
-
-const postfixCheck = document.createElement("input");
-postfixCheck.type = "checkbox";
-postfixCheck.checked = false;
-
-const postfix = document.createElement("input");
-postfix.type = "text";
-postfix.placeholder = "postfix";
-postfix.className = "itemSelector_postfix";
-postfix.disabled = true;
-
-postfixCheck.addEventListener("change", () => {
-    postfix.disabled = !postfixCheck.checked;
-});
-
-postfixWrap.appendChild(postfixCheck);
-postfixWrap.appendChild(postfix);
-nameTools.appendChild(postfixWrap);
-
-root.appendChild(nameTools);
-
-
-    // ------------------------------------------------------------
-    // Scrollable list container
-    // ------------------------------------------------------------
-    const listWrap = document.createElement("div");
-    listWrap.className = "itemSelector_list";
-
-    // ------------------------------------------------------------
-    // Apply row-based height
-    // ------------------------------------------------------------
-    const rowHeight = 24;               // MUST match CSS
-    const visibleRows = rows || 10;     // default if user doesn't specify
-
-    listWrap.style.height = (visibleRows * rowHeight) + "px";
-    listWrap.style.overflowY = "auto";
-
-    // ------------------------------------------------------------
-    // Populate items
-    // ------------------------------------------------------------
-    Object.keys(items).forEach(key => {
-        const row = document.createElement("div");
-        row.className = "itemSelector_row";
-
-        const cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.className = "itemSelector_checkbox";
-        cb.value = key;
-        cb.name = "chk:" + key;   // ← NEW: unique checkbox name
-
-        const label = document.createElement("span");
-        label.className = "itemSelector_label";
-        label.textContent = key;
-
-        if (typeof send === "function") {
-            const sendBtn = document.createElement("button");
-            sendBtn.className = "itemSelector_sendBtn";
-            sendBtn.textContent = "→";
-
-            sendBtn.addEventListener("click", () => {
-                send({
-                    key: key,
-                    value: items[key]
-                });
-            });
-
-            row.appendChild(sendBtn);
-        }
-
-        row.appendChild(cb);
-        row.appendChild(label);
-        listWrap.appendChild(row);
-    // ------------------------------------------------------------
-	// begin add validator logic
-    // ------------------------------------------------------------
- 
- cb.addEventListener("change", () => {
-    const prefixVal  = prefixCheck.checked  ? prefix.value  : "";
-    const postfixVal = postfixCheck.checked ? postfix.value : "";
-    const nameMode   = root.querySelector("input[name='nameMode']:checked")?.value;
-    const customVal  = nameField.value;
-    const result = itemSelectorCollisionDetection({
-        root,
-        sectionObj,
-        collisionLog,
-        prefixVal,
-        postfixVal,
-        nameMode,
-        customVal
+    const check = el("input", null, { type: "checkbox" });
+    const input = el("input", className, {
+      type: "text",
+      placeholder,
+      disabled: true
     });
-    const copyBtn    = root.querySelector("button[name='copy']");
-    const replaceBtn = root.querySelector("button[name='replace']");
-    copyBtn.disabled    = !result.canCopy;
-    replaceBtn.disabled = !result.canReplace;
-});
 
-    // ------------------------------------------------------------
-    // end add validator logic
-    // ------------------------------------------------------------
+    on(check, "change", (event) => {
+      if (!check.checked) {
+        input.value = "";
+        root.state[stateKey] = "";
+        itemSelectorCollisionDetection(event);
+      } else {
+        input.disabled = false;
+      }
+    });
+
+    on(input, "input", (event) => {
+      root.state[stateKey] = input.value.trim();
+      debouncedCollisionCheck(event);
+    });
+
+    append(wrap, check, input);
+    return wrap;
+  }
+
+  append(nameTools,
+    buildNameField("itemSelector_prefix", "prefix", "prefix"),
+    buildNameField("itemSelector_postfix", "postfix", "postfix")
+  );
+
+  append(root, nameTools);
+
+  // ------------------------------------------------------------
+  // Select All
+  // ------------------------------------------------------------
+  const selectAll = el("input", "itemSelector_selectAllCheckbox", { type: "checkbox" });
+
+  on(selectAll, "change", (event) => {
+    const root = event.target.closest(".itemSelector");
+
+    root.querySelectorAll(".itemSelector_checkbox").forEach(cb => cb.checked = false);
+
+    const visibleChecks = root.querySelectorAll(
+      ".itemSelector_row:not([style*='display: none']) .itemSelector_checkbox"
+    );
+
+    visibleChecks.forEach(cb => cb.checked = event.target.checked);
+
+    itemSelectorCollisionDetection(event);
   });
 
-// ------------------------------------------------------------
-// Select All checkbox
-// ------------------------------------------------------------
-const selectAllWrap = document.createElement("div");
-selectAllWrap.className = "itemSelector_selectAll";
+  append(root,
+    append(el("div", "itemSelector_selectAll"), selectAll, el("label", null, { textContent: "Select All" }))
+  );
 
-const selectAll = document.createElement("input");
-selectAll.type = "checkbox";
-selectAll.className = "itemSelector_selectAllCheckbox";
+  // ------------------------------------------------------------
+  // Scrollable list container
+  // ------------------------------------------------------------
+  const listWrap = el("div", "itemSelector_list");
+  const rowHeight = 24;
+  const visibleRows = rows || 10;
 
-const selectAllLabel = document.createElement("label");
-selectAllLabel.textContent = "Select All";
+  Object.assign(listWrap.style, {
+    height: (visibleRows * rowHeight) + "px",
+    overflowY: "auto"
+  });
 
-selectAllWrap.appendChild(selectAll);
-selectAllWrap.appendChild(selectAllLabel);
+  append(root, listWrap);
 
+  // ------------------------------------------------------------
+  // Populate items
+  // ------------------------------------------------------------
+  Object.keys(items).forEach(key => {
+    const row = el("div", "itemSelector_row");
 
-selectAll.addEventListener("change", () => {
-    const allChecks = root.querySelectorAll(".itemSelector_checkbox");
-    allChecks.forEach(cb => cb.checked = selectAll.checked);
-    const prefixVal  = prefixCheck.checked  ? prefix.value  : "";
-    const postfixVal = postfixCheck.checked ? postfix.value : "";
-    const nameMode   = root.querySelector("input[name='nameMode']:checked")?.value;
-    const customVal  = nameField.value;
-    const result = itemSelectorCollisionDetection({
-        root,
-        sectionObj,
-        collisionLog,
-        prefixVal,
-        postfixVal,
-        nameMode,
-        customVal
-    });
-    const copyBtn    = root.querySelector("button[name='copy']");
-    const replaceBtn = root.querySelector("button[name='replace']");
-    copyBtn.disabled    = !result.canCopy;
-    replaceBtn.disabled = !result.canReplace;
-});
-
-
-root.appendChild(selectAllWrap);
-
-    root.appendChild(listWrap);
-
-    // ------------------------------------------------------------
-    // Buttons (copy / delete / replace / load)
-    // ------------------------------------------------------------
-    const buttonBar = document.createElement("div");
-    buttonBar.className = "itemSelector_buttons";
-
-     // ------------------------------------------------------------
-    // Build button object dynamically
-    // ------------------------------------------------------------
-    let buttonObj = {
-        copy: [action]
-    };
-
-    if (edit === true) {
-        buttonObj = {
-            ...buttonObj,
-            delete:  [action],
-            load:    [action],
-            replace: [action, "hidden"]
-        };
-    }
-    Object.keys(buttonObj).forEach(btnName => {
-        const [fn, defaultClass] = buttonObj[btnName];
-
-        const btn = document.createElement("button");
-        btn.name = btnName;
-        btn.textContent = btnName;
-
-        if (defaultClass) btn.classList.add(defaultClass);
-
-        btn.addEventListener("click", fn);
-
-        buttonBar.appendChild(btn);
+    const cb = el("input", "itemSelector_checkbox", {
+      type: "checkbox",
+      value: key
     });
 
-    root.appendChild(buttonBar);
+    const label = el("span", "itemSelector_label", { textContent: key });
 
-  const collisionLog = document.createElement("div");
-  collisionLog.className = "collisionWarning";
-  collisionLog.style.height = rows * 1.2 + "em";
-  collisionLog.style.overflowY = "auto";
-  collisionLog.style.whiteSpace = "pre-line";
-  collisionLog.style.display = "none"; // start hidden
+    on(cb, "change", gatherfacts);
 
-  root.appendChild(collisionLog);
-
-    // ------------------------------------------------------------
-    // Initial validation call
-    // ------------------------------------------------------------
-    if (typeof validator === "function") {
-        validator({ target: root });
+    if (typeof send === "function") {
+      const sendBtn = el("button", "itemSelector_sendBtn", { textContent: "→" });
+      on(sendBtn, "click", () => send({ key, value: items[key] }));
+      append(row, sendBtn);
     }
+
+    append(row, cb, label);
+    append(listWrap, row);
+  });
+
+  // ------------------------------------------------------------
+  // Buttons
+  // ------------------------------------------------------------
+  const buttonBar = el("div", "itemSelector_buttons");
+
+  let buttonObj = { copy: [action] };
+  if (edit === true) {
+    buttonObj.delete = [action];
+    buttonObj.load = [action];
+  }
+
+  Object.keys(buttonObj).forEach(btnName => {
+    const [fn, defaultClass] = buttonObj[btnName];
+    const btn = el("button", null, { name: btnName, textContent: btnName });
+    if (defaultClass) btn.classList.add(defaultClass);
+    on(btn, "click", fn);
+    append(buttonBar, btn);
+  });
+
+  append(root, buttonBar);
+
+  // ------------------------------------------------------------
+  // Collision log
+  // ------------------------------------------------------------
+  const collisionLog = el("div", "collisionWarning");
+  Object.assign(collisionLog.style, {
+    height: rows * 1.2 + "em",
+    overflowY: "auto",
+    whiteSpace: "pre-line",
+    display: "none"
+  });
+
+  append(root, collisionLog);
+
+  // ------------------------------------------------------------
+  // Initial validation
+  // ------------------------------------------------------------
+  itemSelectorCollisionDetection({ target: root });
 
   return root;
-}
-
-function itemSelectorCollisionDetection({
-    root,
-    sectionObj,
-    collisionLog,
-    prefixVal,
-    postfixVal,
-    nameMode,
-    customVal
-}) {
-    const { items, namespaces } = sectionObj;
-
-    // ------------------------------------------------------------
-    // 1. Gather all selected items
-    // ------------------------------------------------------------
-    const selected = [...root.querySelectorAll(".itemSelector_checkbox:checked")];
-    const selectedNames = selected.map(cb => cb.value);
-
-    if (selectedNames.length === 0) {
-        collisionLog.innerHTML = "";
-        collisionLog.style.display = "none";
-        return {
-            anyCollision: false,
-            canCopy: false,
-            canReplace: false
-        };
-    }
-
-    // ------------------------------------------------------------
-    // 2. Build final names using passed-in prefix/postfix/custom
-    // ------------------------------------------------------------
-    const finalNames = selectedNames.map(name => {
-        let base = "";
-
-        switch (nameMode) {
-            case "current":
-                base = name;
-                break;
-            case "custom":
-                base = customVal;
-                break;
-            default:
-                base = name;
-        }
-
-        return prefixVal + base + postfixVal;
-    });
-
-    // ------------------------------------------------------------
-    // 3. Check collisions
-    // ------------------------------------------------------------
-    collisionLog.innerHTML = "";
-
-    let totalNameCollisions = 0;
-    let totalNamespaceCollisions = 0;
-    let totalEmptyCollisions = 0;
-
-    finalNames.forEach(finalName => {
-
-        // Empty name check
-        const isEmpty = !finalName || finalName.trim() === "";
-        if (isEmpty) {
-            const div = document.createElement("div");
-            div.textContent = `Invalid name: name cannot be empty`;
-            collisionLog.appendChild(div);
-            totalEmptyCollisions++;
-            return;
-        }
-
-        // Name collision
-        const nameCollision = items.hasOwnProperty(finalName);
-
-        // Namespace collision
-        let namespaceCollision = false;
-        let namespaceSource = null;
-        let namespaceMsg = null;
-
-        for (const ns in namespaces) {
-            if (namespaces[ns].keys.includes(finalName)) {
-                namespaceCollision = true;
-                namespaceSource = ns;
-                namespaceMsg = namespaces[ns].msg;
-                break;
-            }
-        }
-
-        if (nameCollision) {
-            const div = document.createElement("div");
-            div.textContent = `Name collision: "${finalName}" already exists in this section`;
-            collisionLog.appendChild(div);
-            totalNameCollisions++;
-        }
-
-        if (namespaceCollision) {
-            const div = document.createElement("div");
-            div.textContent = `Namespace collision (${namespaceSource}): ${namespaceMsg}`;
-            collisionLog.appendChild(div);
-            totalNamespaceCollisions++;
-        }
-    });
-
-    const total =
-        totalNameCollisions +
-        totalNamespaceCollisions +
-        totalEmptyCollisions;
-
-    collisionLog.style.display = total > 0 ? "block" : "none";
-
-    return {
-        finalNames,
-        totalNameCollisions,
-        totalNamespaceCollisions,
-        totalEmptyCollisions,
-        anyCollision: total > 0,
-        canCopy:
-            totalNameCollisions === 0 &&
-            totalEmptyCollisions === 0,
-        canReplace:
-            totalNamespaceCollisions === 0 &&
-            totalEmptyCollisions === 0
-    };
-}
-
-
-
-
-function itemSelectorSearch(event) {
-    const root = event.target.closest(".itemSelector");
-    if (!root) return;
-
-    const searchInput = root.querySelector(".itemSelector_searchInput");
-    const searchText = searchInput.value.trim().toLowerCase();
-    const mode = root.querySelector('input[name="searchMode"]:checked')?.value || "contains";
-
-    const rows = root.querySelectorAll(".itemSelector_row");
-
-    rows.forEach(row => {
-        const label = row.querySelector(".itemSelector_label").textContent.toLowerCase();
-        const checkbox = row.querySelector(".itemSelector_checkbox");
-
-        let match = false;
-
-        // ------------------------------------------------------------
-        // If search is empty → show all rows and DO NOT uncheck anything
-        // ------------------------------------------------------------
-        if (searchText === "") {
-            row.style.display = "";
-            return;
-        }
-
-        // ------------------------------------------------------------
-        // Apply search mode
-        // ------------------------------------------------------------
-        switch (mode) {
-            case "contains":
-                match = label.includes(searchText);
-                break;
-
-            case "begins":
-                match = label.startsWith(searchText);
-                break;
-
-            case "ends":
-                match = label.endsWith(searchText);
-                break;
-
-            case "exact":
-                match = label === searchText;
-                break;
-        }
-
-        // ------------------------------------------------------------
-        // Hide or show row
-        // ------------------------------------------------------------
-        if (match) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-            checkbox.checked = false;   // ← unselect hidden items
-        }
-    });
-	// ------------------------------------------------------------
 }

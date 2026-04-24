@@ -1,58 +1,40 @@
+// FILE: js/build_selector/itemSelectorSearch.js
+
 function itemSelectorSearch(event) {
-    const root = event.target.closest(".itemSelector");
-    if (!root) return;
-    //const formSearch = root.querySelector("form[name='search']");
+  const root = event.target.closest(".itemSelector");
+  if (!root) return;
 
-    const searchInput = root.querySelector(".itemSelector_searchInput");
-    const searchText = searchInput.value.trim().toLowerCase();
-    const mode = root.querySelector('input[name="searchMode"]:checked')?.value || "contains";
+  const searchInput = root.querySelector(".itemSelector_searchInput");
+  const searchText = searchInput.value.trim().toLowerCase();
+  const mode = root.querySelector('input[name="searchMode"]:checked')?.value || "contains";
 
-    const rows = root.querySelectorAll(".itemSelector_row");
+  const rows = root.querySelectorAll(".itemSelector_row");
 
-    rows.forEach(row => {
-        const label = row.querySelector(".itemSelector_label").textContent.toLowerCase();
-        const checkbox = row.querySelector(".itemSelector_checkbox");
+  rows.forEach(row => {
+    const label = row.querySelector(".itemSelector_label").textContent.toLowerCase();
+    const checkbox = row.querySelector(".itemSelector_checkbox");
 
-        let match = false;
+    if (searchText === "") {
+      row.style.display = "";
+      return;
+    }
 
-        // ------------------------------------------------------------
-        // If search is empty → show all rows and DO NOT uncheck anything
-        // ------------------------------------------------------------
-        if (searchText === "") {
-            row.style.display = "";
-            return;
-        }
+    let match = false;
 
-        // ------------------------------------------------------------
-        // Apply search mode
-        // ------------------------------------------------------------
-        switch (mode) {
-            case "contains":
-                match = label.includes(searchText);
-                break;
+    switch (mode) {
+      case "contains": match = label.includes(searchText); break;
+      case "begins":   match = label.startsWith(searchText); break;
+      case "ends":     match = label.endsWith(searchText); break;
+      case "exact":    match = label === searchText; break;
+    }
 
-            case "begins":
-                match = label.startsWith(searchText);
-                break;
+    if (match) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+      checkbox.checked = false;
+    }
+  });
 
-            case "ends":
-                match = label.endsWith(searchText);
-                break;
-
-            case "exact":
-                match = label === searchText;
-                break;
-        }
-
-        // ------------------------------------------------------------
-        // Hide or show row
-        // ------------------------------------------------------------
-        if (match) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-            checkbox.checked = false;   // ← unselect hidden items
-        }
-    });
-	// ------------------------------------------------------------
+  itemSelectorCollisionDetection(event);
 }

@@ -1,122 +1,46 @@
+// FILE: js/build_selector/itemSelectorCollisionDetection.js
 
-function itemSelectorCollisionDetection({
-    root,
-    sectionObj,
-    collisionLog,
-    prefixVal,
-    postfixVal,
-    nameMode,
-    customVal
-}) {
-    const { items, namespaces } = sectionObj;
+function itemSelectorCollisionDetection(event) {
+  const root = event.target.closest(".itemSelector");
+  if (!root || !root.state) return;
 
-    // ------------------------------------------------------------
-    // 1. Gather all selected items
-    // ------------------------------------------------------------
-    const selected = [...root.querySelectorAll(".itemSelector_checkbox:checked")];
-    const selectedNames = selected.map(cb => cb.value);
+  const state = {
+    prefix:     root.state.prefix     || "",
+    postfix:    root.state.postfix    || "",
+    items:      root.state.items      || {},
+    namespaces: root.state.namespaces || {},
+    selected:   [...root.querySelectorAll(".itemSelector_checkbox:checked")]
+                  .map(cb => cb.value.trim())
+  };
 
-    if (selectedNames.length === 0) {
-        collisionLog.innerHTML = "";
-        collisionLog.style.display = "none";
-        return {
-            anyCollision: false,
-            canCopy: false,
-            canReplace: false
-        };
-    }
+  const result = computeCollisions(state);
 
-    // ------------------------------------------------------------
-    // 2. Build final names using passed-in prefix/postfix/custom
-    // ------------------------------------------------------------
-    const finalNames = selectedNames.map(name => {
-        let base = "";
+  const log = root.querySelector(".collisionWarning");
+  log.innerHTML = "";
+  log.style.display = "none";
 
-        switch (nameMode) {
-            case "current":
-                base = name;
-                break;
-            case "custom":
-                base = customVal;
-                break;
-            default:
-                base = name;
-        }
+  if (result.messages.length > 0) {
+    log.innerHTML = result.messages.join("<br>");
+    log.style.display = "block";
+  }
 
-        return prefixVal + base + postfixVal;
-    });
+  const copyBtn   = root.querySelector("button[name='copy']");
+  const deleteBtn = root.querySelector("button[name='delete']");
+  const loadBtn   = root.querySelector("button[name='load']");
 
-    // ------------------------------------------------------------
-    // 3. Check collisions
-    // ------------------------------------------------------------
-    collisionLog.innerHTML = "";
+  const hasNamespace = result.totalNamespaceCollisions > 0;
 
-    let totalNameCollisions = 0;
-    let totalNamespaceCollisions = 0;
-    let totalEmptyCollisions = 0;
-
-    finalNames.forEach(finalName => {
-
-        // Empty name check
-        const isEmpty = !finalName || finalName.trim() === "";
-        if (isEmpty) {
-            const div = document.createElement("div");
-            div.textContent = `Invalid name: name cannot be empty`;
-            collisionLog.appendChild(div);
-            totalEmptyCollisions++;
-            return;
-        }
-
-        // Name collision
-        const nameCollision = items.hasOwnProperty(finalName);
-
-        // Namespace collision
-        let namespaceCollision = false;
-        let namespaceSource = null;
-        let namespaceMsg = null;
-
-        for (const ns in namespaces) {
-            if (namespaces[ns].keys.includes(finalName)) {
-                namespaceCollision = true;
-                namespaceSource = ns;
-                namespaceMsg = namespaces[ns].msg;
-                break;
-            }
-        }
-
-        if (nameCollision) {
-            const div = document.createElement("div");
-            div.textContent = `Name collision: "${finalName}" already exists in this section`;
-            collisionLog.appendChild(div);
-            totalNameCollisions++;
-        }
-
-        if (namespaceCollision) {
-            const div = document.createElement("div");
-            div.textContent = `Namespace collision (${namespaceSource}): ${namespaceMsg}`;
-            collisionLog.appendChild(div);
-            totalNamespaceCollisions++;
-        }
-    });
-
-    const total =
-        totalNameCollisions +
-        totalNamespaceCollisions +
-        totalEmptyCollisions;
-
-    collisionLog.style.display = total > 0 ? "block" : "none";
-
-    return {
-        finalNames,
-        totalNameCollisions,
-        totalNamespaceCollisions,
-        totalEmptyCollisions,
-        anyCollision: total > 0,
-        canCopy:
-            totalNameCollisions === 0 &&
-            totalEmptyCollisions === 0,
-        canReplace:
-            totalNamespaceCollisions === 0 &&
-            totalEmptyCollisions === 0
-    };
+  if (hasNamespace) {
+    copyBtn.disabled   = true;
+    deleteBtn.disabled = true;
+    loadBtn.disabled   = true;
+  } else {
+    copyBtn.disabled = (
+      result.totalEmptyCollisions > 0 ||
+      result.totalNameCollisions > 0
+    );
+    deleteBtn.disabled = false;
+    loadBtn.disabled   = false;
+  }
 }
+

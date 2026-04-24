@@ -1,0 +1,51 @@
+// FILE: js/build_selector/computeCollisions.js.txt
+
+function computeCollisions(state) {
+  const {
+    prefix = "",
+    postfix = "",
+    items = {},
+    namespaces = {},
+    selected = []
+  } = state;
+
+  let totalNameCollisions = 0;
+  let totalNamespaceCollisions = 0;
+  let totalEmptyCollisions = 0;
+
+  const messages = [];
+
+  selected.forEach(base => {
+    if (!base) {
+      totalEmptyCollisions++;
+      messages.push(`Empty name: base name missing`);
+      return;
+    }
+
+    const finalName = `${prefix}${base}${postfix}`;
+
+    if (items[finalName] !== undefined) {
+      totalNameCollisions++;
+      messages.push(`Name collision: "${finalName}" already exists in this section`);
+    }
+
+    for (const ns in namespaces) {
+      const keys = namespaces[ns].keys;
+      const keyList = Array.isArray(keys) ? keys : Object.keys(keys);
+
+      if (keyList.includes(finalName)) {
+        totalNamespaceCollisions++;
+        messages.push(
+          `Namespace collision (${ns}): "${finalName}" already exists (${namespaces[ns].msg})`
+        );
+      }
+    }
+  });
+
+  return {
+    totalNameCollisions,
+    totalNamespaceCollisions,
+    totalEmptyCollisions,
+    messages
+  };
+}

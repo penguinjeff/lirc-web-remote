@@ -121,6 +121,7 @@ async function include(src, extension = "", multiple = []) {
   
   return new Promise(resolve => {
     const s = document.createElement("script");
+	s.type = "text/javascript";
     s.src = src + extension + "?ts=" + Date.now();
     s.onload = resolve;
     document.head.appendChild(s);
@@ -144,9 +145,10 @@ const tree = {
 */
 const tree = {
   build_selector: {
-    build_selector:{},
+    computeCollisions:{},
     itemSelectorCollisionDetection:{},
-    itemSelectorSearch:{}
+    itemSelectorSearch:{},
+    build_selector:{}
   }
 };
 
@@ -161,7 +163,7 @@ await include("js", ".js.txt", tree);
 function dummy_action(event) {
   const target = event.target;
 
-  // Find the selector root using your NEW class name
+  // Find the selector root
   const root = target.closest(".itemSelector");
   if (!root) {
     console.log("No .itemSelector root found");
@@ -173,20 +175,34 @@ function dummy_action(event) {
   console.log("Dummy function triggered by:", target.name || target.textContent);
   console.log("Selector section:", section);
 
+  // Read prefix/postfix/name mode
+  const prefix     = root.querySelector(".itemSelector_prefix").value.trim();
+  const postfix    = root.querySelector(".itemSelector_postfix").value.trim();
+  
+  console.log("Prefix:", prefix || "(none)");
+  console.log("Postfix:", postfix || "(none)");
+
   // Get all checkboxes inside this selector
   const checkboxes = root.querySelectorAll(".itemSelector_checkbox");
 
   // Collect selected items
-  const selected = [...checkboxes]
-    .filter(cb => cb.checked)
-    .map(cb => cb.value);
+  const selected = [...checkboxes].filter(cb => cb.checked);
 
-  // Pretty output
   console.log("====================================");
   console.log(" Selected items:", selected.length);
-  selected.forEach(item => console.log("  •", item));
+
+  selected.forEach(cb => {
+    const base = cb.value.trim();
+    const finalName = `${prefix}${base}${postfix}`;
+
+    console.log(
+      `  • ${cb.value}  (base: "${base}", final: "${finalName}")`
+    );
+  });
+
   console.log("====================================");
 }
+
 
 
 // ------------------------------------------------------------

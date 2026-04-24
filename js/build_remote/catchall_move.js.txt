@@ -30,16 +30,16 @@ window.catchall_wrap_toggle = function(event) {
   root.wrap=!root.wrap;
   const nav = root.querySelector('[name="Navigator"]');
   const buttons = [...nav.querySelectorAll("button")]
-    .filter(b => b.onclick === window.catchall_move);
+    .filter(b => b.onclick !== event.currentTarget.onclick);
 
   // Now split them by reverse flag
   const reverseBtn = buttons.find(b => b.reverse === true);
   const forwardBtn = buttons.find(b => b.reverse !== true);
   forwardBtn.disabled = false;
   reverseBtn.disabled = false;
-  toggleBtn.textContent = "No Wrap";
+  toggleBtn.textContent = root.wraptxt[1];
   if(!root.wrap){
-    toggleBtn.textContent = "Wrap";
+    toggleBtn.textContent = root.wraptxt[0];
     // All elements inside the component
     const allElements = root.querySelectorAll(root.unit);
 
@@ -133,7 +133,7 @@ window.catchall_move = function(event) {
     if (!root.wrap) {
       const nav = root.querySelector('[name="Navigator"]');
       const buttons = [...nav.querySelectorAll("button")]
-        .filter(b => b.onclick === window.catchall_move);
+        .filter(b => b.onclick === event.currentTarget.onclick);
 
       // Now split them by reverse flag
       const reverseBtn = buttons.find(b => b.reverse === true);
@@ -160,8 +160,7 @@ window.catchall_move = function(event) {
         if (hiddenIndex>allElements.length-2) {
           forwardBtn.disabled = true;
         }
-      }
-	  
+      }	  
     }
 
     return;
@@ -170,13 +169,11 @@ window.catchall_move = function(event) {
   // * Case 2: Wrap slide
   // ***************************
 
-  let hidden_window;
-
+  let start=0;
   if (isReverse) {
-    hidden_window = [...allElements].slice(-visible_window.length);
-  } else {
-    hidden_window = [...allElements].slice(0, visible_window.length);
+    start=allElements.length - visible_window.length;
   }
+  const hidden_window = [...allElements].slice(start, start + visible_window.length);
 
   swapDisplays(hidden_window, visible_window, true);
 };

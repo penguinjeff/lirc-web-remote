@@ -22,6 +22,7 @@ function getDisplayName(rawName) {
   dom.classList.add("CatchAll");
   dom.unit=".onewide"
   dom.wrap = state.wrap ?? true;
+  dom.wraptxt=["Wrap","No Wrap"]
   // Build columns
   const cols = [];
   let index = 0;
@@ -97,12 +98,12 @@ function getDisplayName(rawName) {
 
     const wrap = document.createElement("button");
     wrap.classList.add("button");
-    wrap.textContent = "No Wrap";
+    wrap.textContent = dom.wraptxt[1];
     wrap.onclick = catchall_wrap_toggle;
 
 	if(!dom.wrap) {
 	  left.disabled=true;
-      wrap.textContent = "Wrap";
+      wrap.textContent = dom.wraptxt[0];
 	}
     const right = document.createElement("button");
     right.classList.add("button");
