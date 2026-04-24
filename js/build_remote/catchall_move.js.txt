@@ -23,6 +23,51 @@ a MutationObserver to auto‑init sliders
 
 */
 
+window.catchall_wrap_toggle = function(event) {
+  const toggleBtn = event.target
+  const root = event.target.closest('.CatchAll');
+  if (!root) { return; }
+  root.wrap=!root.wrap;
+  const nav = root.querySelector('[name="Navigator"]');
+  const buttons = [...nav.querySelectorAll("button")]
+    .filter(b => b.onclick === window.catchall_move);
+
+  // Now split them by reverse flag
+  const reverseBtn = buttons.find(b => b.reverse === true);
+  const forwardBtn = buttons.find(b => b.reverse !== true);
+  forwardBtn.disabled = false;
+  reverseBtn.disabled = false;
+  toggleBtn.textContent = "No Wrap";
+  if(!root.wrap){
+    toggleBtn.textContent = "Wrap";
+    // All elements inside the component
+    const allElements = root.querySelectorAll(root.unit);
+
+    // Visible window (contiguous; guaranteed by the builder)
+    // allElements is a NodeList, not a real array. Spreading it creates a true array,
+    // which allows us to use array methods like slice(), filter(), and indexing safely.
+    // Spread NodeList → Array (needed for slice/filter)
+    const visible_window = [...allElements].filter(element =>
+      element.style.display !== "none"
+    );
+
+    const hidden_edge  = visible_window[0].previousElementSibling;
+	let hiddenIndex=-1
+    if(hidden_edge){hiddenIndex = [...allElements].findIndex(el => el === hidden_edge);}
+	if(hiddenIndex < visible_window.length - 1) {
+      reverseBtn.disabled = true;
+      const hidden_window = [...allElements].slice(0, visible_window.length-1);
+      const make_visible_window = [...allElements].slice(visible_window.length, (2*visible_window.length)-1);
+	  const visible=visible_window[0].style.display;
+	  hidden_window.forEach(el => el.style.display = "none");
+	  make_visible_window.forEach(el => el.style.display = visible);
+	}
+	if(hiddenIndex > (allElements.length-visible_window.length)-2) {
+	  forwardBtn.disabled = true;
+	}
+	return;
+  }
+}
 
 window.catchall_move = function(event) {
 
@@ -31,34 +76,14 @@ window.catchall_move = function(event) {
   // **************************
 
   function swapDisplays(first, second, isList = false) {
-
-    // **************************
-    // * Helper: Return the first element.
-    // **************************
-    function getFirst(target, isList) {
-      let first;
-
-      if (isList) {
-        first = target[0];
-      } else {
-        first = target;
-      }
-
-      return first;
-    }
-
-    const firstEl = getFirst(first, isList);
-    const secondEl = getFirst(second, isList);
-
-    const first_display  = firstEl.style.display;
-    const second_display = secondEl.style.display;
-
     if (isList) {
-      first.forEach(el => el.style.display = second_display);
-      second.forEach(el => el.style.display = first_display);
+	  const tmp_display = first[0].style.display
+      first.forEach(el => el.style.display = second[0].style.display);
+      second.forEach(el => el.style.display = tmp_display);
     } else {
-      first.style.display = second_display;
-      second.style.display = first_display;
+	  const tmp_display = first.style.display
+      first.style.display = second.style.display;
+      second.style.display = tmp_display;
     }
   }
 
@@ -107,22 +132,36 @@ window.catchall_move = function(event) {
 
     if (!root.wrap) {
       const nav = root.querySelector('[name="Navigator"]');
-      const leftBtn  = [...nav.querySelectorAll("button")].find(b => b.reverse === true);
-      const rightBtn = [...nav.querySelectorAll("button")].find(b => b.reverse !== true);
+      const buttons = [...nav.querySelectorAll("button")]
+        .filter(b => b.onclick === window.catchall_move);
 
-      rightBtn.disabled = false;
-      leftBtn.disabled = false;
+      // Now split them by reverse flag
+      const reverseBtn = buttons.find(b => b.reverse === true);
+      const forwardBtn = buttons.find(b => b.reverse !== true);
+      forwardBtn.disabled = false;
+      reverseBtn.disabled = false;
+	  
+	  // Compute index of the hidden edge
+      const hiddenIndex = [...allElements].findIndex(el => el === hidden_edge);
+	  // console.log("hiddenIndex:", hiddenIndex);
+      // console.log("allElements.length:", allElements.length);
+      // console.log("visible_window.length:", visible_window.length);
+
       if (isReverse) {
         // moving left
-          if (!first_visible.previousElementSibling) {
-            leftBtn.disabled = true;
-          }
+		// because we do not want wrapping we do not want to see the first visible_window.length-1 
+		// elements so if we are headed that direction we want to disable the button when it is pressed just before that.
+        if (hiddenIndex<visible_window.length) {
+          reverseBtn.disabled = true;
+        }
       } else {
         // moving right
-        if (!last_visible.nextElementSibling) {
-          rightBtn.disabled = true;
+		// because index starts at 0 we subtract 1 because we moved one last_visible is one more we subtract another 1 thus subtract 2 total
+        if (hiddenIndex>allElements.length-2) {
+          forwardBtn.disabled = true;
         }
       }
+	  
     }
 
     return;
