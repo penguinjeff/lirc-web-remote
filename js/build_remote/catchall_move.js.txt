@@ -75,17 +75,14 @@ window.catchall_move = function(event) {
   // * Helper: Swap display values between two elements or element lists
   // **************************
 
-  function swapDisplays(first, second, isList = false) {
-    if (isList) {
-	  const tmp_display = first[0].style.display
-      first.forEach(el => el.style.display = second[0].style.display);
-      second.forEach(el => el.style.display = tmp_display);
-    } else {
-	  const tmp_display = first.style.display
-      first.style.display = second.style.display;
-      second.style.display = tmp_display;
-    }
+  function swapDisplay(first, second) {
+      [first.style.display,second.style.display]=[second.style.display,first.style.display]
   }
+
+  function swapDisplays(first, second) {
+      first.forEach((el,i) => swapDisplay(el,second[i]));
+  }
+
 
   // **************************
   // * End of helper functions
@@ -128,7 +125,7 @@ window.catchall_move = function(event) {
   // * Case 1: Normal slide (no wrap)
   // ***************************
   if (hidden_edge) {
-    swapDisplays(hidden_edge, visible_edge);
+    swapDisplay(hidden_edge, visible_edge);
 
     if (!root.wrap) {
       const nav = root.querySelector('[name="Navigator"]');
@@ -175,5 +172,5 @@ window.catchall_move = function(event) {
   }
   const hidden_window = [...allElements].slice(start, start + visible_window.length);
 
-  swapDisplays(hidden_window, visible_window, true);
+  swapDisplays(hidden_window, visible_window);
 };
