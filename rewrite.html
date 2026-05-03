@@ -7,40 +7,86 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <script>
+<script>
+async function include(src, extension = "", multiple = []) {
+  if (Array.isArray(multiple) && multiple.length > 0) {
+    for (const item of multiple) {
+      console.log(src + "/" + item + extension);
+      await include(src + "/" + item, extension);
+    }
+    return;
+  }
+  if (
+    multiple &&
+    typeof multiple === "object" &&
+    !Array.isArray(multiple) &&
+    Object.keys(multiple).length > 0
+  ) {
+    for (const key of Object.keys(multiple)) {
+      const value = multiple[key];
 
-function loadScript(src) {
+      // Array → list of files
+      if (Array.isArray(value)) {
+        await include(src + "/" + key, extension, value);
+      }
+
+      // Non-empty object → directory
+      else if (value && typeof value === "object" && Object.keys(value).length > 0) {
+        await include(src + "/" + key, extension, value);
+      }
+
+      // Empty object → file
+      else {
+        await include(src + "/" + key, extension, null);
+      }
+    }
+    return;
+  }
   return new Promise(resolve => {
     const s = document.createElement("script");
-    s.src = src + "?ts=" + Date.now();   // ← add timestamp
+	s.type = "text/javascript";
+    s.src = src + extension + "?ts=" + Date.now();
     s.onload = resolve;
     document.head.appendChild(s);
   });
 }
+</script>
 
+<script>
 async function loadAllScripts() {
   
-  await loadScript("defaults/get_default_display.js.txt");
-  await loadScript("defaults/get_default_modules.js.txt");
-  await loadScript("js/execute.js.txt");
-  await loadScript("js/refresh.js.txt");
-  await loadScript("js/options.js.txt");
-  
-  // files needed for build_remote
-  let rp="js/build_remote/"
-  await loadScript(rp + "build_button.js.txt");
-  await loadScript(rp + "build_module.js.txt");
-  await loadScript(rp + "build_remote.js.txt");
-  await loadScript(rp + "catchall_move.js.txt");
-  await loadScript(rp + "build_catchall.js.txt");
-  
-  // files needed for build_edit
-  let ep="js/build_edit/"
-  await loadScript(ep + "build_activities.js.txt");
-  await loadScript(ep + "build_macros.js.txt");
-  await loadScript(ep + "build_modules.js.txt");
-  await loadScript(ep + "build_displays.js.txt");
-  await loadScript(ep + "build_edit.js.txt");
+  const tree = {
+    defaults: [
+      "get_default_display",
+      "get_default_modules"
+    ],
+    js: {
+      execute:{},
+      refresh:{},
+      options:{},
+      build_remote: [
+        "build_button",
+        "build_module",
+        "build_remote",
+        "catchall_move",
+        "build_catchall"
+      ],
+      build_edit: [
+        "build_activities",
+        "build_macros",
+        "build_modules",
+        "build_displays",
+        "build_edit"
+      ],
+      build_selector: [
+        "computeCollisions",
+        "build_selector",
+        "itemSelectorCollisionDetection",
+        "itemSelectorSearch"
+      ]
+    }
+  };
+  await include(".",".js.txt",tree);
 }
 
 function refresh_db() {
@@ -80,8 +126,8 @@ function new_remotes_check(list_ignore, db_ignore) {
 let last_selected="";
 function show_selected(sel) {
   // hide all
-  groups.forEach(item=> window.divs[item+"_selector"].classList.add("hidden"));
-  groups.forEach(item=> window.divs[item+"_display"].classList.add("hidden"));
+  groups.forEach(item=> window.divs[item+"_selector"].style.display = "none");
+  groups.forEach(item=> window.divs[item+"_display"].style.display = "none");
 
   // show selected
   if (sel.value === "Refresh") {
@@ -92,8 +138,8 @@ function show_selected(sel) {
     return;
   }
   last_selected=sel.value;
-  window.divs[sel.value + "_selector"].classList.remove("hidden");
-  window.divs[sel.value + "_display"].classList.remove("hidden");
+  window.divs[sel.value + "_selector"].style.display = "";
+  window.divs[sel.value + "_display"].style.display = "";
 }
 
 function run_after_refresh(list, db_in)
@@ -168,13 +214,13 @@ window.addEventListener("load", async function () {
   selectors.appendChild(selector); 
   groups.forEach(item => {
     let selector = document.createElement("select");
-    selector.id = item + "_selector"
-    selector.className="hidden"
+    selector.id = item + "_selector";
+    selector.style.display = "none";
     selector.setAttribute("onchange","load(this)")
     selectors.appendChild(selector);
     let display = document.createElement("div");
-    display.id = item + "_display"
-    display.className="hidden"
+    display.id = item + "_display";
+    display.style.display = "none";
     displays.appendChild(display);
   });
   bodyElement.appendChild(selectors);

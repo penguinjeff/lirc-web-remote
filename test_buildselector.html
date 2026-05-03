@@ -235,26 +235,23 @@ window.addEventListener("load", async function () {
    }
   };
   
-  function send(obj)
-  {
+  function send(obj) {
    console.log(obj);
   }
 
   // ------------------------------------------------------------
   // Build selector
   // ------------------------------------------------------------
-  const selector = build_selector(
-    {
-      section: "TestSection",
-      validator: dummy_action,
-      items: testItems,
-	  rows: 10,
-	  edit: true, // besides copy(always shown unselectable if name collision) show replace (unselectable if namespace collision) 
-	  namespaces:namespaces,
-	  action:dummy_action,
-	  send:send // create a button behind each selectable item and when clicked call said function 
-    }
-  );
+  const selector = build_selector( {
+    section: "TestSection",
+    validator: dummy_action,
+    items: testItems,
+    rows: 10,
+    edit: true, // besides copy(always shown unselectable if name collision) show replace (unselectable if namespace collision)
+    namespaces:namespaces,
+    action:dummy_action,
+    send:send // create a button behind each selectable item and when clicked call said function
+  } );
 
   // ------------------------------------------------------------
   // Mount it

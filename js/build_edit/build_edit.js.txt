@@ -1,5 +1,54 @@
 /* js/build_edit/build_edit.js.txt */
 
+function dummy_action(event) {
+  const target = event.target;
+
+  // Find the selector root
+  const root = target.closest(".itemSelector");
+  if (!root) {
+    console.log("No .itemSelector root found");
+    return;
+  }
+
+  const section = root.getAttribute("name");
+
+  console.log("Dummy function triggered by:", target.name || target.textContent);
+  console.log("Selector section:", section);
+
+  // Read prefix/postfix/name mode
+  const prefix     = root.querySelector(".itemSelector_prefix").value.trim();
+  const postfix    = root.querySelector(".itemSelector_postfix").value.trim();
+
+  console.log("Prefix:", prefix || "(none)");
+  console.log("Postfix:", postfix || "(none)");
+
+  // Get all checkboxes inside this selector
+  const checkboxes = root.querySelectorAll(".itemSelector_checkbox");
+
+  // Collect selected items
+  const selected = [...checkboxes].filter(cb => cb.checked);
+
+  console.log("====================================");
+  console.log(" Selected items:", selected.length);
+
+  selected.forEach(cb => {
+    const base = cb.value.trim();
+    const finalName = `${prefix}${base}${postfix}`;
+
+    console.log(
+      `  • ${cb.value}  (base: "${base}", final: "${finalName}")`
+    );
+  });
+
+  console.log("====================================");
+}
+
+function send(obj) {
+  console.log(obj);
+}
+
+
+
 function save(event){
   const item = event.currentTarget;
   const name = item.getAttribute("name") || "";
@@ -15,7 +64,32 @@ function build_editor_shell({ db, section, create_fn, validate_fn = validate_gen
 
   // for display just add button to copy default_display
   // for modules have a selector to copy default_modules
-  
+
+  let selector_args={
+    section: section,
+    validator: dummy_action,
+    items: db[section],
+    rows: 10,
+    edit: true,
+    namespaces:{},
+    action:dummy_action,
+  }
+  switch (section)
+  {
+    case "modules":
+      selector_args["namespaces"]["Default Modules"]={
+        keys:Object.keys(get_default_modules()),
+        msg:"Name collision with Default Modules."
+      }
+    break;
+    case "macros":
+     selector_args["send"]=send;
+    break;
+  }
+
+  const selector = build_selector(selector_args);
+
+
   // add pickers and remove JSON
   // picker should allow copy and load
 
