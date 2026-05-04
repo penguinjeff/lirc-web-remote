@@ -44,7 +44,8 @@ function dummy_action(event) {
 }
 
 function send(obj) {
-  console.log(obj);
+  console.log("macro:",obj["value"]);
+  execute("macro",obj["value"]);
 }
 
 
@@ -88,6 +89,7 @@ function build_editor_shell({ db, section, create_fn, validate_fn = validate_gen
   }
 
   const selector = build_selector(selector_args);
+  dom.appendChild(selector);
 
 
   // add pickers and remove JSON
