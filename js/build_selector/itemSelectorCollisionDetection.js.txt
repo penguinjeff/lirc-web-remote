@@ -32,15 +32,15 @@ function itemSelectorCollisionDetection(event) {
 
   if (hasNamespace) {
     copyBtn.disabled   = true;
-    deleteBtn.disabled = true;
-    loadBtn.disabled   = true;
+    if(deleteBtn){deleteBtn.disabled = true;}
+    if(loadBtn){loadBtn.disabled   = true;}
   } else {
     copyBtn.disabled = (
       result.totalEmptyCollisions > 0 ||
       result.totalNameCollisions > 0
     );
-    deleteBtn.disabled = false;
-    loadBtn.disabled   = false;
+    if(deleteBtn){deleteBtn.disabled = false;}
+    if(loadBtn){loadBtn.disabled   = false;}
   }
 }
 

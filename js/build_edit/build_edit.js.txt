@@ -44,11 +44,8 @@ function dummy_action(event) {
 }
 
 function send(obj) {
-  console.log("macro:",obj["value"]);
   execute("macro",obj["value"]);
 }
-
-
 
 function save(event){
   const item = event.currentTarget;
@@ -77,7 +74,22 @@ function build_editor_shell({ db, section, create_fn, validate_fn = validate_gen
   }
   switch (section)
   {
+    case "displays":
+      const copy_btn=document.createElement("button");
+      copy_btn.innerHTML="Copy Default Display"
+      dom.appendChild(copy_btn);
+    break;
     case "modules":
+      default_selector = build_selector({
+        section: "Default Modules",
+        validator: dummy_action,
+        items: get_default_modules(),
+        rows: 10,
+        edit: false,
+        namespaces:{},
+        action:dummy_action,
+      });
+      dom.appendChild(default_selector);
       selector_args["namespaces"]["Default Modules"]={
         keys:Object.keys(get_default_modules()),
         msg:"Name collision with Default Modules."
@@ -91,16 +103,10 @@ function build_editor_shell({ db, section, create_fn, validate_fn = validate_gen
   const selector = build_selector(selector_args);
   dom.appendChild(selector);
 
+  const add_btn=document.createElement("button");
+  add_btn.innerHTML="Add "+section;
+  dom.appendChild(add_btn);
 
-  // add pickers and remove JSON
-  // picker should allow copy and load
-
-  // Show current JSON
-  let current = document.createElement("div");
-  let pre = document.createElement("pre");
-  pre.textContent = JSON.stringify(db[section], null, 2);
-  current.appendChild(pre);
-  dom.appendChild(current);
 
   // Input for new item name
   let name_input = document.createElement("input");
