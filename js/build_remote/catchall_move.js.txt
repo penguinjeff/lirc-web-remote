@@ -80,7 +80,7 @@ window.catchall_move = function(event) {
   }
 
   function swapDisplays(first, second) {
-      first.forEach((el,i) => swapDisplay(el,second[i]));
+      first.forEach((item,index) => swapDisplay(item,second[index]));
   }
 
 
